@@ -32,52 +32,97 @@ export default function AddItemForm({ onAdd }: AddItemFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: "24px" }}>
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        marginBottom: "24px",
+        maxWidth: "600px",
+        width: "100%",
+      }}
+    >
       <input
         type="text"
         placeholder="Название"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        style={{ padding: "8px", marginRight: "8px" }}
+        style={{
+          flex: "1",
+          padding: "10px",
+          borderRadius: "6px",
+          border: "1px solid #374151",
+          backgroundColor: "#1f2937",
+          color: "#f9fafb",
+        }}
         required
       />
+
       <select
         value={type}
         onChange={(e) => setType(e.target.value)}
-        style={{ padding: "8px", marginRight: "8px" }}
+        style={{
+          padding: "10px",
+          borderRadius: "6px",
+          border: "1px solid #374151",
+          backgroundColor: "#1f2937",
+          color: "#f9fafb",
+        }}
       >
         <option value="movie">Фильм</option>
         <option value="series">Сериал</option>
         <option value="book">Книга</option>
       </select>
+
       <input
         type="number"
         min={1}
         max={10}
         value={rating}
         onChange={(e) => setRating(Number(e.target.value))}
-        style={{ width: "60px", padding: "8px", marginRight: "8px" }}
+        style={{
+          width: "70px",
+          padding: "10px",
+          borderRadius: "6px",
+          border: "1px solid #374151",
+          backgroundColor: "#1f2937",
+          color: "#f9fafb",
+        }}
       />
+
       <input
         type="text"
         placeholder="Комментарий"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
-        style={{ padding: "8px", marginRight: "8px" }}
+        style={{
+          flex: "1",
+          padding: "10px",
+          borderRadius: "6px",
+          border: "1px solid #374151",
+          backgroundColor: "#1f2937",
+          color: "#f9fafb",
+        }}
       />
+
       <button
         type="submit"
         style={{
-          padding: "8px 16px",
+          padding: "10px 16px",
           backgroundColor: "#10b981",
           color: "#fff",
           border: "none",
           borderRadius: "6px",
           cursor: "pointer",
+          transition: "background-color 0.2s ease",
+          height: "100%",
         }}
       >
         Добавить
       </button>
     </form>
   );
+
 }
