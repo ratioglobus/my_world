@@ -5,58 +5,91 @@ import ItemList from "./components/ItemList";
 import AddItemForm from "./components/AddItemForm";
 import SearchBar from "./components/SearchBar";
 import ConfirmModal from "./components/ConfirmModal";
+import { supabase } from "./supabaseClient"; // импорт клиента Supabase
 
 function App() {
-  const [completedItems, setCompletedItems] = useState<MediaItemProps[]>(() => {
-    const stored = localStorage.getItem("completedItems");
-    return stored ? JSON.parse(stored) : [];
-  });
-
-  const [plannedItems, setPlannedItems] = useState<MediaItemProps[]>(() => {
-    const stored = localStorage.getItem("plannedItems");
-    return stored ? JSON.parse(stored) : [];
-  });
-
+  const [completedItems, setCompletedItems] = useState<MediaItemProps[]>([]);
+  const [plannedItems, setPlannedItems] = useState<MediaItemProps[]>([]);
   const [query, setQuery] = useState("");
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [viewItemId, setViewItemId] = useState<string | null>(null);
   const [mode, setMode] = useState<"completed" | "planned">("completed");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  useEffect(() => {
-    localStorage.setItem("completedItems", JSON.stringify(completedItems));
-  }, [completedItems]);
+  // --- Загрузка данных с Supabase ---
+  const fetchItems = async () => {
+    const { data: completed, error: cError } = await supabase
+      .from("completed_items")
+      .select("*");
+    if (cError) console.error(cError);
+    else setCompletedItems(completed || []);
+
+    const { data: planned, error: pError } = await supabase
+      .from("planned_items")
+      .select("*");
+    if (pError) console.error(pError);
+    else setPlannedItems(planned || []);
+  };
 
   useEffect(() => {
-    localStorage.setItem("plannedItems", JSON.stringify(plannedItems));
-  }, [plannedItems]);
+    fetchItems();
+  }, []);
 
-  const handleAdd = (item: MediaItemProps) => {
+  // --- CRUD функции ---
+  const handleAdd = async (item: MediaItemProps) => {
     if (mode === "completed") {
-      setCompletedItems(prev => [item, ...prev]);
+      const { data, error } = await supabase
+        .from("completed_items")
+        .insert([item])
+        .select();
+      if (error) console.error(error);
+      else setCompletedItems(prev => [data[0], ...prev]);
     } else {
-      setPlannedItems(prev => [item, ...prev]);
+      const { data, error } = await supabase
+        .from("planned_items")
+        .insert([item])
+        .select();
+      if (error) console.error(error);
+      else setPlannedItems(prev => [data[0], ...prev]);
     }
   };
 
-  const handleView = (id: string) => setViewItemId(id);
-
-  const handleDelete = (id: string) => {
-    if (mode === "completed") setCompletedItems(prev => prev.filter(item => item.id !== id));
-    else setPlannedItems(prev => prev.filter(item => item.id !== id));
-    setConfirmDeleteId(null);
-  };
-
-  const handleEdit = (id: string) => setEditingItemId(id);
-
-  const handleUpdate = (id: string, updatedItem: MediaItemProps) => {
+  const handleUpdate = async (id: string, updatedItem: MediaItemProps) => {
     if (mode === "completed") {
-      setCompletedItems(prev => prev.map(item => (item.id === id ? updatedItem : item)));
+      const { data, error } = await supabase
+        .from("completed_items")
+        .update(updatedItem)
+        .eq("id", id)
+        .select();
+      if (error) console.error(error);
+      else setCompletedItems(prev => prev.map(item => (item.id === id ? data[0] : item)));
     } else {
-      setPlannedItems(prev => prev.map(item => (item.id === id ? updatedItem : item)));
+      const { data, error } = await supabase
+        .from("planned_items")
+        .update(updatedItem)
+        .eq("id", id)
+        .select();
+      if (error) console.error(error);
+      else setPlannedItems(prev => prev.map(item => (item.id === id ? data[0] : item)));
     }
     setEditingItemId(null);
   };
+
+  const handleDelete = async (id: string) => {
+    if (mode === "completed") {
+      const { error } = await supabase.from("completed_items").delete().eq("id", id);
+      if (error) console.error(error);
+      else setCompletedItems(prev => prev.filter(item => item.id !== id));
+    } else {
+      const { error } = await supabase.from("planned_items").delete().eq("id", id);
+      if (error) console.error(error);
+      else setPlannedItems(prev => prev.filter(item => item.id !== id));
+    }
+    setConfirmDeleteId(null);
+  };
+
+  const handleView = (id: string) => setViewItemId(id);
+  const handleEdit = (id: string) => setEditingItemId(id);
 
   const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(item =>
     item.title.toLowerCase().includes(query.toLowerCase())
@@ -75,6 +108,7 @@ function App() {
         paddingBottom: "40px",
       }}
     >
+      {/* --- Переключатель режимов --- */}
       <div style={{ display: "flex", justifyContent: "center", margin: "24px 0 16px 0" }}>
         <div
           style={{
@@ -120,7 +154,6 @@ function App() {
           >
             Готовые
           </button>
-
           <button
             onClick={() => setMode("planned")}
             style={{
@@ -151,9 +184,7 @@ function App() {
       <h1 style={{ textAlign: "center", margin: "20px 0 10px 0", fontSize: "24px" }}>
         {mode === "completed" ? "Готовые исследования" : "Запланированное"}
       </h1>
-
       <SearchBar query={query} onSearch={setQuery} />
-
       <ItemList
         items={filteredItems}
         onDelete={(id: string) => setConfirmDeleteId(id)}
@@ -164,7 +195,6 @@ function App() {
         viewItemId={viewItemId}
         mode={mode}
       />
-
       {confirmDeleteId && (
         <ConfirmModal
           message="Вы точно хотите удалить элемент?"
