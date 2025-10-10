@@ -35,22 +35,24 @@ function App() {
   }, []);
 
   const handleAdd = async (item: MediaItemProps) => {
-    if (mode === "completed") {
-      const { data, error } = await supabase
-        .from("completed_items")
-        .insert([item])
-        .select();
-      if (error) console.error(error);
-      else setCompletedItems(prev => [data[0], ...prev]);
-    } else {
-      const { data, error } = await supabase
-        .from("planned_items")
-        .insert([item])
-        .select();
-      if (error) console.error(error);
+    const { data, error } = await supabase
+      .from(mode === "completed" ? "completed_items" : "planned_items")
+      .insert([{
+        title: item.title,
+        comment: item.comment,
+        type: item.type,
+        rating: item.rating,
+        createdAt: item.createdAt ?? new Date().toISOString()
+      }])
+      .select();
+
+    if (error) console.error(error);
+    else {
+      if (mode === "completed") setCompletedItems(prev => [data[0], ...prev]);
       else setPlannedItems(prev => [data[0], ...prev]);
     }
   };
+
 
   const handleUpdate = async (id: string, updatedItem: MediaItemProps) => {
     if (mode === "completed") {
