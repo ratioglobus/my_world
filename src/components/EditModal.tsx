@@ -5,9 +5,10 @@ type EditModalProps = {
   item: MediaItemProps;
   onCancel: () => void;
   onSave: (updatedItem: MediaItemProps) => void;
+  mode: "completed" | "planned"; // 👈 добавили
 };
 
-export default function EditModal({ item, onCancel, onSave }: EditModalProps) {
+export default function EditModal({ item, onCancel, onSave, mode }: EditModalProps) {
   const [title, setTitle] = useState(item.title);
   const [type, setType] = useState(item.type);
   const [rating, setRating] = useState(item.rating);
@@ -18,7 +19,7 @@ export default function EditModal({ item, onCancel, onSave }: EditModalProps) {
       ...item,
       title,
       type,
-      rating,
+      rating: mode === "planned" ? 0 : rating,
       comment,
     };
     onSave(updated);
@@ -42,7 +43,7 @@ export default function EditModal({ item, onCancel, onSave }: EditModalProps) {
     >
       <div
         style={{
-          backgroundColor: "#1f2937",
+          backgroundColor: "var(--card-bg)",
           color: "#f9fafb",
           borderRadius: "12px",
           padding: "24px",
@@ -51,81 +52,77 @@ export default function EditModal({ item, onCancel, onSave }: EditModalProps) {
           boxShadow: "0 4px 12px rgba(0,0,0,0.7)",
           display: "flex",
           flexDirection: "column",
-          gap: "12px",
+          gap: "14px",
         }}
       >
-        <h2 style={{ margin: 0 }}>Редактировать элемент</h2>
+        <h2 style={{ margin: 0, textAlign: "center" }}>Редактировать элемент</h2>
 
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Название"
-          style={{
-            width: "100%",
-            padding: "8px",
-            borderRadius: "6px",
-            border: "1px solid #374151",
-            backgroundColor: "#111827",
-            color: "#f9fafb",
-          }}
-        />
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Название"
+            style={inputStyle}
+          />
 
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            style={inputStyle}
+          >
+            <option value="Фильм">Фильм</option>
+            <option value="Сериал">Сериал</option>
+            <option value="Книга">Книга</option>
+            <option value="Аниме">Аниме</option>
+            <option value="YouTube видео">YouTube видео</option>
+          </select>
+
+          {mode === "completed" && (
+            <select
+              value={rating}
+              onChange={(e) => setRating(Number(e.target.value))}
+              style={{
+                width: "100%",
+                padding: "8px",
+                borderRadius: "6px",
+                border: "1px solid #374151",
+                backgroundColor: "#111827",
+                color: "#f9fafb",
+              }}
+            >
+              {[...Array(10)].map((_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {i + 1}
+                </option>
+              ))}
+            </select>
+          )}
+
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Комментарий"
+            rows={3}
+            style={{
+              ...inputStyle,
+              resize: "none",
+            }}
+          />
+        </div>
+
+        <div
           style={{
-            width: "100%",
-            padding: "8px",
-            borderRadius: "6px",
-            border: "1px solid #374151",
-            backgroundColor: "#111827",
-            color: "#f9fafb",
+            display: "flex",
+            gap: "8px",
+            marginTop: "12px",
           }}
         >
-          <option value="movie">Фильм</option>
-          <option value="series">Сериал</option>
-          <option value="book">Книга</option>
-        </select>
-
-        <input
-          type="number"
-          min={1}
-          max={10}
-          value={rating}
-          onChange={(e) => setRating(Number(e.target.value))}
-          placeholder="Рейтинг"
-          style={{
-            width: "100%",
-            padding: "8px",
-            borderRadius: "6px",
-            border: "1px solid #374151",
-            backgroundColor: "#111827",
-            color: "#f9fafb",
-          }}
-        />
-
-        <input
-          type="text"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          placeholder="Комментарий"
-          style={{
-            width: "100%",
-            padding: "8px",
-            borderRadius: "6px",
-            border: "1px solid #374151",
-            backgroundColor: "#111827",
-            color: "#f9fafb",
-          }}
-        />
-
-        <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
           <button
             onClick={onCancel}
             style={{
               flex: 1,
-              padding: "8px",
+              padding: "10px",
               backgroundColor: "#6b7280",
               color: "#fff",
               border: "none",
@@ -140,7 +137,7 @@ export default function EditModal({ item, onCancel, onSave }: EditModalProps) {
             onClick={handleSave}
             style={{
               flex: 1,
-              padding: "8px",
+              padding: "10px",
               backgroundColor: "#10b981",
               color: "#fff",
               border: "none",
@@ -155,3 +152,14 @@ export default function EditModal({ item, onCancel, onSave }: EditModalProps) {
     </div>
   );
 }
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "10px",
+  borderRadius: "6px",
+  border: "1px solid #374151",
+  backgroundColor: "#111827",
+  color: "#f9fafb",
+  fontSize: "1rem",
+  boxSizing: "border-box",
+};

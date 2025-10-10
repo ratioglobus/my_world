@@ -5,12 +5,13 @@ type SearchBarProps = {
 
 export default function SearchBar({ query, onSearch }: SearchBarProps) {
     return (
-        <div style={{
-            maxWidth: "600px",
-            margin: "0 auto 20px",
+        <div className="card-bg" style={{
+            maxWidth: "640px",
+            margin: "0 auto 30px",
             display: "flex",
             alignItems: "center",
-            gap: "8px"
+            boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
+            gap: "8px",
         }}>
             <input
                 value={query}
@@ -20,11 +21,11 @@ export default function SearchBar({ query, onSearch }: SearchBarProps) {
                 aria-label="Поле поиска по названию"
                 style={{
                     flex: "1",
-                    width: "400px",
+                    width: "640px",
                     padding: "10px",
                     borderRadius: "6px",
                     border: "1px solid #374151",
-                    backgroundColor: "#1f2937",
+                    backgroundColor: "var(--card-bg)",
                     color: "#f9fafb",
                     fontSize: "1rem",
                     outline: "none"

@@ -1,8 +1,7 @@
-export type MediaItemProps = {
+export type PlannedItemProps = {
     id: string
     title: string
     type: string
-    rating?: number
     comment?: string
     createdAt: string
 }
