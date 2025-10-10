@@ -5,7 +5,7 @@ import ItemList from "./components/ItemList";
 import AddItemForm from "./components/AddItemForm";
 import SearchBar from "./components/SearchBar";
 import ConfirmModal from "./components/ConfirmModal";
-import { supabase } from "./supabaseClient"; // импорт клиента Supabase
+import { supabase } from "./supabaseClient";
 
 function App() {
   const [completedItems, setCompletedItems] = useState<MediaItemProps[]>([]);
@@ -16,7 +16,6 @@ function App() {
   const [mode, setMode] = useState<"completed" | "planned">("completed");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  // --- Загрузка данных с Supabase ---
   const fetchItems = async () => {
     const { data: completed, error: cError } = await supabase
       .from("completed_items")
@@ -35,7 +34,6 @@ function App() {
     fetchItems();
   }, []);
 
-  // --- CRUD функции ---
   const handleAdd = async (item: MediaItemProps) => {
     if (mode === "completed") {
       const { data, error } = await supabase
@@ -108,7 +106,6 @@ function App() {
         paddingBottom: "40px",
       }}
     >
-      {/* --- Переключатель режимов --- */}
       <div style={{ display: "flex", justifyContent: "center", margin: "24px 0 16px 0" }}>
         <div
           style={{
