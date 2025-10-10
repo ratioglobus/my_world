@@ -6,8 +6,10 @@ import AddItemForm from "./components/AddItemForm";
 import SearchBar from "./components/SearchBar";
 import ConfirmModal from "./components/ConfirmModal";
 import { supabase } from "./supabaseClient";
+import AuthForm from "./components/AuthForm";
 
 function App() {
+  const [user, setUser] = useState<any>(null);
   const [completedItems, setCompletedItems] = useState<MediaItemProps[]>([]);
   const [plannedItems, setPlannedItems] = useState<MediaItemProps[]>([]);
   const [query, setQuery] = useState("");
@@ -16,34 +18,56 @@ function App() {
   const [mode, setMode] = useState<"completed" | "planned">("completed");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
+  // Проверка сессии при загрузке
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  // Фетчим данные для текущего пользователя
   const fetchItems = async () => {
+    if (!user) return;
+
     const { data: completed, error: cError } = await supabase
       .from("completed_items")
-      .select("*");
+      .select("*")
+      .eq("user_id", user.id);
+
     if (cError) console.error(cError);
     else setCompletedItems(completed || []);
 
     const { data: planned, error: pError } = await supabase
       .from("planned_items")
-      .select("*");
+      .select("*")
+      .eq("user_id", user.id);
+
     if (pError) console.error(pError);
     else setPlannedItems(planned || []);
   };
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [user]);
 
   const handleAdd = async (item: MediaItemProps) => {
+    if (!user) return;
+
+    const dbItem = {
+      ...item,
+      user_id: user.id,
+      createdAt: item.createdAt ?? new Date().toISOString(),
+    };
+
     const { data, error } = await supabase
       .from(mode === "completed" ? "completed_items" : "planned_items")
-      .insert([{
-        title: item.title,
-        comment: item.comment,
-        type: item.type,
-        rating: item.rating,
-        createdAt: item.createdAt ?? new Date().toISOString()
-      }])
+      .insert([dbItem])
       .select();
 
     if (error) console.error(error);
@@ -53,36 +77,38 @@ function App() {
     }
   };
 
-
   const handleUpdate = async (id: string, updatedItem: MediaItemProps) => {
-    if (mode === "completed") {
-      const { data, error } = await supabase
-        .from("completed_items")
-        .update(updatedItem)
-        .eq("id", id)
-        .select();
-      if (error) console.error(error);
-      else setCompletedItems(prev => prev.map(item => (item.id === id ? data[0] : item)));
-    } else {
-      const { data, error } = await supabase
-        .from("planned_items")
-        .update(updatedItem)
-        .eq("id", id)
-        .select();
-      if (error) console.error(error);
+    if (!user) return;
+
+    const dbItem = {
+      ...updatedItem,
+      user_id: user.id,
+    };
+
+    const table = mode === "completed" ? "completed_items" : "planned_items";
+    const { data, error } = await supabase
+      .from(table)
+      .update(dbItem)
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .select();
+
+    if (error) console.error(error);
+    else {
+      if (mode === "completed") setCompletedItems(prev => prev.map(item => (item.id === id ? data[0] : item)));
       else setPlannedItems(prev => prev.map(item => (item.id === id ? data[0] : item)));
     }
     setEditingItemId(null);
   };
 
   const handleDelete = async (id: string) => {
-    if (mode === "completed") {
-      const { error } = await supabase.from("completed_items").delete().eq("id", id);
-      if (error) console.error(error);
-      else setCompletedItems(prev => prev.filter(item => item.id !== id));
-    } else {
-      const { error } = await supabase.from("planned_items").delete().eq("id", id);
-      if (error) console.error(error);
+    if (!user) return;
+
+    const table = mode === "completed" ? "completed_items" : "planned_items";
+    const { error } = await supabase.from(table).delete().eq("id", id).eq("user_id", user.id);
+    if (error) console.error(error);
+    else {
+      if (mode === "completed") setCompletedItems(prev => prev.filter(item => item.id !== id));
       else setPlannedItems(prev => prev.filter(item => item.id !== id));
     }
     setConfirmDeleteId(null);
@@ -94,6 +120,9 @@ function App() {
   const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(item =>
     item.title.toLowerCase().includes(query.toLowerCase())
   );
+
+  // Если пользователь не залогинен, показываем форму входа/регистрации
+  if (!user) return <AuthForm onLogin={() => fetchItems()} />;
 
   return (
     <div
@@ -108,6 +137,16 @@ function App() {
         paddingBottom: "40px",
       }}
     >
+      <div style={{ display: "flex", justifyContent: "center", margin: "24px 0 16px 0" }}>
+        <button
+          onClick={() => supabase.auth.signOut()}
+          style={{ position: "absolute", right: 20, top: 20 }}
+        >
+          Выйти
+        </button>
+      </div>
+
+      {/* Остальной UI, переключение режимов, AddItemForm, ItemList и SearchBar */}
       <div style={{ display: "flex", justifyContent: "center", margin: "24px 0 16px 0" }}>
         <div
           style={{
