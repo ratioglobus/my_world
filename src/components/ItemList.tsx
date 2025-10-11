@@ -1,8 +1,9 @@
 import type { MediaItemProps } from "../types/MediaItem";
 import ItemCard from "./ItemCard";
 import EditModal from "./EditModal";
-import { useMemo } from "react";
 import ViewModal from "./ViewModal";
+import { useMemo } from "react";
+import "../style/ItemList.css";
 
 type ItemListProps = {
   items: MediaItemProps[];
@@ -25,7 +26,7 @@ export default function ItemList({
   viewItemId,
   onView,
   mode,
-  setEditingItemId
+  setEditingItemId,
 }: ItemListProps) {
   const editingItem = useMemo(
     () => items.find((item) => item.id === editingItemId),
@@ -38,19 +39,12 @@ export default function ItemList({
   );
 
   if (!items || items.length === 0) {
-    return <p style={{color:"#fff"}}>Список пуст — добавь первый элемент!</p>;
+    return <p className="item-list-empty">Список пуст — добавь первый элемент!</p>;
   }
 
   return (
-    <div style={{ width: "100%", maxWidth: "1200px" }}>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-          gap: "16px",
-          width: "100%",
-        }}
-      >
+    <div className="item-list-container">
+      <div className="item-list-grid">
         {items.map((item) => (
           <ItemCard
             key={item.id}
@@ -64,11 +58,7 @@ export default function ItemList({
       </div>
 
       {viewingItem && (
-        <ViewModal
-          item={viewingItem}
-          onClose={() => onView("")}
-          mode={mode}
-        />
+        <ViewModal item={viewingItem} onClose={() => onView("")} mode={mode} />
       )}
 
       {editingItem && (

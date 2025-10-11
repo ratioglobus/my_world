@@ -1,0 +1,89 @@
+.edit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.edit-modal {
+  background-color: var(--card-bg);
+  color: #1e1b4b;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.edit-modal-title {
+  margin: 0;
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+.edit-modal-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edit-modal-input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #a49fe0;
+  background-color: #f3f0ff;
+  color: #1e1b4b;
+  font-size: 1rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.edit-modal-input:focus {
+  border-color: #7a74d8;
+  box-shadow: 0 0 4px rgba(118, 75, 162, 0.3);
+}
+
+.edit-modal-textarea {
+  resize: none;
+}
+
+.edit-modal-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.edit-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #fff;
+  transition: opacity 0.2s ease;
+}
+
+.edit-btn:hover {
+  opacity: 0.85;
+}
+
+.cancel-btn {
+  background-color: #6b7280;
+}
+
+.save-btn {
+  background-color: #10b981;
+}

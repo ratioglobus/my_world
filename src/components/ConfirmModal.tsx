@@ -1,3 +1,5 @@
+import "../style/ConfirmModal.css";
+
 type ConfirmModalProps = {
   message?: string;
   onConfirm: () => void;
@@ -10,60 +12,14 @@ export default function ConfirmModal({
   onCancel,
 }: ConfirmModalProps) {
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        backgroundColor: "rgba(0,0,0,0.6)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 1000,
-      }}
-      onClick={onCancel}
-    >
-      <div
-        style={{
-          backgroundColor: "var(--card-bg)",
-          color: "#000",
-          borderRadius: "12px",
-          padding: "24px",
-          width: "100%",
-          maxWidth: "400px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.7)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "16px",
-          position: "relative",
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <p style={{ margin: 0, textAlign: "center" }}>{message}</p>
-        <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
-          <button
-            onClick={onCancel}
-            style={{
-              padding: "8px 16px",
-              borderRadius: "6px",
-              border: "none",
-              cursor: "pointer",
-              backgroundColor: "#6b7280",
-              color: "#fff",
-            }}
-          >
+    <div className="confirm-modal-overlay" onClick={onCancel}>
+      <div className="confirm-modal" onClick={(e) => e.stopPropagation()}>
+        <p className="confirm-modal-message">{message}</p>
+        <div className="confirm-modal-buttons">
+          <button className="confirm-btn cancel-btn" onClick={onCancel}>
             Отмена
           </button>
-          <button
-            onClick={onConfirm}
-            style={{
-              padding: "8px 16px",
-              borderRadius: "6px",
-              border: "none",
-              cursor: "pointer",
-              backgroundColor: "#ef4444",
-              color: "#fff",
-            }}
-          >
+          <button className="confirm-btn delete-btn" onClick={onConfirm}>
             Удалить
           </button>
         </div>

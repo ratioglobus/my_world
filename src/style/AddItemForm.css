@@ -1,0 +1,65 @@
+.add-item-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+  background-color: #e0dfff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  max-width: 600px;
+  width: 100%;
+}
+
+.add-item-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.add-item-input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #a49fe0;
+  background-color: #f3f0ff;
+  color: #1e1b4b;
+  font-size: 1rem;
+  box-sizing: border-box;
+  outline: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.add-item-input:focus {
+  border-color: #7a74d8;
+  box-shadow: 0 0 4px rgba(118, 75, 162, 0.3);
+}
+
+.add-item-select-type {
+  flex: 0 0 130px;
+}
+
+.add-item-select-rating {
+  flex: 0 0 80px;
+}
+
+.add-item-textarea {
+  flex: 1;
+  resize: none;
+}
+
+.add-item-button {
+  padding: 10px 10px;
+  background-color: #764ba2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 120px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.add-item-button:hover {
+  background-color: #5d3d9b;
+}

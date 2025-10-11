@@ -1,0 +1,67 @@
+.searchbar-container {
+  max-width: 640px;
+  margin: 0 auto 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  overflow: hidden;
+}.searchbar-container {
+  max-width: 640px;
+  margin: 0 auto 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.searchbar-container:focus-within {
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(129, 140, 248, 0.4);
+}
+
+.searchbar-input {
+  flex: 1;
+  width: 640px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  color: #000 !important;
+  font-size: 1rem;
+  outline: none;
+  caret-color: #000;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchbar-input::placeholder {
+  color: #6b7280;
+}
+
+.searchbar-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 4px rgba(99, 102, 241, 0.4);
+}
+
+
+.searchbar-input {
+  flex: 1;
+  width: 640px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #374151;
+  background-color: var(--card-bg);
+  color: #f9fafb;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchbar-input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 4px rgba(129, 140, 248, 0.4);
+}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { MediaItemProps } from "../types/MediaItem";
+import "../style/AddItemForm.css";
 
 type AddItemFormProps = {
   onAdd: (item: Omit<MediaItemProps, "id" | "user_id">) => void;
@@ -32,35 +33,21 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "12px",
-        marginBottom: "12px",
-        backgroundColor: "#e0dfff",
-        padding: "20px",
-        borderRadius: "12px",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.25)",
-        maxWidth: "600px",
-        width: "100%",
-      }}
-    >
-      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+    <form className="add-item-form" onSubmit={handleSubmit}>
+      <div className="add-item-row">
         <input
           type="text"
           placeholder="Название"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          style={inputStyle}
+          className="add-item-input"
           required
         />
 
         <select
           value={type}
           onChange={(e) => setType(e.target.value)}
-          style={{ ...inputStyle, flex: "0 0 130px" }}
+          className="add-item-input add-item-select-type"
         >
           <option value="Фильм">Фильм</option>
           <option value="Сериал">Сериал</option>
@@ -73,7 +60,7 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
           <select
             value={rating}
             onChange={(e) => setRating(Number(e.target.value))}
-            style={{ ...inputStyle, flex: "0 0 80px" }}
+            className="add-item-input add-item-select-rating"
           >
             {[...Array(10)].map((_, i) => (
               <option key={i + 1} value={i + 1}>
@@ -84,50 +71,18 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
         )}
       </div>
 
-      <div style={{ display: "flex", gap: "10px" }}>
+      <div className="add-item-row">
         <textarea
           placeholder="Комментарий"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           rows={2}
-          style={{ ...inputStyle, flex: 1, resize: "none" }}
+          className="add-item-input add-item-textarea"
         />
-        <button
-          type="submit"
-          style={{
-            padding: "10px 10px",
-            backgroundColor: "#764ba2",
-            color: "#fff",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            minWidth: "120px",
-            fontWeight: 500,
-            transition: "background-color 0.2s ease",
-          }}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.backgroundColor = "#5d3d9b")
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.backgroundColor = "#764ba2")
-          }
-        >
+        <button type="submit" className="add-item-button">
           Добавить
         </button>
       </div>
     </form>
   );
 }
-
-const inputStyle: React.CSSProperties = {
-  flex: "1",
-  padding: "10px",
-  borderRadius: "6px",
-  border: "1px solid #a49fe0",
-  backgroundColor: "#f3f0ff",
-  color: "#1e1b4b",
-  fontSize: "1rem",
-  boxSizing: "border-box",
-  outline: "none",
-  transition: "box-shadow 0.2s ease, border-color 0.2s ease",
-};

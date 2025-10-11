@@ -1,0 +1,78 @@
+.item-card {
+  background-color: #e0dfff;
+  color: #1e1b4b;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.item-card-title {
+  margin: 0 0 8px 0;
+  font-size: 1.2rem;
+}
+
+.item-card-type {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b5dd6;
+}
+
+.item-card-date {
+  margin: 4px 0;
+  font-size: 0.8rem;
+  color: #4b3f91;
+}
+
+.item-card-comment {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #3b2e70;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+}
+
+.item-card-buttons {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.item-btn {
+  flex: 1;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.edit-btn {
+  background-color: #764ba2;
+}
+
+.edit-btn:hover {
+  background-color: #5d3d9b;
+}
+
+.delete-btn {
+  background-color: #ef4444;
+}
+
+.delete-btn:hover {
+  background-color: #dc2626;
+}
