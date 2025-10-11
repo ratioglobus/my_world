@@ -18,7 +18,6 @@ function App() {
   const [mode, setMode] = useState<"completed" | "planned">("completed");
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-  // Проверка сессии при загрузке
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -31,7 +30,6 @@ function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  // Фетчим данные для текущего пользователя
   const fetchItems = async () => {
     if (!user) return;
 
@@ -121,7 +119,6 @@ function App() {
     item.title.toLowerCase().includes(query.toLowerCase())
   );
 
-  // Если пользователь не залогинен, показываем форму входа/регистрации
   if (!user) return <AuthForm onLogin={() => fetchItems()} />;
 
   return (
@@ -146,7 +143,6 @@ function App() {
         </button>
       </div>
 
-      {/* Остальной UI, переключение режимов, AddItemForm, ItemList и SearchBar */}
       <div style={{ display: "flex", justifyContent: "center", margin: "24px 0 16px 0" }}>
         <div
           style={{
@@ -179,7 +175,7 @@ function App() {
               flex: 1,
               background: "transparent",
               border: "none",
-              color: mode === "completed" ? "#000" : "#fff",
+              color: mode === "completed" ? "#1e1b4b" : "#000",
               fontWeight: 500,
               borderRadius: "9999px",
               cursor: "pointer",
@@ -198,7 +194,7 @@ function App() {
               flex: 1,
               background: "transparent",
               border: "none",
-              color: mode === "planned" ? "#000" : "#fff",
+              color: mode === "planned" ? "#1e1b4b" : "#000",
               fontWeight: 500,
               borderRadius: "9999px",
               cursor: "pointer",

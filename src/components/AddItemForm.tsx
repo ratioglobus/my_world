@@ -40,10 +40,10 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
         flexDirection: "column",
         gap: "12px",
         marginBottom: "12px",
-        backgroundColor: "var(--card-bg)",
+        backgroundColor: "#e0dfff", // светлый фиолетовый фон формы
         padding: "20px",
         borderRadius: "12px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
+        boxShadow: "0 2px 12px rgba(0,0,0,0.25)",
         maxWidth: "600px",
         width: "100%",
       }}
@@ -91,18 +91,14 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           rows={2}
-          style={{
-            ...inputStyle,
-            resize: "none",
-            flex: 1,
-          }}
+          style={{ ...inputStyle, flex: 1, resize: "none" }}
         />
         <button
           type="submit"
           style={{
             padding: "10px 10px",
-            backgroundColor: "#fff",
-            color: "#000",
+            backgroundColor: "#764ba2",
+            color: "#fff",
             border: "none",
             borderRadius: "6px",
             cursor: "pointer",
@@ -110,6 +106,12 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
             fontWeight: 500,
             transition: "background-color 0.2s ease",
           }}
+          onMouseOver={(e) =>
+            (e.currentTarget.style.backgroundColor = "#5d3d9b")
+          }
+          onMouseOut={(e) =>
+            (e.currentTarget.style.backgroundColor = "#764ba2")
+          }
         >
           Добавить
         </button>
@@ -122,9 +124,13 @@ const inputStyle: React.CSSProperties = {
   flex: "1",
   padding: "10px",
   borderRadius: "6px",
-  border: "1px solid #374151",
-  backgroundColor: "#111827",
-  color: "#f9fafb",
+  border: "1px solid #a49fe0",
+  backgroundColor: "#f3f0ff",
+  color: "#1e1b4b",
   fontSize: "1rem",
   boxSizing: "border-box",
+  outline: "none", // убираем стандартное выделение
+  transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+  // эффект при фокусе
+  // в React inline нужно через onFocus/onBlur, пример ниже
 };
