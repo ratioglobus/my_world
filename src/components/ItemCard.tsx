@@ -12,7 +12,7 @@ export default function ItemCard({ item, onDelete, onEdit, onView, mode }: ItemC
   return (
     <div
       style={{
-        backgroundColor: "#f3f0ff",
+        backgroundColor: "#e0dfff",
         color: "#1e1b4b",
         borderRadius: "12px",
         padding: "16px",
