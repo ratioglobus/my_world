@@ -54,7 +54,7 @@ function App() {
     fetchItems();
   }, [user]);
 
-  const handleAdd = async (item: MediaItemProps) => {
+  const handleAdd = async (item: Omit<MediaItemProps, "id" | "user_id">) => {
     if (!user) return;
 
     const dbItem = {

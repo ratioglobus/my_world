@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { MediaItemProps } from "../types/MediaItem";
 
 type AddItemFormProps = {
-  onAdd: (item: MediaItemProps) => void;
+  onAdd: (item: Omit<MediaItemProps, "id" | "user_id">) => void;
   mode: "completed" | "planned";
 };
 
@@ -16,8 +16,7 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
     e.preventDefault();
     if (!title) return;
 
-    const newItem: MediaItemProps = {
-      id: Date.now().toString(),
+    const newItem: Omit<MediaItemProps, "id" | "user_id"> = {
       title,
       type,
       comment: comment || undefined,
@@ -40,7 +39,7 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
         flexDirection: "column",
         gap: "12px",
         marginBottom: "12px",
-        backgroundColor: "#e0dfff", // светлый фиолетовый фон формы
+        backgroundColor: "#e0dfff",
         padding: "20px",
         borderRadius: "12px",
         boxShadow: "0 2px 12px rgba(0,0,0,0.25)",
@@ -129,8 +128,6 @@ const inputStyle: React.CSSProperties = {
   color: "#1e1b4b",
   fontSize: "1rem",
   boxSizing: "border-box",
-  outline: "none", // убираем стандартное выделение
+  outline: "none",
   transition: "box-shadow 0.2s ease, border-color 0.2s ease",
-  // эффект при фокусе
-  // в React inline нужно через onFocus/onBlur, пример ниже
 };
