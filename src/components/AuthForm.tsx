@@ -64,6 +64,8 @@ export default function AuthForm({ onLogin }: { onLogin: () => void }) {
                         border: '1px solid #ccc',
                         outline: 'none',
                         fontSize: '16px',
+                        color: '#000',
+                        backgroundColor: "#fff"
                     }}
                 />
                 <input
@@ -79,8 +81,11 @@ export default function AuthForm({ onLogin }: { onLogin: () => void }) {
                         border: '1px solid #ccc',
                         outline: 'none',
                         fontSize: '16px',
+                        color: '#000',
+                        backgroundColor: "#fff"
                     }}
                 />
+
                 <button
                     type="submit"
                     style={{

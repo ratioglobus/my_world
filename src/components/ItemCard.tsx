@@ -76,7 +76,7 @@ export default function ItemCard({ item, onDelete, onEdit, onView, mode }: ItemC
           style={{
             flex: 1,
             padding: "6px",
-            backgroundColor: "#667eea",
+            backgroundColor: "#764ba2",
             color: "#fff",
             border: "none",
             borderRadius: "6px",
@@ -84,8 +84,8 @@ export default function ItemCard({ item, onDelete, onEdit, onView, mode }: ItemC
             fontSize: "12px",
             transition: "background-color 0.2s ease",
           }}
-          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#5665d4")}
-          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#667eea")}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#5d3d9b")}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#764ba2")}
         >
           Редактировать
         </button>
