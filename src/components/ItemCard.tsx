@@ -8,32 +8,43 @@ type ItemCardProps = {
   mode: "completed" | "planned";
 };
 
-export default function ItemCard({ item, onDelete, onEdit, onView, mode  }: ItemCardProps) {
+export default function ItemCard({ item, onDelete, onEdit, onView, mode }: ItemCardProps) {
   return (
     <div
       style={{
-        backgroundColor: "var(--card-bg)",
-        color: "#f9fafb",
+        backgroundColor: "#f3f0ff",
+        color: "#1e1b4b",
         borderRadius: "12px",
         padding: "16px",
-        boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
         width: "100%",
-        height: "250px",
+        minHeight: "250px",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        alignItems: "center",
         boxSizing: "border-box",
         overflow: "hidden",
+        transition: "transform 0.2s ease, box-shadow 0.2s ease",
+        cursor: "pointer",
       }}
       onClick={() => onView(item.id)}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-3px)";
+        e.currentTarget.style.boxShadow = "0 6px 18px rgba(0,0,0,0.25)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+      }}
     >
       <div>
         <h3 style={{ margin: "0 0 8px 0", fontSize: "1.2rem" }}>{item.title}</h3>
-        <p style={{ margin: 0, fontSize: "0.9rem", color: "#d1d5db" }}>
+        <p style={{ margin: 0, fontSize: "0.9rem", color: "#6b5dd6" }}>
           {item.type}
           {mode === "completed" && <> · рейтинг - <strong>{item.rating}/10</strong></>}
         </p>
-        <p style={{ margin: "4px 0", fontSize: "0.8rem", color: "#9ca3af" }}>
+        <p style={{ margin: "4px 0", fontSize: "0.8rem", color: "#4b3f91" }}>
           Добавлено: {new Date(item.createdAt).toLocaleDateString("ru-RU")}
         </p>
         {item.comment && (
@@ -41,7 +52,7 @@ export default function ItemCard({ item, onDelete, onEdit, onView, mode  }: Item
             style={{
               marginTop: "8px",
               fontSize: "0.85rem",
-              color: "#e5e7eb",
+              color: "#3b2e70",
               overflow: "hidden",
               textOverflow: "ellipsis",
               display: "-webkit-box",
@@ -64,14 +75,17 @@ export default function ItemCard({ item, onDelete, onEdit, onView, mode  }: Item
           }}
           style={{
             flex: 1,
-            padding: "5px",
-            backgroundColor: "#3b82f6",
+            padding: "6px",
+            backgroundColor: "#667eea",
             color: "#fff",
             border: "none",
             borderRadius: "6px",
             cursor: "pointer",
-            fontSize: "12px"
+            fontSize: "12px",
+            transition: "background-color 0.2s ease",
           }}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#5665d4")}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#667eea")}
         >
           Редактировать
         </button>
@@ -82,14 +96,17 @@ export default function ItemCard({ item, onDelete, onEdit, onView, mode  }: Item
           }}
           style={{
             flex: 1,
-            padding: "5px",
+            padding: "6px",
             backgroundColor: "#ef4444",
             color: "#fff",
             border: "none",
             borderRadius: "6px",
             cursor: "pointer",
-            fontSize: "12px"
+            fontSize: "12px",
+            transition: "background-color 0.2s ease",
           }}
+          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#dc2626")}
+          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#ef4444")}
         >
           Удалить
         </button>

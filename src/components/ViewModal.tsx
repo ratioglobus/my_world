@@ -15,7 +15,7 @@ export default function ViewModal({ item, onClose, mode }: ViewModalProps) {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0,0,0,0.6)",
+        backgroundColor: "rgba(0,0,0,0.5)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -27,14 +27,14 @@ export default function ViewModal({ item, onClose, mode }: ViewModalProps) {
       <div
         style={{
           backgroundColor: "var(--card-bg)",
-          color: "#f9fafb",
+          color: "#1e1b4b",
           borderRadius: "12px",
           padding: "24px",
           width: "100%",
           maxWidth: "500px",
           maxHeight: "80vh",
           overflowY: "auto",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.7)",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
           display: "flex",
           flexDirection: "column",
           gap: "12px",
@@ -58,39 +58,32 @@ export default function ViewModal({ item, onClose, mode }: ViewModalProps) {
           ✖
         </button>
 
-        <h2 style={{ margin: 0 }}>{item.title}</h2>
+        <h2 style={{ margin: 0, textAlign: "center" }}>{item.title}</h2>
 
-        <p style={{ margin: "4px 0", color: "#d1d5db" }}>
-          <strong>Тип:</strong>{" "}
-          {item.type === "Фильм"
-            ? "Фильм"
-            : item.type === "Сериал"
-            ? "Сериал"
-            : item.type === "Книга"
-            ? "Книга"
-            : item.type}
+        <p style={{ margin: "4px 0", color: "#1e1b4b" }}>
+          <strong>Тип:</strong> {item.type}
         </p>
 
         {mode === "completed" && (
-          <p style={{ margin: "4px 0", color: "#d1d5db" }}>
+          <p style={{ margin: "4px 0", color: "#1e1b4b" }}>
             <strong>Рейтинг:</strong> {item.rating}/10
           </p>
         )}
 
         {item.createdAt && (
-          <p style={{ margin: "4px 0", color: "#9ca3af", fontSize: "0.9rem" }}>
-            <strong>Добавлено:</strong>{" "}
-            {new Date(item.createdAt).toLocaleDateString("ru-RU")}
+          <p style={{ margin: "4px 0", color: "#6b7280", fontSize: "0.9rem" }}>
+            <strong>Добавлено:</strong> {new Date(item.createdAt).toLocaleDateString("ru-RU")}
           </p>
         )}
 
         {item.comment && (
           <div
             style={{
-              backgroundColor: "#111827",
+              backgroundColor: "#f3f0ff",
               padding: "12px",
               borderRadius: "8px",
-              border: "1px solid #374151",
+              border: "1px solid #a49fe0",
+              color: "#1e1b4b",
               whiteSpace: "pre-wrap",
               lineHeight: 1.5,
               overflowY: "auto",

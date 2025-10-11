@@ -127,13 +127,14 @@ function App() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        width: "100%",
         minHeight: "100vh",
+        width: "100vw",
         boxSizing: "border-box",
         color: "#1e1b4b",
         paddingBottom: "40px",
         background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       }}
+
     >
       <div style={{ display: "flex", justifyContent: "center", margin: "24px 0 16px 0" }}>
         <button
@@ -211,12 +212,12 @@ function App() {
         </div>
       </div>
 
-      <h1 style={{ marginBottom: "18px", fontSize: "24px" }}>
+      <h1 style={{ marginBottom: "18px", fontSize: "24px", color:"#fff" }}>
         {mode === "completed" ? "Добавить исследование" : "Запланировать исследование"}
       </h1>
       <AddItemForm onAdd={handleAdd} mode={mode} />
 
-      <h1 style={{ textAlign: "center", margin: "20px 0 10px 0", fontSize: "24px" }}>
+      <h1 style={{ textAlign: "center", margin: "20px 0 10px 0", fontSize: "24px", color:"#fff" }}>
         {mode === "completed" ? "Готовые исследования" : "Запланированное"}
       </h1>
       <SearchBar query={query} onSearch={setQuery} />
@@ -229,6 +230,7 @@ function App() {
         onView={handleView}
         viewItemId={viewItemId}
         mode={mode}
+        setEditingItemId={setEditingItemId}
       />
       {confirmDeleteId && (
         <ConfirmModal

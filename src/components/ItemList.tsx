@@ -13,6 +13,7 @@ type ItemListProps = {
   viewItemId: string | null;
   onView: (id: string) => void;
   mode: "completed" | "planned";
+  setEditingItemId: (id: string | null) => void;
 };
 
 export default function ItemList({
@@ -24,6 +25,7 @@ export default function ItemList({
   viewItemId,
   onView,
   mode,
+  setEditingItemId
 }: ItemListProps) {
   const editingItem = useMemo(
     () => items.find((item) => item.id === editingItemId),
@@ -36,7 +38,7 @@ export default function ItemList({
   );
 
   if (!items || items.length === 0) {
-    return <p>Список пуст — добавь первый элемент!</p>;
+    return <p style={{color:"#fff"}}>Список пуст — добавь первый элемент!</p>;
   }
 
   return (
@@ -77,6 +79,7 @@ export default function ItemList({
             onUpdate(editingItem.id, updatedItem)
           }
           mode={mode}
+          onClose={() => setEditingItemId(null)}
         />
       )}
     </div>

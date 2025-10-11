@@ -35,6 +35,7 @@ export default function ConfirmModal({
           flexDirection: "column",
           gap: "16px",
           position: "relative",
+          color: "#000"
         }}
         onClick={(e) => e.stopPropagation()}
       >
