@@ -25,7 +25,7 @@ export default function ConfirmModal({
       <div
         style={{
           backgroundColor: "var(--card-bg)",
-          color: "#f9fafb",
+          color: "#000",
           borderRadius: "12px",
           padding: "24px",
           width: "100%",
@@ -35,7 +35,6 @@ export default function ConfirmModal({
           flexDirection: "column",
           gap: "16px",
           position: "relative",
-          color: "#000"
         }}
         onClick={(e) => e.stopPropagation()}
       >
