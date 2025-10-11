@@ -130,8 +130,9 @@ function App() {
         width: "100%",
         minHeight: "100vh",
         boxSizing: "border-box",
-        color: "#f9fafb",
+        color: "#1e1b4b",
         paddingBottom: "40px",
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       }}
     >
       <div style={{ display: "flex", justifyContent: "center", margin: "24px 0 16px 0" }}>
@@ -148,7 +149,7 @@ function App() {
           style={{
             position: "relative",
             display: "flex",
-            backgroundColor: "var(--card-bg)",
+            backgroundColor: "#e0dfff",
             borderRadius: "9999px",
             padding: "6px",
             width: "300px",
