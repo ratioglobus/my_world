@@ -57,3 +57,27 @@
 .delete-btn:hover {
   background-color: #dc2626;
 }
+
+@media (max-width: 480px) {
+  .confirm-modal {
+    padding: 16px;
+    border-radius: 10px;
+    max-width: 300px;
+    gap: 12px;
+  }
+
+  .confirm-modal-message {
+    font-size: 0.9rem;
+  }
+
+  .confirm-modal-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .confirm-btn {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
+

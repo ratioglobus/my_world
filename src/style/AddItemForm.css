@@ -63,3 +63,38 @@
 .add-item-button:hover {
   background-color: #5d3d9b;
 }
+
+@media (max-width: 480px) {
+  .add-item-form {
+    padding: 14px;
+    gap: 10px;
+    border-radius: 10px;
+    max-width: 85%;
+    margin: 0 auto 16px;
+  }
+
+  .add-item-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .add-item-input,
+  .add-item-textarea {
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 8px;
+  }
+
+  .add-item-select-type,
+  .add-item-select-rating {
+    flex: 1;
+    width: 100%;
+  }
+
+  .add-item-button {
+    width: 100%;
+    min-width: unset;
+    padding: 12px;
+    font-size: 1rem;
+  }
+}
