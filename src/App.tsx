@@ -15,7 +15,9 @@ function App() {
   const [query, setQuery] = useState("");
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [viewItemId, setViewItemId] = useState<string | null>(null);
-  const [mode, setMode] = useState<"completed" | "planned">("completed");
+  const [mode, setMode] = useState<"completed" | "planned">(
+    () => (localStorage.getItem("mode") as "completed" | "planned") || "completed"
+  );
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [burgerOpen, setBurgerOpen] = useState(false);
 
@@ -31,12 +33,23 @@ function App() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    setBurgerOpen(false);
+  }, []);
+
+  const handleModeChange = (newMode: "completed" | "planned") => {
+    setMode(newMode);
+    localStorage.setItem("mode", newMode);
+  };
+
   const fetchItems = async () => {
     if (!user) return;
+
     const { data: completed, error: cError } = await supabase
       .from("completed_items")
       .select("*")
-      .eq("user_id", user.id);
+      .eq("user_id", user.id)
+      .order("createdAt", { ascending: false });
 
     if (cError) console.error(cError);
     else setCompletedItems(completed || []);
@@ -44,7 +57,8 @@ function App() {
     const { data: planned, error: pError } = await supabase
       .from("planned_items")
       .select("*")
-      .eq("user_id", user.id);
+      .eq("user_id", user.id)
+      .order("createdAt", { ascending: false });
 
     if (pError) console.error(pError);
     else setPlannedItems(planned || []);
@@ -113,31 +127,25 @@ function App() {
   return (
     <div className="app-container">
       <div className="top-bar">
-        <button className="burger-btn" onClick={() => setBurgerOpen(!burgerOpen)}>
-          ☰
-        </button>
+        <button className="burger-btn" onClick={() => setBurgerOpen(prev => !prev)}>☰</button>
         {burgerOpen && (
-          <button className="signout-btn" onClick={() => supabase.auth.signOut()}>
-            Выйти
-          </button>
+          <button className="signout-btn" onClick={() => supabase.auth.signOut()}>Выйти</button>
         )}
-        <button className="logout-button-desktop" onClick={() => supabase.auth.signOut()}>
-          Выйти
-        </button>
+        <button className="logout-button-desktop" onClick={() => supabase.auth.signOut()}>Выйти</button>
       </div>
 
       <div className="mode-toggle">
         <div className={`toggle-slider ${mode}`} />
         <button
           className={`toggle-btn ${mode === "completed" ? "active" : ""}`}
-          onClick={() => setMode("completed")}
+          onClick={() => handleModeChange("completed")}
           onMouseDown={(e) => e.preventDefault()}
         >
           Готовые
         </button>
         <button
           className={`toggle-btn ${mode === "planned" ? "active" : ""}`}
-          onClick={() => setMode("planned")}
+          onClick={() => handleModeChange("planned")}
           onMouseDown={(e) => e.preventDefault()}
         >
           Планируемые
