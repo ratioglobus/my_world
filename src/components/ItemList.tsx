@@ -15,6 +15,7 @@ type ItemListProps = {
   onView: (id: string) => void;
   mode: "completed" | "planned";
   setEditingItemId: (id: string | null) => void;
+  onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>;
 };
 
 export default function ItemList({
@@ -27,6 +28,7 @@ export default function ItemList({
   onView,
   mode,
   setEditingItemId,
+  onMarkAsCompleted,
 }: ItemListProps) {
   const editingItem = useMemo(
     () => items.find((item) => item.id === editingItemId),
@@ -53,6 +55,7 @@ export default function ItemList({
             onEdit={onEdit}
             onView={onView}
             mode={mode}
+            onMarkAsCompleted={onMarkAsCompleted}
           />
         ))}
       </div>

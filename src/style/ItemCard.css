@@ -50,6 +50,7 @@
   display: flex;
   gap: 8px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .item-btn {
@@ -77,6 +78,14 @@
 
 .delete-btn:hover {
   background-color: #dc2626;
+}
+
+.review-btn {
+  background-color: #10b981;
+}
+
+.review-btn:hover {
+  background-color: #059669;
 }
 
 @media (max-width: 480px) {
@@ -109,18 +118,19 @@
   }
 
   .item-card-buttons {
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 6px;
-    margin-top: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
     width: 100%;
   }
 
   .item-btn {
-    flex: none;
     width: 48%;
     font-size: 0.8rem;
     padding: 6px 0;
     border-radius: 6px;
+    flex: 0 1 30%;
+    min-width: 90px;
   }
 }

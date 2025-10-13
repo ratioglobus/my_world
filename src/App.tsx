@@ -5,6 +5,7 @@ import ItemList from "./components/ItemList";
 import AddItemForm from "./components/AddItemForm";
 import SearchBar from "./components/SearchBar";
 import ConfirmModal from "./components/ConfirmModal";
+import RatingModal from "./components/RatingModal";
 import { supabase } from "./supabaseClient";
 import AuthForm from "./components/AuthForm";
 
@@ -15,6 +16,7 @@ function App() {
   const [query, setQuery] = useState("");
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [viewItemId, setViewItemId] = useState<string | null>(null);
+  const [ratingItem, setRatingItem] = useState<MediaItemProps | null>(null);
   const [mode, setMode] = useState<"completed" | "planned">(
     () => (localStorage.getItem("mode") as "completed" | "planned") || "completed"
   );
@@ -50,7 +52,6 @@ function App() {
       .select("*")
       .eq("user_id", user.id)
       .order("createdAt", { ascending: false });
-
     if (cError) console.error(cError);
     else setCompletedItems(completed || []);
 
@@ -59,7 +60,6 @@ function App() {
       .select("*")
       .eq("user_id", user.id)
       .order("createdAt", { ascending: false });
-
     if (pError) console.error(pError);
     else setPlannedItems(planned || []);
   };
@@ -75,7 +75,6 @@ function App() {
       .from(mode === "completed" ? "completed_items" : "planned_items")
       .insert([dbItem])
       .select();
-
     if (error) console.error(error);
     else {
       if (mode === "completed") setCompletedItems(prev => [data[0], ...prev]);
@@ -94,7 +93,6 @@ function App() {
       .eq("id", id)
       .eq("user_id", user.id)
       .select();
-
     if (error) console.error(error);
     else {
       if (mode === "completed") setCompletedItems(prev => prev.map(item => (item.id === id ? data[0] : item)));
@@ -118,6 +116,57 @@ function App() {
   const handleView = (id: string) => setViewItemId(id);
   const handleEdit = (id: string) => setEditingItemId(id);
 
+  const handleMarkAsCompleted = async (item: MediaItemProps, rating: number): Promise<void> => {
+    if (!user) return;
+
+    const updatedItem = {
+      ...item,
+      rating,
+      completed_at: new Date().toISOString(), // snake_case как в базе
+      user_id: user.id,
+    };
+
+    // Удаляем из планируемых
+    await supabase
+      .from("planned_items")
+      .delete()
+      .eq("id", item.id)
+      .eq("user_id", user.id);
+    setPlannedItems(prev => prev.filter(i => i.id !== item.id));
+
+    // Добавляем в готовые
+    const { data, error } = await supabase
+      .from("completed_items")
+      .insert([updatedItem])
+      .select();
+
+    if (error) console.error(error);
+    else setCompletedItems(prev => [data[0], ...prev]);
+
+    // **Сброс viewItemId**, чтобы модалка деталей не открывалась
+    setViewItemId(null);
+  };
+
+
+
+  const handleRatingSave = async (item: MediaItemProps, rating: number) => {
+    if (!user) return;
+
+    const updatedItem = { ...item, user_id: user.id, rating, completed_at: new Date().toISOString() };
+
+    await supabase.from("planned_items").delete().eq("id", item.id).eq("user_id", user.id);
+    setPlannedItems(prev => prev.filter(i => i.id !== item.id));
+
+    const { data, error } = await supabase
+      .from("completed_items")
+      .insert([updatedItem])
+      .select();
+    if (error) console.error(error);
+    else setCompletedItems(prev => [data[0], ...prev]);
+
+    setRatingItem(null);
+  };
+
   const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(item =>
     item.title.toLowerCase().includes(query.toLowerCase())
   );
@@ -128,52 +177,42 @@ function App() {
     <div className="app-container">
       <div className="top-bar">
         <button className="burger-btn" onClick={() => setBurgerOpen(prev => !prev)}>☰</button>
-        {burgerOpen && (
-          <button className="signout-btn" onClick={() => supabase.auth.signOut()}>Выйти</button>
-        )}
+        {burgerOpen && <button className="signout-btn" onClick={() => supabase.auth.signOut()}>Выйти</button>}
         <button className="logout-button-desktop" onClick={() => supabase.auth.signOut()}>Выйти</button>
       </div>
 
       <div className="mode-toggle">
         <div className={`toggle-slider ${mode}`} />
-        <button
-          className={`toggle-btn ${mode === "completed" ? "active" : ""}`}
-          onClick={() => handleModeChange("completed")}
-          onMouseDown={(e) => e.preventDefault()}
-        >
-          Готовые
-        </button>
-        <button
-          className={`toggle-btn ${mode === "planned" ? "active" : ""}`}
-          onClick={() => handleModeChange("planned")}
-          onMouseDown={(e) => e.preventDefault()}
-        >
-          Планируемые
-        </button>
+        <button className={`toggle-btn ${mode === "completed" ? "active" : ""}`} onClick={() => handleModeChange("completed")} onMouseDown={(e) => e.preventDefault()}>Готовые</button>
+        <button className={`toggle-btn ${mode === "planned" ? "active" : ""}`} onClick={() => handleModeChange("planned")} onMouseDown={(e) => e.preventDefault()}>Планируемые</button>
       </div>
 
-      <h1 className="section-title">
-        {mode === "completed" ? "Добавить исследование" : "Запланировать исследование"}
-      </h1>
-
+      <h1 className="section-title">{mode === "completed" ? "Добавить исследование" : "Запланировать исследование"}</h1>
       <AddItemForm onAdd={handleAdd} mode={mode} />
 
-      <h1 className="section-title">
-        {mode === "completed" ? "Готовые исследования" : "Запланированное"}
-      </h1>
-
+      <h1 className="section-title">{mode === "completed" ? "Готовые исследования" : "Запланированное"}</h1>
       <SearchBar query={query} onSearch={setQuery} />
+
       <ItemList
         items={filteredItems}
-        onDelete={(id: string) => setConfirmDeleteId(id)}
+        editingItemId={editingItemId}
+        onDelete={setConfirmDeleteId}
         onEdit={handleEdit}
         onUpdate={handleUpdate}
-        editingItemId={editingItemId}
         onView={handleView}
         viewItemId={viewItemId}
         mode={mode}
         setEditingItemId={setEditingItemId}
+        onMarkAsCompleted={handleMarkAsCompleted}
       />
+
+      {ratingItem && (
+        <RatingModal
+          item={ratingItem}
+          onSubmit={handleRatingSave}
+          onClose={() => setRatingItem(null)}
+        />
+      )}
 
       {confirmDeleteId && (
         <ConfirmModal
