@@ -79,3 +79,12 @@
   background-color: #f0f0f0;
   color: #333;
 }
+
+@media (max-width: 480px) {
+  .rating-modal {
+    width: 85%;
+    max-width: 300px;
+    padding: 16px;
+    border-radius: 10px;
+  }
+}

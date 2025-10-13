@@ -56,7 +56,7 @@ export default function ItemCard({
               setShowRatingModal(true);
             }}
           >
-            Готово
+            Оценить
           </button>
         )}
 
