@@ -23,7 +23,6 @@ export default function ItemCard({
   const [showRatingModal, setShowRatingModal] = useState(false);
 
   const handleCardClick = () => {
-    // не открываем модалку деталей, если рейтинг открыт
     if (!showRatingModal) onView(item.id);
   };
 

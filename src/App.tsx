@@ -8,7 +8,7 @@ import ConfirmModal from "./components/ConfirmModal";
 import RatingModal from "./components/RatingModal";
 import { supabase } from "./supabaseClient";
 import AuthForm from "./components/AuthForm";
-import SortBar from "./components/SortBar";
+import FilterByType from "./components/FilterByType";
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -23,6 +23,7 @@ function App() {
   );
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [burgerOpen, setBurgerOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState("Все элементы");
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -44,6 +45,10 @@ function App() {
     setMode(newMode);
     localStorage.setItem("mode", newMode);
   };
+
+  const onTypeChange = (type: string) => {
+    setSelectedType(type)
+  }
 
   const fetchItems = async () => {
     if (!user) return;
@@ -145,8 +150,6 @@ function App() {
     setViewItemId(null);
   };
 
-
-
   const handleRatingSave = async (item: MediaItemProps, rating: number) => {
     if (!user) return;
 
@@ -166,7 +169,7 @@ function App() {
   };
 
   const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(item =>
-    item.title.toLowerCase().includes(query.toLowerCase())
+    item.title.toLowerCase().includes(query.toLowerCase()) && (selectedType === "Все элементы" || item.type === selectedType)
   );
 
   if (!user) return <AuthForm onLogin={() => fetchItems()} />;
@@ -190,7 +193,7 @@ function App() {
 
       <h1 className="section-title">{mode === "completed" ? "Готовые исследования" : "Запланированное"}</h1>
       <SearchBar query={query} onSearch={setQuery} />
-      <SortBar />
+      <FilterByType selectedType={selectedType} onTypeChange={onTypeChange}/>
 
       <ItemList
         items={filteredItems}
