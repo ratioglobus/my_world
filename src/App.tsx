@@ -8,6 +8,7 @@ import ConfirmModal from "./components/ConfirmModal";
 import RatingModal from "./components/RatingModal";
 import { supabase } from "./supabaseClient";
 import AuthForm from "./components/AuthForm";
+import SortBar from "./components/SortBar";
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -122,11 +123,10 @@ function App() {
     const updatedItem = {
       ...item,
       rating,
-      completed_at: new Date().toISOString(), // snake_case как в базе
+      completed_at: new Date().toISOString(),
       user_id: user.id,
     };
 
-    // Удаляем из планируемых
     await supabase
       .from("planned_items")
       .delete()
@@ -134,7 +134,6 @@ function App() {
       .eq("user_id", user.id);
     setPlannedItems(prev => prev.filter(i => i.id !== item.id));
 
-    // Добавляем в готовые
     const { data, error } = await supabase
       .from("completed_items")
       .insert([updatedItem])
@@ -143,7 +142,6 @@ function App() {
     if (error) console.error(error);
     else setCompletedItems(prev => [data[0], ...prev]);
 
-    // **Сброс viewItemId**, чтобы модалка деталей не открывалась
     setViewItemId(null);
   };
 
@@ -192,6 +190,7 @@ function App() {
 
       <h1 className="section-title">{mode === "completed" ? "Готовые исследования" : "Запланированное"}</h1>
       <SearchBar query={query} onSearch={setQuery} />
+      <SortBar />
 
       <ItemList
         items={filteredItems}
