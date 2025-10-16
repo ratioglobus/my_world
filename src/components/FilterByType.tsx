@@ -13,6 +13,7 @@ export default function FilterByType({ selectedType, onTypeChange, types, classN
         { label: "Сериалы", value: "Сериал" },
         { label: "Книги", value: "Книга" },
         { label: "Аниме", value: "Аниме" },
+        { label: "Игра", value: "Игра" },
         { label: "YouTube", value: "YouTube" },
     ];
 

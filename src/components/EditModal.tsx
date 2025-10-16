@@ -56,6 +56,7 @@ export default function EditModal({
             <option value="Сериал">Сериал</option>
             <option value="Книга">Книга</option>
             <option value="Аниме">Аниме</option>
+            <option value="Игра">Игра</option>
             <option value="YouTube">YouTube</option>
           </select>
 
