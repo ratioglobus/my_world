@@ -4,4 +4,5 @@ export type PlannedItemProps = {
     type: string
     comment?: string
     createdAt: string
+    priority: string
 }

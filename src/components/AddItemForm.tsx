@@ -12,6 +12,7 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
   const [type, setType] = useState("Фильм");
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+  const [priority, setPriority] = useState("Среднее");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +21,7 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
     const newItem: Omit<MediaItemProps, "id" | "user_id"> = {
       title,
       type,
+      priority,
       comment: comment || undefined,
       createdAt: new Date().toISOString(),
       ...(mode === "completed" && { rating: Number(rating) }),
@@ -27,6 +29,7 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
 
     onAdd(newItem);
     setTitle("");
+    setPriority("Среднее")
     setType("Фильм");
     setRating(5);
     setComment("");
@@ -55,6 +58,16 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
           <option value="Аниме">Аниме</option>
           <option value="Игра">Игра</option>
           <option value="YouTube">YouTube</option>
+        </select>
+
+        <select
+          value={priority}
+          onChange={(e) => setPriority(e.target.value)}
+          className="add-item-input add-item-select-type"
+        >
+          <option value="Среднее">Среднее</option>
+          <option value="Важное">Важное</option>
+          <option value="Критичное">Критичное</option>
         </select>
 
         {mode === "completed" && (

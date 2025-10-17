@@ -28,13 +28,20 @@ export default function ItemCard({
 
   return (
     <div className="item-card" onClick={handleCardClick}>
-      <div>
+      <div
+        className={`priority-bar ${item.priority === "Критичное"
+          ? "priority-critical"
+          : item.priority === "Важное"
+            ? "priority-important"
+            : "priority-normal"
+          }`}
+      />
+      <div className="item-card-content">
+
         <h3 className="item-card-title">{item.title}</h3>
         <p className="item-card-type">
           {item.type}
-          {mode === "completed" && (
-            <> · рейтинг – <strong>{item.rating}/10</strong></>
-          )}
+          {mode === "completed" && <> · рейтинг – <strong>{item.rating}/10</strong></>}
         </p>
         <p className="item-card-date">
           Добавлено: {new Date(item.createdAt).toLocaleDateString("ru-RU")}
@@ -45,6 +52,8 @@ export default function ItemCard({
           </p>
         )}
       </div>
+
+
 
       <div className="item-card-buttons">
         {mode === "planned" && onMarkAsCompleted && (

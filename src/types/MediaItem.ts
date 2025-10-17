@@ -5,4 +5,5 @@ export type MediaItemProps = {
     rating?: number
     comment?: string
     createdAt: string
+    priority: string
 }

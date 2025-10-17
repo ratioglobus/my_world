@@ -1,4 +1,4 @@
-import "../style/FilterByType.css";
+import "../style/FilterBy.css";
 
 type FilterByTypeProps = {
     selectedType: string;
@@ -13,7 +13,7 @@ export default function FilterByType({ selectedType, onTypeChange, types, classN
         { label: "Сериалы", value: "Сериал" },
         { label: "Книги", value: "Книга" },
         { label: "Аниме", value: "Аниме" },
-        { label: "Игра", value: "Игра" },
+        { label: "Игры", value: "Игра" },
         { label: "YouTube", value: "YouTube" },
     ];
 
@@ -26,7 +26,7 @@ export default function FilterByType({ selectedType, onTypeChange, types, classN
                     onChange={(e) => onTypeChange(e.target.value)}
                     value={selectedType}
                 >
-                    <option value="Все элементы">Все элементы</option>
+                    <option value="Все типы">Все типы</option>
                     {availableTypes.map((type) => (
                         <option key={type.value} value={type.value}>
                             {type.label}

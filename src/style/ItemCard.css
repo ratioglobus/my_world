@@ -15,6 +15,14 @@
   cursor: pointer;
 }
 
+.item-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: flex-start;
+}
+
 .item-card-title {
   margin: 0 0 8px 0;
   font-size: 1.2rem;
@@ -86,6 +94,25 @@
 
 .review-btn:hover {
   background-color: #059669;
+}
+
+.priority-bar {
+  width: 20%;
+  height: 5px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.priority-critical {
+  background-color: #ff4d4f;
+}
+
+.priority-important {
+  background-color: #ffa940;
+}
+
+.priority-normal {
+  background-color: #52c41a;
 }
 
 @media (max-width: 480px) {

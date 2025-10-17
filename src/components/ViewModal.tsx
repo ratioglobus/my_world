@@ -21,6 +21,10 @@ export default function ViewModal({ item, onClose, mode }: ViewModalProps) {
           <strong>Тип:</strong> {item.type}
         </p>
 
+        <p className="view-modal-field">
+          <strong>Приоритет:</strong> {item.priority}
+        </p>
+
         {mode === "completed" && (
           <p className="view-modal-field">
             <strong>Рейтинг:</strong> {item.rating}/10

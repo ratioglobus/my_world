@@ -21,12 +21,14 @@ export default function EditModal({
   const [type, setType] = useState(item.type);
   const [rating, setRating] = useState(item.rating);
   const [comment, setComment] = useState(item.comment || "");
+  const [priority, setPriority] = useState(item.priority);
 
   const handleSave = () => {
     const updated: MediaItemProps = {
       ...item,
       title,
       type,
+      priority,
       rating: mode === "planned" ? 0 : rating,
       comment,
     };
@@ -58,6 +60,16 @@ export default function EditModal({
             <option value="Аниме">Аниме</option>
             <option value="Игра">Игра</option>
             <option value="YouTube">YouTube</option>
+          </select>
+
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            className="edit-modal-input"
+          >
+            <option value="Среднее">Среднее</option>
+            <option value="Важное">Важное</option>
+            <option value="Критичное">Критичное</option>
           </select>
 
           {mode === "completed" && (

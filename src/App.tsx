@@ -9,6 +9,7 @@ import RatingModal from "./components/RatingModal";
 import { supabase } from "./supabaseClient";
 import AuthForm from "./components/AuthForm";
 import FilterByType from "./components/FilterByType";
+import FilterByPriority from "./components/FilterByPriority";
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -23,7 +24,19 @@ function App() {
   );
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [burgerOpen, setBurgerOpen] = useState(false);
-  const [selectedType, setSelectedType] = useState("Все элементы");
+  const [selectedType, setSelectedType] = useState("Все типы");
+  const [selectedPriority, setSelectedPriority] = useState("Все приоритеты");
+
+  const ITEMS_PER_PAGE = 16;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query, selectedType, selectedPriority]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [currentPage]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -46,9 +59,8 @@ function App() {
     localStorage.setItem("mode", newMode);
   };
 
-  const onTypeChange = (type: string) => {
-    setSelectedType(type)
-  }
+  const onTypeChange = (type: string) => setSelectedType(type);
+  const onPriorityChange = (priority: string) => setSelectedPriority(priority);
 
   const fetchItems = async () => {
     if (!user) return;
@@ -122,28 +134,15 @@ function App() {
   const handleView = (id: string) => setViewItemId(id);
   const handleEdit = (id: string) => setEditingItemId(id);
 
-  const handleMarkAsCompleted = async (item: MediaItemProps, rating: number): Promise<void> => {
+  const handleMarkAsCompleted = async (item: MediaItemProps, rating: number) => {
     if (!user) return;
 
-    const updatedItem = {
-      ...item,
-      rating,
-      completed_at: new Date().toISOString(),
-      user_id: user.id,
-    };
+    const updatedItem = { ...item, rating, completed_at: new Date().toISOString(), user_id: user.id };
 
-    await supabase
-      .from("planned_items")
-      .delete()
-      .eq("id", item.id)
-      .eq("user_id", user.id);
+    await supabase.from("planned_items").delete().eq("id", item.id).eq("user_id", user.id);
     setPlannedItems(prev => prev.filter(i => i.id !== item.id));
 
-    const { data, error } = await supabase
-      .from("completed_items")
-      .insert([updatedItem])
-      .select();
-
+    const { data, error } = await supabase.from("completed_items").insert([updatedItem]).select();
     if (error) console.error(error);
     else setCompletedItems(prev => [data[0], ...prev]);
 
@@ -152,25 +151,28 @@ function App() {
 
   const handleRatingSave = async (item: MediaItemProps, rating: number) => {
     if (!user) return;
-
-    const updatedItem = { ...item, user_id: user.id, rating, completed_at: new Date().toISOString() };
+    const updatedItem = { ...item, rating, completed_at: new Date().toISOString(), user_id: user.id };
 
     await supabase.from("planned_items").delete().eq("id", item.id).eq("user_id", user.id);
     setPlannedItems(prev => prev.filter(i => i.id !== item.id));
 
-    const { data, error } = await supabase
-      .from("completed_items")
-      .insert([updatedItem])
-      .select();
+    const { data, error } = await supabase.from("completed_items").insert([updatedItem]).select();
     if (error) console.error(error);
     else setCompletedItems(prev => [data[0], ...prev]);
 
     setRatingItem(null);
   };
 
-  const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(item =>
-    item.title.toLowerCase().includes(query.toLowerCase()) && (selectedType === "Все элементы" || item.type === selectedType)
+  const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(
+    item =>
+      item.title.toLowerCase().includes(query.toLowerCase()) &&
+      (selectedType === "Все типы" || item.type === selectedType) &&
+      (selectedPriority === "Все приоритеты" || item.priority === selectedPriority)
   );
+
+  const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const visibleItems = filteredItems.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   if (!user) return <AuthForm onLogin={() => fetchItems()} />;
 
@@ -179,24 +181,31 @@ function App() {
       <div className="top-bar">
         <button className="burger-btn" onClick={() => setBurgerOpen(prev => !prev)}>☰</button>
         {burgerOpen && <button className="signout-btn" onClick={() => supabase.auth.signOut()}>Выйти</button>}
+        <div className="top-bar-center">
+          <div className="mode-toggle">
+            <div className={`toggle-slider ${mode}`} />
+            <button className={`toggle-btn ${mode === "completed" ? "active" : ""}`} onClick={() => handleModeChange("completed")} onMouseDown={e => e.preventDefault()}>Готовые</button>
+            <button className={`toggle-btn ${mode === "planned" ? "active" : ""}`} onClick={() => handleModeChange("planned")} onMouseDown={e => e.preventDefault()}>Планируемые</button>
+          </div>
+        </div>
+        
         <button className="logout-button-desktop" onClick={() => supabase.auth.signOut()}>Выйти</button>
       </div>
 
-      <div className="mode-toggle">
-        <div className={`toggle-slider ${mode}`} />
-        <button className={`toggle-btn ${mode === "completed" ? "active" : ""}`} onClick={() => handleModeChange("completed")} onMouseDown={(e) => e.preventDefault()}>Готовые</button>
-        <button className={`toggle-btn ${mode === "planned" ? "active" : ""}`} onClick={() => handleModeChange("planned")} onMouseDown={(e) => e.preventDefault()}>Планируемые</button>
-      </div>
 
       <h1 className="section-title">{mode === "completed" ? "Добавить исследование" : "Запланировать исследование"}</h1>
       <AddItemForm onAdd={handleAdd} mode={mode} />
 
       <h1 className="section-title">{mode === "completed" ? "Готовые исследования" : "Запланированное"}</h1>
       <SearchBar query={query} onSearch={setQuery} />
-      <FilterByType selectedType={selectedType} onTypeChange={onTypeChange}/>
+
+      <div className="section-filtered">
+        <FilterByType selectedType={selectedType} onTypeChange={onTypeChange} />
+        <FilterByPriority selectedPriority={selectedPriority} onPriorityChange={onPriorityChange} />
+      </div>
 
       <ItemList
-        items={filteredItems}
+        items={visibleItems}
         editingItemId={editingItemId}
         onDelete={setConfirmDeleteId}
         onEdit={handleEdit}
@@ -208,21 +217,16 @@ function App() {
         onMarkAsCompleted={handleMarkAsCompleted}
       />
 
-      {ratingItem && (
-        <RatingModal
-          item={ratingItem}
-          onSubmit={handleRatingSave}
-          onClose={() => setRatingItem(null)}
-        />
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Предыдущая</button>
+          <span className="pagination-text">Страница {currentPage} из {totalPages}</span>
+          <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>Следующая</button>
+        </div>
       )}
 
-      {confirmDeleteId && (
-        <ConfirmModal
-          message="Вы точно хотите удалить элемент?"
-          onConfirm={() => handleDelete(confirmDeleteId)}
-          onCancel={() => setConfirmDeleteId(null)}
-        />
-      )}
+      {ratingItem && <RatingModal item={ratingItem} onSubmit={handleRatingSave} onClose={() => setRatingItem(null)} />}
+      {confirmDeleteId && <ConfirmModal message="Вы точно хотите удалить элемент?" onConfirm={() => handleDelete(confirmDeleteId)} onCancel={() => setConfirmDeleteId(null)} />}
     </div>
   );
 }
