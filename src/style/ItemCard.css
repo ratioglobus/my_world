@@ -61,6 +61,8 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   word-break: break-word;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .item-card-buttons {
