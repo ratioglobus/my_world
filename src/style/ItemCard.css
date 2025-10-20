@@ -1,5 +1,5 @@
 .item-card {
-  background-color: #e0dfff;
+  background-color: #ebebfc;
   color: #1e1b4b;
   border-radius: 12px;
   padding: 16px;
@@ -13,6 +13,7 @@
   box-sizing: border-box;
   overflow: hidden;
   cursor: pointer;
+  position: relative;
 }
 
 .item-card-content {
@@ -21,6 +22,14 @@
   align-items: center;
   flex-grow: 1;
   justify-content: flex-start;
+}
+
+.idea-icon {
+  width: 28px;
+  height: 28px;
+  align-self: center;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));
 }
 
 .item-card-title {
@@ -34,6 +43,7 @@
   font-size: 0.9rem;
   color: #6b5dd6;
   text-align: center;
+  font-weight: 500;
 }
 
 .item-card-date {

@@ -27,7 +27,10 @@ export default function ItemCard({
   };
 
   return (
-    <div className="item-card" onClick={handleCardClick}>
+    <div
+      className={`item-card ${item.type === "Идея" ? "idea" : ""}`}
+      onClick={handleCardClick}
+    >
       <div
         className={`priority-bar ${item.priority === "Критичное"
           ? "priority-critical"
@@ -36,23 +39,31 @@ export default function ItemCard({
             : "priority-normal"
           }`}
       />
-      <div className="item-card-content">
 
+
+
+      <div className="item-card-content">
         <h3 className="item-card-title">{item.title}</h3>
-        <p className="item-card-type">
-          {item.type}
-          {mode === "completed" && <> · рейтинг – <strong>{item.rating}/10</strong></>}
-        </p>
+
+        {item.type === "Идея" ? (
+          <img src="/idea.png" alt="Идея" className="idea-icon" />
+        ) : (
+          <p className="item-card-type">
+            {item.type}
+            {mode === "completed" && <> · рейтинг – <strong>{item.rating}/10</strong></>}
+          </p>
+        )}
+
         <p className="item-card-date">
           Добавлено: {new Date(item.createdAt).toLocaleDateString("ru-RU")}
         </p>
+
         {item.comment && (
           <p className="item-card-comment" title={item.comment}>
             {item.comment}
           </p>
         )}
       </div>
-
 
 
       <div className="item-card-buttons">

@@ -71,3 +71,14 @@
   overflow-y: auto;
   max-height: 200px;
 }
+
+.view-modal-link {
+  color: #4ea1ff;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.view-modal-link:hover {
+  color: #80caff;
+}
+

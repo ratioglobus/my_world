@@ -57,6 +57,7 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
           <option value="Книга">Книга</option>
           <option value="Аниме">Аниме</option>
           <option value="Игра">Игра</option>
+          <option value="Идея">Идея</option>
           <option value="YouTube">YouTube</option>
         </select>
 

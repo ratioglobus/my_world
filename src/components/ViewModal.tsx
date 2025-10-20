@@ -8,6 +8,27 @@ type ViewModalProps = {
 };
 
 export default function ViewModal({ item, onClose, mode }: ViewModalProps) {
+  const renderCommentWithLinks = (text: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+    return text.split(urlRegex).map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="view-modal-link"
+          >
+            {part}
+          </a>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
+  };
+
   return (
     <div className="view-modal-overlay" onClick={onClose}>
       <div className="view-modal" onClick={(e) => e.stopPropagation()}>
@@ -39,7 +60,9 @@ export default function ViewModal({ item, onClose, mode }: ViewModalProps) {
         )}
 
         {item.comment && (
-          <div className="view-modal-comment">{item.comment}</div>
+          <div className="view-modal-comment">
+            {renderCommentWithLinks(item.comment)}
+          </div>
         )}
       </div>
     </div>

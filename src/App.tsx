@@ -10,6 +10,7 @@ import { supabase } from "./supabaseClient";
 import AuthForm from "./components/AuthForm";
 import FilterByType from "./components/FilterByType";
 import FilterByPriority from "./components/FilterByPriority";
+import FilterIdeasButton from "./components/FilterIdeasButton";
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -188,7 +189,7 @@ function App() {
             <button className={`toggle-btn ${mode === "planned" ? "active" : ""}`} onClick={() => handleModeChange("planned")} onMouseDown={e => e.preventDefault()}>Планируемые</button>
           </div>
         </div>
-        
+
         <button className="logout-button-desktop" onClick={() => supabase.auth.signOut()}>Выйти</button>
       </div>
 
@@ -200,8 +201,11 @@ function App() {
       <SearchBar query={query} onSearch={setQuery} />
 
       <div className="section-filtered">
-        <FilterByType selectedType={selectedType} onTypeChange={onTypeChange} />
-        <FilterByPriority selectedPriority={selectedPriority} onPriorityChange={onPriorityChange} />
+        <div className="filters-row">
+          <FilterByType selectedType={selectedType} onTypeChange={onTypeChange} />
+          <FilterByPriority selectedPriority={selectedPriority} onPriorityChange={onPriorityChange} />
+          <FilterIdeasButton selectedType={selectedType} onTypeChange={onTypeChange} />
+        </div>
       </div>
 
       <ItemList
