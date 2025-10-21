@@ -31,6 +31,38 @@ function App() {
   const ITEMS_PER_PAGE = 16;
   const [currentPage, setCurrentPage] = useState(1);
 
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      const stored = localStorage.getItem('theme') as 'light' | 'dark' | null;
+      if (stored === 'light' || stored === 'dark') return stored;
+      if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return 'light';
+  });
+
+  useEffect(() => {
+    try {
+      if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        document.body.classList.remove('light-theme');
+      } else {
+        document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
+      }
+      localStorage.setItem('theme', theme);
+      console.log('Theme applied:', theme, 'body.classList:', document.body.className);
+    } catch (err) {
+      console.error('Failed to apply theme', err);
+    }
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+
+
   useEffect(() => {
     setCurrentPage(1);
   }, [query, selectedType, selectedPriority]);
@@ -180,6 +212,11 @@ function App() {
   return (
     <div className="app-container">
       <div className="top-bar">
+        <div className="top-bar-right">
+          <button className="theme-toggle" onClick={toggleTheme}>
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
+        </div>
         <button className="burger-btn" onClick={() => setBurgerOpen(prev => !prev)}>☰</button>
         {burgerOpen && <button className="signout-btn" onClick={() => supabase.auth.signOut()}>Выйти</button>}
         <div className="top-bar-center">

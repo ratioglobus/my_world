@@ -6,16 +6,19 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  transition: background 0.3s ease;
 }
 
 .rating-modal {
-  background: #fff;
+  background: var(--card-bg);
+  color: var(--text-color);
   border-radius: 12px;
   padding: 30px;
   width: 320px;
   max-width: 90%;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   text-align: center;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .rating-modal-title {
@@ -37,12 +40,13 @@
   height: 36px;
   border-radius: 50%;
   background: #eee;
+  color: #1e1b4b;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   font-weight: 600;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.2s, transform 0.2s, color 0.2s;
 }
 
 .rating-circle:hover {
@@ -68,6 +72,7 @@
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .rating-submit-btn {
@@ -78,6 +83,38 @@
 .rating-cancel-btn {
   background-color: #f0f0f0;
   color: #333;
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] .rating-modal {
+  background-color: #1e1e2f;
+  color: #e0e0e0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+}
+
+[data-theme="dark"] .rating-circle {
+  background-color: #3a2970;
+  color: #e5e7eb;
+  border: 1px solid #555;
+}
+
+[data-theme="dark"] .rating-circle:hover {
+  background-color: #3b3f52;
+}
+
+[data-theme="dark"] .rating-circle.active {
+  background-color: #22c55e;
+  color: #fff;
+}
+
+[data-theme="dark"] .rating-submit-btn {
+  background-color: #22c55e;
+  color: #fff;
+}
+
+[data-theme="dark"] .rating-cancel-btn {
+  background-color: #334155;
+  color: #e5e7eb;
 }
 
 @media (max-width: 480px) {

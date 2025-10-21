@@ -6,11 +6,12 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  transition: background-color 0.3s ease;
 }
 
 .confirm-modal {
   background-color: var(--card-bg);
-  color: #000;
+  color: var(--text-color);
   border-radius: 12px;
   padding: 24px;
   width: 100%;
@@ -20,6 +21,7 @@
   flex-direction: column;
   gap: 16px;
   position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .confirm-modal-message {
@@ -31,6 +33,7 @@
   display: flex;
   gap: 12px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .confirm-btn {
@@ -51,11 +54,33 @@
 }
 
 .delete-btn {
-  background-color: #ef4444;
+  background-color: #ba3232;
 }
 
 .delete-btn:hover {
-  background-color: #dc2626;
+  background-color: #751616;
+}
+
+[data-theme="dark"] .confirm-modal {
+  background-color: #1e1e2f;
+  color: #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
+}
+
+[data-theme="dark"] .cancel-btn {
+  background-color: #334155;
+}
+
+[data-theme="dark"] .cancel-btn:hover {
+  background-color: #1f2937;
+}
+
+[data-theme="dark"] .delete-btn {
+  background-color: #a62121;
+}
+
+[data-theme="dark"] .delete-btn:hover {
+  background-color: #751616;
 }
 
 @media (max-width: 480px) {
@@ -80,4 +105,3 @@
     font-size: 0.9rem;
   }
 }
-

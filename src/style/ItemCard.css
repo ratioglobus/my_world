@@ -1,6 +1,37 @@
+:root {
+  --card-bg: #ebebfc;
+  --text-color: #1e1b4b;
+  --btn-edit-bg: #764ba2;
+  --btn-edit-hover: #5d3d9b;
+  --btn-delete-bg: #ef4444;
+  --btn-delete-hover: #dc2626;
+  --btn-review-bg: #10b981;
+  --btn-review-hover: #059669;
+  --type-color: #6b5dd6;
+  --date-color: rgba(30, 27, 75, 0.8);
+  --comment-color: rgba(30, 27, 75, 0.85);
+}
+
+body.dark-theme {
+  --card-bg: #34235e;
+  --text-color: #e5e7eb;
+
+  --btn-common-bg: #4f46e5;
+  --btn-common-hover: #6366f1;
+
+  --btn-edit-bg: var(--btn-common-bg);
+  --btn-edit-hover: var(--btn-common-hover);
+  --btn-review-bg: var(--btn-common-bg);
+  --btn-review-hover: var(--btn-common-hover);
+  
+  --type-color: #a5b4fc;
+  --date-color: rgba(229, 231, 235, 0.7);
+  --comment-color: rgba(229, 231, 235, 0.7);
+}
+
 .item-card {
-  background-color: #ebebfc;
-  color: #1e1b4b;
+  background-color: var(--card-bg);
+  color: var(--text-color);
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -14,6 +45,7 @@
   overflow: hidden;
   cursor: pointer;
   position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .item-card-content {
@@ -41,7 +73,7 @@
 .item-card-type {
   margin: 0;
   font-size: 0.9rem;
-  color: #6b5dd6;
+  color: var(--type-color);
   text-align: center;
   font-weight: 500;
 }
@@ -49,13 +81,13 @@
 .item-card-date {
   margin: 4px 0;
   font-size: 0.8rem;
-  color: #4b3f91;
+  color: var(--date-color);
 }
 
 .item-card-comment {
   margin-top: 8px;
   font-size: 0.85rem;
-  color: #3b2e70;
+  color: var(--comment-color);
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -76,36 +108,33 @@
 .item-btn {
   flex: 1;
   padding: 6px;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 6px;
   cursor: pointer;
   font-size: 12px;
   color: #fff;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .edit-btn {
-  background-color: #764ba2;
+  background-color: var(--btn-edit-bg);
 }
-
 .edit-btn:hover {
-  background-color: #5d3d9b;
+  background-color: var(--btn-edit-hover);
 }
 
 .delete-btn {
-  background-color: #ef4444;
+  background-color: var(--btn-delete-bg);
 }
-
 .delete-btn:hover {
-  background-color: #dc2626;
+  background-color: var(--btn-delete-hover);
 }
 
 .review-btn {
-  background-color: #10b981;
+  background-color: var(--btn-review-bg);
 }
-
 .review-btn:hover {
-  background-color: #059669;
+  background-color: var(--btn-review-hover);
 }
 
 .priority-bar {
@@ -114,18 +143,9 @@
   border-radius: 4px;
   margin-bottom: 10px;
 }
-
-.priority-critical {
-  background-color: #ff4d4f;
-}
-
-.priority-important {
-  background-color: #ffa940;
-}
-
-.priority-normal {
-  background-color: #52c41a;
-}
+.priority-critical { background-color: #ff4d4f; }
+.priority-important { background-color: #ffa940; }
+.priority-normal { background-color: #52c41a; }
 
 @media (max-width: 480px) {
   .item-card {
@@ -137,24 +157,10 @@
     margin: 0 auto;
   }
 
-  .item-card-title {
-    font-size: 1rem;
-    margin-bottom: 6px;
-    text-align: center;
-  }
-
-  .item-card-type {
-    font-size: 0.85rem;
-    text-align: center;
-  }
-
-  .item-card-date {
-    font-size: 0.75rem;
-  }
-
-  .item-card-comment {
-    font-size: 0.8rem;
-  }
+  .item-card-title { font-size: 1rem; margin-bottom: 6px; }
+  .item-card-type { font-size: 0.85rem; }
+  .item-card-date { font-size: 0.75rem; }
+  .item-card-comment { font-size: 0.8rem; }
 
   .item-card-buttons {
     flex-wrap: wrap;
@@ -168,7 +174,6 @@
     width: 48%;
     font-size: 0.8rem;
     padding: 6px 0;
-    border-radius: 6px;
     flex: 0 1 30%;
     min-width: 90px;
   }

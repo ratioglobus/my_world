@@ -10,11 +10,12 @@
   align-items: center;
   z-index: 1000;
   padding: 16px;
+  transition: background-color 0.3s ease;
 }
 
 .view-modal {
   background-color: var(--card-bg);
-  color: #1e1b4b;
+  color: var(--text-color);
   border-radius: 12px;
   padding: 24px;
   width: 100%;
@@ -26,6 +27,7 @@
   flex-direction: column;
   gap: 12px;
   position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .view-modal-close {
@@ -51,7 +53,7 @@
 
 .view-modal-field {
   margin: 4px 0;
-  color: #1e1b4b;
+  color: var(--text-color);
 }
 
 .view-modal-date {
@@ -61,24 +63,50 @@
 }
 
 .view-modal-comment {
-  background-color: #f3f0ff;
+  background-color: var(--card-bg);
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid #a49fe0;
-  color: #1e1b4b;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text-color);
   white-space: pre-wrap;
   line-height: 1.5;
   overflow-y: auto;
   max-height: 200px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .view-modal-link {
   color: #4ea1ff;
   text-decoration: underline;
   word-break: break-all;
+  transition: color 0.2s ease;
 }
 
 .view-modal-link:hover {
   color: #80caff;
 }
 
+/* Dark theme overrides */
+[data-theme="dark"] .view-modal {
+  background-color: #1e1e2f;
+  color: #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .view-modal-comment {
+  background-color: #3a2970;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .view-modal-date {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .view-modal-close {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .view-modal-close:hover {
+  color: #9ca3af;
+}
