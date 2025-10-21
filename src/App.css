@@ -301,18 +301,20 @@ button:focus-visible {
 
 .theme-toggle {
   background: transparent;
-  border: 1px solid #fff;
+  border: 1px solid #c4b9b9;
   color: #fff;
   border-radius: 8px;
-  padding: 6px 12px;
+  padding: 9px 15px;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
   margin-right: 12px;
+  outline: none;
 }
 
 .theme-toggle:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
+  outline: none;
 }
 
 @media (max-width: 1024px) {
