@@ -9,6 +9,7 @@ type ItemCardProps = {
   onEdit: (id: string) => void;
   onView: (id: string) => void;
   mode: "completed" | "planned";
+  theme: "dark" | "light";
   onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>;
 };
 
@@ -18,6 +19,7 @@ export default function ItemCard({
   onEdit,
   onView,
   mode,
+  theme,
   onMarkAsCompleted,
 }: ItemCardProps) {
   const [showRatingModal, setShowRatingModal] = useState(false);
@@ -40,13 +42,15 @@ export default function ItemCard({
           }`}
       />
 
-
-
       <div className="item-card-content">
         <h3 className="item-card-title">{item.title}</h3>
 
         {item.type === "Идея" ? (
-          <img src="/idea.png" alt="Идея" className="idea-icon" />
+          <img
+            src={theme === 'dark' ? '/idea-dark.png' : '/idea.png'}
+            alt="Идея"
+            className="idea-icon"
+          />
         ) : (
           <p className="item-card-type">
             {item.type}
@@ -64,7 +68,6 @@ export default function ItemCard({
           </p>
         )}
       </div>
-
 
       <div className="item-card-buttons">
         {mode === "planned" && onMarkAsCompleted && (

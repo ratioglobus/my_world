@@ -54,11 +54,9 @@ body.dark-theme {
 }
 
 .idea-icon {
-  width: 28px;
-  height: 28px;
+  width: 25px;
+  height: 25px;
   align-self: center;
-  opacity: 0.9;
-  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.6));
 }
 
 .item-card-title {

@@ -14,6 +14,7 @@ type ItemListProps = {
   viewItemId: string | null;
   onView: (id: string) => void;
   mode: "completed" | "planned";
+  theme: 'light' | 'dark';
   setEditingItemId: (id: string | null) => void;
   onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>;
 };
@@ -27,6 +28,7 @@ export default function ItemList({
   viewItemId,
   onView,
   mode,
+  theme,
   setEditingItemId,
   onMarkAsCompleted,
 }: ItemListProps) {
@@ -55,6 +57,7 @@ export default function ItemList({
             onEdit={onEdit}
             onView={onView}
             mode={mode}
+            theme={theme}
             onMarkAsCompleted={onMarkAsCompleted}
           />
         ))}
