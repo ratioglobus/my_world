@@ -15,15 +15,12 @@
 body.dark-theme {
   --card-bg: #34235e;
   --text-color: #e5e7eb;
-
   --btn-common-bg: #4f46e5;
   --btn-common-hover: #6366f1;
-
   --btn-edit-bg: var(--btn-common-bg);
   --btn-edit-hover: var(--btn-common-hover);
   --btn-review-bg: var(--btn-common-bg);
   --btn-review-hover: var(--btn-common-hover);
-  
   --type-color: #a5b4fc;
   --date-color: rgba(229, 231, 235, 0.7);
   --comment-color: rgba(229, 231, 235, 0.7);
@@ -174,7 +171,6 @@ body.dark-theme {
     width: 48%;
     font-size: 0.8rem;
     padding: 6px 0;
-    flex: 0 1 30%;
     min-width: 90px;
   }
 }

@@ -137,10 +137,10 @@ button:focus-visible {
 
 .burger-btn {
   display: none;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   background: transparent;
   border: none;
-  color: #fff;
+  color: #d6c9c9;
   cursor: pointer;
   z-index: 10;
 }

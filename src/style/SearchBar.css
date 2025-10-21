@@ -22,7 +22,7 @@
   border-radius: 6px;
   border: 1px solid #374151;
   background-color: var(--card-bg, #fff);
-  color: #000 !important; /* черный текст */
+  color: #000 !important;
   font-size: 1rem;
   outline: none;
   caret-color: #000;
