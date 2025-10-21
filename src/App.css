@@ -391,6 +391,11 @@ button:focus-visible {
 
   .theme-toggle {
     margin: 0;
+    outline: none;
+  }
+
+  .theme-toggle:active {
+    outline: none;
   }
 
   .item-list-grid {
