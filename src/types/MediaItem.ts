@@ -6,5 +6,5 @@ export type MediaItemProps = {
     comment?: string
     createdAt: string
     priority: string
-    theme: string
+    theme?: string
 }
