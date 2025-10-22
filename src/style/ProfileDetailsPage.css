@@ -1,0 +1,216 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  background: var(--bg-gradient);
+  gap: 20px;
+  transition: background 0.3s ease;
+}
+
+.profile-main {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+  justify-content: center;
+}
+
+.profile-card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.profile-title {
+  font-size: 28px;
+  text-align: center;
+  margin: 0 0 10px 0;
+}
+
+.profile-field {
+  font-size: 16px;
+  line-height: 1.5;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: var(--text-color);
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.profile-field strong {
+  font-weight: 600;
+}
+
+.back-button {
+  background: transparent;
+  border: 1px solid #c4b9b9;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-bottom: 16px;
+  margin-top: 16px;
+  margin-left: 14px;
+  font-weight: 500;
+  font-size: 17px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.back-button:hover {
+  background: var(--button-bg);
+  color: #fff;
+}
+
+.public-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 10px 15px;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.toggle-label {
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.toggle-switch {
+  position: relative;
+  width: 46px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: var(--button-bg);
+}
+
+.toggle-switch input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+.public-hint {
+  font-size: 14px;
+  color: var(--text-color);
+  opacity: 0.75;
+  text-align: center;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+.subscriptions-card {
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  min-width: 250px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.subscriptions-title {
+  font-size: 20px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.subscriptions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.subscription-link {
+  display: block;
+  width: 100%;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s;
+}
+
+.subscription-link:hover {
+  background: var(--button-bg);
+}
+
+@media (max-width: 480px) {
+  .profile-card {
+    padding: 20px 15px;
+    border-radius: 12px;
+  }
+  
+  .profile-main {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-title {
+    font-size: 24px;
+  }
+
+  .profile-field {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .toggle-label {
+    font-size: 0.9rem;
+  }
+}

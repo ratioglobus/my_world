@@ -11,6 +11,7 @@ type ItemCardProps = {
   mode: "completed" | "planned";
   theme: "dark" | "light";
   onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>;
+  isOwner?: boolean;
 };
 
 export default function ItemCard({
@@ -21,6 +22,7 @@ export default function ItemCard({
   mode,
   theme,
   onMarkAsCompleted,
+  isOwner = true,
 }: ItemCardProps) {
   const [showRatingModal, setShowRatingModal] = useState(false);
 
@@ -34,12 +36,13 @@ export default function ItemCard({
       onClick={handleCardClick}
     >
       <div
-        className={`priority-bar ${item.priority === "Критичное"
-          ? "priority-critical"
-          : item.priority === "Важное"
+        className={`priority-bar ${
+          item.priority === "Критичное"
+            ? "priority-critical"
+            : item.priority === "Важное"
             ? "priority-important"
             : "priority-normal"
-          }`}
+        }`}
       />
 
       <div className="item-card-content">
@@ -47,14 +50,16 @@ export default function ItemCard({
 
         {item.type === "Идея" ? (
           <img
-            src={theme === 'dark' ? '/idea-dark.png' : '/idea.png'}
+            src={theme === "dark" ? "/idea-dark.png" : "/idea.png"}
             alt="Идея"
             className="idea-icon"
           />
         ) : (
           <p className="item-card-type">
             {item.type}
-            {mode === "completed" && <> · рейтинг – <strong>{item.rating}/10</strong></>}
+            {mode === "completed" && (
+              <> · рейтинг – <strong>{item.rating}/10</strong></>
+            )}
           </p>
         )}
 
@@ -69,39 +74,41 @@ export default function ItemCard({
         )}
       </div>
 
-      <div className="item-card-buttons">
-        {mode === "planned" && onMarkAsCompleted && (
+      {isOwner && (
+        <div className="item-card-buttons">
+          {mode === "planned" && onMarkAsCompleted && (
+            <button
+              className="item-btn review-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowRatingModal(true);
+              }}
+            >
+              Оценить
+            </button>
+          )}
+
           <button
-            className="item-btn review-btn"
+            className="item-btn edit-btn"
             onClick={(e) => {
               e.stopPropagation();
-              setShowRatingModal(true);
+              onEdit(item.id);
             }}
           >
-            Оценить
+            Изменить
           </button>
-        )}
 
-        <button
-          className="item-btn edit-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            onEdit(item.id);
-          }}
-        >
-          Изменить
-        </button>
-
-        <button
-          className="item-btn delete-btn"
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(item.id);
-          }}
-        >
-          Удалить
-        </button>
-      </div>
+          <button
+            className="item-btn delete-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(item.id);
+            }}
+          >
+            Удалить
+          </button>
+        </div>
+      )}
 
       {showRatingModal && onMarkAsCompleted && (
         <RatingModal
