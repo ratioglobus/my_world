@@ -9,25 +9,25 @@
 }
 
 .top-bar-other-profile {
+  display: flex;
+  flex-direction: row;
   color: #fff;
-  font-size: 1.2rem;
-  margin: 0;
+  font-size: 1rem;
+  margin-top: 12px;
   letter-spacing: 0.5px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.05);
   padding: 13px 20px;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 20px rgba(0, 0, 0);
   text-align: center;
   word-wrap: break-word;
   max-width: 100%;
+  align-items: center;
 }
 
 .top-bar-other-profile-button {
   position: absolute;
   top: 36px;
-  left: 35px;
+  right: 35px;
   padding: 8px 16px;
   border: 1px solid #c4b9b9;
   background-color: transparent;
@@ -63,17 +63,17 @@
 .top-bar-button-follow {
   display: block;
   margin: 0 auto;
-  margin-top: 15px;
-  padding: 10px 17px;
-  background: var(--button-bg);
+  margin-left: 15px;
+  padding: 7px 17px;
+  background: #090a0a;
   color: #fff;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 @media (max-width: 480px) {
@@ -87,10 +87,11 @@
   .top-bar-other-profile {
     font-size: 1rem;
     padding: 10px 15px;
+    margin: 0;
   }
 
   .top-bar-button-follow {
-    font-size: 14px;
-    padding: 8px 14px;
+    font-size: 13px;
+    padding: 9px 15px;
   }
 }

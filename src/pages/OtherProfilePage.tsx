@@ -128,7 +128,7 @@ export default function OtherProfilePage() {
                     {profile
                         ? currentUserId === userId
                             ? "Моя страница"
-                            : `Страница пользователя ${profile.nickname}`
+                            : `Профиль ${profile.nickname}`
                         : "Загрузка..."}
 
                                         {currentUserId !== userId && !loadingFollow && (

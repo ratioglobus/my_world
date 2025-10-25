@@ -22,6 +22,23 @@
   justify-content: center;
 }
 
+.share-profile-btn {
+  padding: 10px 10px;
+  background-color: var(--button-bg);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 120px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.share-profile-btn:hover {
+  background-color: #8767a8;
+  transform: scale(1.03);
+}
+
 .profile-card {
   background-color: var(--card-bg);
   color: var(--text-color);
@@ -47,7 +64,7 @@
 .profile-field {
   font-size: 16px;
   line-height: 1.5;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.3);
   padding: 10px 15px;
   border-radius: 8px;
   color: var(--text-color);
@@ -85,7 +102,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.3);
   padding: 10px 15px;
   border-radius: 8px;
   width: 100%;
@@ -132,11 +149,11 @@
   transition: 0.4s;
 }
 
-.toggle-switch input:checked + .slider {
+.toggle-switch input:checked+.slider {
   background-color: var(--button-bg);
 }
 
-.toggle-switch input:checked + .slider::before {
+.toggle-switch input:checked+.slider::before {
   transform: translateX(22px);
 }
 
@@ -149,53 +166,148 @@
   margin-top: 4px;
 }
 
-.subscriptions-card {
-  background: var(--card-bg);
-  color: var(--text-color);
-  padding: 25px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  min-width: 250px;
-  max-height: 500px;
-  overflow-y: auto;
+.toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(100, 0, 255, 0.85);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  animation: fadeInOut 2.5s ease-in-out forwards;
+  z-index: 9999;
+  backdrop-filter: blur(6px);
 }
 
-.subscriptions-title {
-  font-size: 20px;
-  margin-bottom: 12px;
-  text-align: center;
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+
+  10%,
+  90% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
 }
 
-.subscriptions-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.nickname-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.subscription-link {
-  display: block;
+.nickname-view {
+  position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
-  background: rgba(255,255,255,0.1);
+  padding: 10px 40px 10px 12px;
+  border-radius: 10px;
+  color: var(--text-color);
+  box-sizing: border-box;
+}
+
+.nickname-edit-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 6px 8px;
+  border-radius: 10px;
+  max-width: 300px; 
+  box-sizing: border-box;
+}
+
+.nickname-input {
+  background: transparent;
   color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.2s;
+  padding: 8px 8px;
+  border-radius: 6px;
+  min-width: 120px;     
+  max-width: 180px;     
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  font-size: 1rem;
 }
 
-.subscription-link:hover {
-  background: var(--button-bg);
+.save-nick-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  font-size: 1rem;
 }
+
+.save-nick-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: scale(1.08);
+  opacity: 0.9;
+}
+
+.edit-nick-btn {
+  position: absolute;
+  right: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #bfbfbf;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
+  border-radius: 8px;
+  width: 27px;
+  transition: background 0.2s ease, transform 0.15s ease, color 0.2s ease;
+}
+
+.edit-nick-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transform: scale(1.05);
+}
+
 
 @media (max-width: 480px) {
   .profile-card {
     padding: 20px 15px;
     border-radius: 12px;
   }
-  
+
   .profile-main {
     flex-direction: column;
     align-items: center;

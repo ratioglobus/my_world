@@ -214,10 +214,28 @@ function MyProfilePage() {
   return (
     <div className="app-container">
       <div className="top-bar">
-        <div className="top-bar-left desktop-only">
-          <Link className="top-bar-profile-button" to="/profile">
-            Мой профиль
-          </Link>
+        <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
+          <button
+            className="burger-btn mobile-only"
+            onClick={() => setBurgerOpen(prev => !prev)}
+          >
+            ☰
+          </button>
+
+          <div className="burger-menu">
+            <Link className="top-bar-profile-button" to="/profile">
+              Мой профиль
+            </Link>
+            <Link className="top-bar-profile-button" to="/follows">
+              Мои подписки
+            </Link>
+            <button
+              className="signout-btn"
+              onClick={() => supabase.auth.signOut()}
+            >
+              Выйти
+            </button>
+          </div>
         </div>
 
         <div className="top-bar-center">
@@ -240,40 +258,11 @@ function MyProfilePage() {
           </div>
         </div>
 
-        <div className="top-bar-right desktop-only">
-          <button className="theme-toggle" onClick={toggleTheme}>
-            {theme === "light" ? "🌙" : "☀️"}
-          </button>
-          <button
-            className="logout-button-desktop"
-            onClick={() => supabase.auth.signOut()}
-          >
-            Выйти
-          </button>
-        </div>
-
-        <div className="burger-wrapper mobile-only">
-          <button
-            className="burger-btn"
-            onClick={() => setBurgerOpen(prev => !prev)}
-          >
-            ☰
-          </button>
-          {burgerOpen && (
-            <div className="burger-menu">
-              <button className="theme-toggle" onClick={toggleTheme}>
-                {theme === "light" ? "🌙" : "☀️"}
-              </button>
-              <Link className="top-bar-profile-button" to="/profile">
-                Мой профиль
-              </Link>
-              <button className="signout-btn" onClick={() => supabase.auth.signOut()}>
-                Выйти
-              </button>
-            </div>
-          )}
-        </div>
+        <button className="theme-toggle" onClick={toggleTheme}>
+          {theme === "light" ? "🌙" : "☀️"}
+        </button>
       </div>
+
 
       <h1 className="section-title">{mode === "completed" ? "Добавить исследование" : "Запланировать исследование"}</h1>
       <AddItemForm onAdd={handleAdd} mode={mode} />

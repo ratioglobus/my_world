@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import "../style/ProfileDetailsPage.css";
@@ -7,11 +7,12 @@ export default function ProfileDetailsPage() {
   const [profile, setProfile] = useState<{ nickname: string; email: string } | null>(null);
   const [isPublic, setIsPublic] = useState(false);
   const navigate = useNavigate();
-  const [subscriptions, setSubscriptions] = useState<
-    { followed_id: string; nickname: string; key: string }[]
-  >([]);
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-
+  const [showCopiedToast, setShowCopiedToast] = useState(false);
+  const [editingNickname, setEditingNickname] = useState(false);
+  const [nicknameDraft, setNicknameDraft] = useState<string>("");
+  const [savingNickname, setSavingNickname] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const nicknameInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
@@ -27,6 +28,7 @@ export default function ProfileDetailsPage() {
       if (sessionError || !session?.user) return;
 
       const userId = session.user.id;
+      setUserId(userId);
 
       const { data, error } = await supabase
         .from("profiles")
@@ -68,50 +70,12 @@ export default function ProfileDetailsPage() {
   }, []);
 
   useEffect(() => {
-    const fetchCurrentUserAndSubscriptions = async () => {
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if (!user || error) return;
-
-      if (!currentUserId) {
-        console.log("Текущий пользователь не найден:");
-      }
-
-      setCurrentUserId(user.id);
-
-      const { data: subsData, error: subsError } = await supabase
-        .from("follows")
-        .select("following_id")
-        .eq("follower_id", user.id);
-
-      if (subsError || !subsData) return;
-
-      const uniqueIds = Array.from(new Set(subsData.map(sub => sub.following_id)));
-
-      if (uniqueIds.length === 0) {
-        setSubscriptions([]);
-        return;
-      }
-
-      const { data: profilesData, error: profilesError } = await supabase
-        .from("profiles")
-        .select("user_id, nickname")
-        .in("user_id", uniqueIds);
-
-      if (profilesError || !profilesData) return;
-
-      const mappedSubs = profilesData.map(p => ({
-        followed_id: p.user_id,
-        nickname: p.nickname || "Без имени",
-        key: p.user_id
-      }));
-
-      const uniqueSubs = Array.from(new Map(mappedSubs.map(s => [s.followed_id, s])).values());
-
-      setSubscriptions(uniqueSubs);
-    };
-
-    fetchCurrentUserAndSubscriptions();
-  }, []);
+    if (editingNickname && nicknameInputRef.current) {
+      nicknameInputRef.current.focus();
+      const len = nicknameInputRef.current.value.length;
+      nicknameInputRef.current.setSelectionRange(len, len);
+    }
+  }, [editingNickname]);
 
   if (!profile) return <div className="profile-page loading">Загрузка...</div>;
 
@@ -130,6 +94,38 @@ export default function ProfileDetailsPage() {
     }
   };
 
+  const handleSaveNickname = async () => {
+    if (!userId || !profile) return;
+    const newNick = nicknameDraft.trim();
+    if (newNick.length === 0) return;
+
+    if (newNick === profile.nickname) {
+      setEditingNickname(false);
+      return;
+    }
+
+    const prevNick = profile.nickname;
+    setProfile({ nickname: newNick, email: profile.email });
+    setSavingNickname(true);
+
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ nickname: newNick })
+        .eq("user_id", userId);
+
+      if (error) {
+        setProfile({ nickname: prevNick, email: profile.email });
+        console.error("Ошибка при обновлении ника:", error);
+        return;
+      }
+
+      setEditingNickname(false);
+    } finally {
+      setSavingNickname(false);
+    }
+  };
+
   return (
     <div className="profile-container">
       <button className="back-button" onClick={() => navigate("/")}>
@@ -140,8 +136,49 @@ export default function ProfileDetailsPage() {
         <div className="profile-card">
           <h1 className="profile-title">Мой профиль</h1>
 
-          <p className="profile-field">
-            <strong>Никнейм:</strong> {profile.nickname}
+          <p className="profile-field nickname-row">
+            <strong>Никнейм:</strong>
+
+            {!editingNickname ? (
+              <span className="nickname-view">
+                {profile.nickname}
+                <button
+                  className="icon-btn edit-nick-btn"
+                  aria-label="Редактировать никнейм"
+                  onClick={() => {
+                    setNicknameDraft(profile.nickname);
+                    setEditingNickname(true);
+                  }}
+                >
+                  <img src="./edit-icon.png" alt="edit profile button"/>
+                </button>
+              </span>
+            ) : (
+              <span className="nickname-edit-wrapper">
+                <input
+                  ref={(el) => { nicknameInputRef.current = el; }}
+                  className="nickname-input"
+                  value={nicknameDraft}
+                  onChange={(e) => setNicknameDraft(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSaveNickname();
+                    if (e.key === "Escape") {
+                      setEditingNickname(false);
+                      setNicknameDraft(profile.nickname);
+                    }
+                  }}
+                  aria-label="Новый никнейм"
+                />
+                <button
+                  className="icon-btn save-nick-btn"
+                  onClick={handleSaveNickname}
+                  aria-label="Сохранить никнейм"
+                  disabled={savingNickname || nicknameDraft.trim().length === 0}
+                >
+                  {savingNickname ? "..." : "✅"}
+                </button>
+              </span>
+            )}
           </p>
 
           <p className="profile-field">
@@ -172,30 +209,21 @@ export default function ProfileDetailsPage() {
               if (!session?.user) return;
 
               const url = `${window.location.origin}/profile/${session.user.id}`;
-              navigator.clipboard.writeText(url);
-              alert("Ссылка скопирована!");
+              await navigator.clipboard.writeText(url);
+
+              setShowCopiedToast(true);
+              setTimeout(() => setShowCopiedToast(false), 2500);
             }}
           >
-            Поделиться профилем
+            Скопировать ссылку на профиль
           </button>
         </div>
 
-        <div className="subscriptions-card">
-          <h2 className="subscriptions-title">Мои подписки</h2>
-          <ul className="subscriptions-list">
-            {subscriptions.length === 0 && <li>Нет подписок</li>}
-            {subscriptions.map(sub => (
-              <li key={sub.key}>
-                <button
-                  className="subscription-link"
-                  onClick={() => navigate(`/profile/${sub.followed_id}`)}
-                >
-                  {sub.nickname}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {showCopiedToast && (
+          <div className="toast">
+            <span>Ссылка скопирована ✨</span>
+          </div>
+        )}
       </div>
     </div>
   );
