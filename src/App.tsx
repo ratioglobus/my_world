@@ -38,19 +38,23 @@ export default function App() {
     );
   }
 
-  if (!session) {
-    return <AuthForm onLogin={async () => {
-      const { data } = await supabase.auth.getSession();
-      setSession(data.session);
-    }} />;
-  }
-
   return (
-    <Routes>
-      <Route path="/" element={<MyProfilePage />} />
-      <Route path="/profile" element={<ProfileDetailsPage />} />
-      <Route path="/profile/:id" element={<OtherProfilePage />} />
-      <Route path="/follows/" element={<MyFollowsPage />} />
-    </Routes>
+    <div className="app-content fade-in">
+      {!session ? (
+        <AuthForm
+          onLogin={async () => {
+            const { data } = await supabase.auth.getSession();
+            setSession(data.session);
+          }}
+        />
+      ) : (
+        <Routes>
+          <Route path="/" element={<MyProfilePage />} />
+          <Route path="/profile" element={<ProfileDetailsPage />} />
+          <Route path="/profile/:id" element={<OtherProfilePage />} />
+          <Route path="/follows" element={<MyFollowsPage />} />
+        </Routes>
+      )}
+    </div>
   );
 }
