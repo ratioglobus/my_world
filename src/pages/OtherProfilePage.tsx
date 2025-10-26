@@ -41,13 +41,15 @@ export default function OtherProfilePage() {
             const { data: completed, error: cError } = await supabase
                 .from("completed_items")
                 .select("*")
-                .eq("user_id", userId);
+                .eq("user_id", userId)
+                .order("createdAt", { ascending: false });
             if (!cError) setCompletedItems(completed || []);
 
             const { data: planned, error: pError } = await supabase
                 .from("planned_items")
                 .select("*")
-                .eq("user_id", userId);
+                .eq("user_id", userId)
+                .order("createdAt", { ascending: false });
             if (!pError) setPlannedItems(planned || []);
         };
         fetchItems();

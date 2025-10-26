@@ -64,7 +64,6 @@ function MyProfilePage() {
 
   const toggleTheme = () => setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
 
-
   useEffect(() => {
     setCurrentPage(1);
   }, [query, selectedType, selectedPriority]);

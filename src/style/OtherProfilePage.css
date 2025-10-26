@@ -27,7 +27,7 @@
 .top-bar-other-profile-button {
   position: absolute;
   top: 36px;
-  right: 35px;
+  left: 35px;
   padding: 8px 16px;
   border: 1px solid #c4b9b9;
   background-color: transparent;
