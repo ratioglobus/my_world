@@ -20,6 +20,7 @@ type ItemListProps = {
   onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>;
   isArchiveView?: boolean;
   onArchive?: (id: string) => void;
+  onRestore?: (id: string) => void;
 };
 
 export default function ItemList({
@@ -33,9 +34,11 @@ export default function ItemList({
   mode,
   theme,
   onArchive,
+  onRestore,
   isOwner,
   setEditingItemId,
   onMarkAsCompleted,
+  isArchiveView,
 }: ItemListProps) {
   const editingItem = useMemo(
     () => items.find((item) => item.id === editingItemId),
@@ -66,6 +69,8 @@ export default function ItemList({
             theme={theme}
             onMarkAsCompleted={onMarkAsCompleted}
             onArchive={onArchive}
+            isArchiveView={isArchiveView}
+            onRestore={onRestore}
           />
         ))}
       </div>
@@ -74,7 +79,7 @@ export default function ItemList({
         <ViewModal item={viewingItem} onClose={() => onView("")} mode={mode} />
       )}
 
-      {editingItem && onUpdate && setEditingItemId && onEdit && (
+      {editingItem && onUpdate && setEditingItemId && onEdit && !isArchiveView && (
         <EditModal
           item={editingItem}
           onCancel={() => onEdit("")}

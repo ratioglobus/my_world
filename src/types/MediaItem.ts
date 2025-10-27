@@ -8,4 +8,5 @@ export type MediaItemProps = {
     priority: string
     theme?: string
     isArchiveView?: boolean
+    is_archived?: boolean
 }

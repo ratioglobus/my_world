@@ -38,13 +38,13 @@ export default function ArchiveItemsPage() {
             .from("completed_items")
             .select("*")
             .eq("user_id", user.id)
-            .eq("is_archived", true)
+            .eq("is_archived", true);
 
         const { data: planned } = await supabase
             .from("planned_items")
             .select("*")
             .eq("user_id", user.id)
-            .eq("is_archived", true)
+            .eq("is_archived", true);
 
         setArchivedCompleted(completed || []);
         setArchivedPlanned(planned || []);
@@ -54,10 +54,43 @@ export default function ArchiveItemsPage() {
         fetchArchivedItems();
     }, [user]);
 
+    const handleRestore = async (id: string, mode: "completed" | "planned") => {
+        if (!user) return;
+
+        const table = mode === "completed" ? "completed_items" : "planned_items";
+        const { error } = await supabase
+            .from(table)
+            .update({ is_archived: false })
+            .eq("id", id)
+            .eq("user_id", user.id);
+
+        if (!error) {
+            fetchArchivedItems();
+        } else {
+            console.error(error);
+        }
+    };
+
+    const handleDelete = async (id: string, mode: "completed" | "planned") => {
+        if (!user) return;
+
+        const table = mode === "completed" ? "completed_items" : "planned_items";
+        const { error } = await supabase
+            .from(table)
+            .delete()
+            .eq("id", id)
+            .eq("user_id", user.id);
+
+        if (!error) {
+            fetchArchivedItems();
+        } else {
+            console.error(error);
+        }
+    };
+
     if (!user) return <AuthForm onLogin={() => fetchArchivedItems()} />;
 
     return (
-
         <div className="archive-main">
             <button className="back-button" onClick={() => navigate("/")}>
                 ← На главную
@@ -73,13 +106,14 @@ export default function ArchiveItemsPage() {
                             mode="completed"
                             theme={theme}
                             isArchiveView={true}
-                            onDelete={() => { }}
-                            onEdit={() => { }}
-                            onUpdate={() => { }}
+                            onDelete={(id) => handleDelete(id, "completed")}
+                            onRestore={(id) => handleRestore(id, "completed")}
                             editingItemId={null}
                             viewItemId={null}
-                            onView={() => { }}
-                            setEditingItemId={() => { }}
+                            onEdit={() => {}}
+                            onUpdate={() => {}}
+                            onView={() => {}}
+                            setEditingItemId={() => {}}
                         />
                     ) : (
                         <p className="archive-empty">Нет архивированных готовых карточек</p>
@@ -93,13 +127,15 @@ export default function ArchiveItemsPage() {
                             items={archivedPlanned}
                             mode="planned"
                             theme={theme}
+                            isArchiveView={true}
+                            onDelete={(id) => handleDelete(id, "planned")}
+                            onRestore={(id) => handleRestore(id, "planned")}
                             editingItemId={null}
                             viewItemId={null}
-                            onDelete={() => { }}
-                            onEdit={() => { }}
-                            onUpdate={() => { }}
-                            onView={() => { }}
-                            setEditingItemId={() => { }}
+                            onEdit={() => {}}
+                            onUpdate={() => {}}
+                            onView={() => {}}
+                            setEditingItemId={() => {}}
                         />
                     ) : (
                         <p className="archive-empty">Нет архивированных планируемых карточек</p>

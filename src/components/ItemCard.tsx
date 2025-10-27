@@ -14,6 +14,8 @@ type ItemCardProps = {
   onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>;
   isOwner?: boolean;
   onArchive?: (id: string) => void;
+  isArchiveView?: boolean;
+  onRestore?: (id: string) => void;
 };
 
 export default function ItemCard({
@@ -26,6 +28,8 @@ export default function ItemCard({
   onMarkAsCompleted,
   onArchive,
   isOwner = true,
+  isArchiveView = false,
+  onRestore,
 }: ItemCardProps) {
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -71,9 +75,7 @@ export default function ItemCard({
         ) : (
           <p className="item-card-type">
             {item.type}
-            {mode === "completed" && (
-              <> · рейтинг – <strong>{item.rating}/10</strong></>
-            )}
+            {mode === "completed" && <> · рейтинг – <strong>{item.rating}/10</strong></>}
           </p>
         )}
 
@@ -102,7 +104,7 @@ export default function ItemCard({
 
           {menuOpen && (
             <div className="menu-dropdown">
-              {mode === "planned" && onMarkAsCompleted && (
+              {mode === "planned" && onMarkAsCompleted && !isArchiveView && (
                 <button
                   className="menu-item"
                   onClick={(e) => {
@@ -115,7 +117,7 @@ export default function ItemCard({
                 </button>
               )}
 
-              {onArchive && (
+              {onArchive && !isArchiveView && (
                 <button
                   className="menu-item archive"
                   onClick={(e) => {
@@ -128,16 +130,31 @@ export default function ItemCard({
                 </button>
               )}
 
-              <button
-                className="menu-item"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setMenuOpen(false);
-                  onEdit(item.id);
-                }}
-              >
-                Изменить
-              </button>
+              {!isArchiveView ? (
+                <button
+                  className="menu-item"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen(false);
+                    onEdit(item.id);
+                  }}
+                >
+                  Изменить
+                </button>
+              ) : (
+                onRestore && (
+                  <button
+                    className="menu-item restore"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMenuOpen(false);
+                      onRestore(item.id);
+                    }}
+                  >
+                    Вернуть из архива
+                  </button>
+                )
+              )}
 
               <button
                 className="menu-item delete"
@@ -151,7 +168,6 @@ export default function ItemCard({
               </button>
             </div>
           )}
-
         </div>
       )}
 

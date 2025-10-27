@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { supabase } from "./supabaseClient";
 import type { Session } from "@supabase/supabase-js";
-
 import MyProfilePage from "./pages/MyProfilePage";
 import ProfileDetailsPage from "./pages/ProfileDetailsPage";
 import OtherProfilePage from "./pages/OtherProfilePage";

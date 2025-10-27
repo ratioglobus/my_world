@@ -199,6 +199,7 @@ function MyProfilePage() {
 
   const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(
     item =>
+      !item.is_archived &&
       item.title.toLowerCase().includes(query.toLowerCase()) &&
       (selectedType === "Все типы" || item.type === selectedType) &&
       (selectedPriority === "Все приоритеты" || item.priority === selectedPriority)

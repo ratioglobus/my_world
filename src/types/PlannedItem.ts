@@ -6,4 +6,5 @@ export type PlannedItemProps = {
     createdAt: string
     priority: string
     isArchiveView?: boolean
+    is_archived?: boolean
 }
