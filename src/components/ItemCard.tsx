@@ -1,7 +1,8 @@
 import type { MediaItemProps } from "../types/MediaItem";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "../style/ItemCard.css";
 import RatingModal from "./RatingModal";
+import { MoreVertical } from "lucide-react";
 
 type ItemCardProps = {
   item: MediaItemProps;
@@ -12,6 +13,7 @@ type ItemCardProps = {
   theme: "dark" | "light";
   onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>;
   isOwner?: boolean;
+  onArchive?: (id: string) => void;
 };
 
 export default function ItemCard({
@@ -22,13 +24,26 @@ export default function ItemCard({
   mode,
   theme,
   onMarkAsCompleted,
+  onArchive,
   isOwner = true,
 }: ItemCardProps) {
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   const handleCardClick = () => {
-    if (!showRatingModal) onView(item.id);
+    if (!showRatingModal && !menuOpen) onView(item.id);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div
@@ -36,13 +51,12 @@ export default function ItemCard({
       onClick={handleCardClick}
     >
       <div
-        className={`priority-bar ${
-          item.priority === "Критичное"
+        className={`priority-bar ${item.priority === "Критичное"
             ? "priority-critical"
             : item.priority === "Важное"
-            ? "priority-important"
-            : "priority-normal"
-        }`}
+              ? "priority-important"
+              : "priority-normal"
+          }`}
       />
 
       <div className="item-card-content">
@@ -75,38 +89,69 @@ export default function ItemCard({
       </div>
 
       {isOwner && (
-        <div className="item-card-buttons">
-          {mode === "planned" && onMarkAsCompleted && (
-            <button
-              className="item-btn review-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowRatingModal(true);
-              }}
-            >
-              Оценить
-            </button>
+        <div className="item-card-menu-wrapper" ref={menuRef}>
+          <button
+            className="menu-button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuOpen((prev) => !prev);
+            }}
+          >
+            <MoreVertical size={20} />
+          </button>
+
+          {menuOpen && (
+            <div className="menu-dropdown">
+              {mode === "planned" && onMarkAsCompleted && (
+                <button
+                  className="menu-item"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen(false);
+                    setShowRatingModal(true);
+                  }}
+                >
+                  Оценить
+                </button>
+              )}
+
+              {onArchive && (
+                <button
+                  className="menu-item archive"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen(false);
+                    onArchive(item.id);
+                  }}
+                >
+                  Архивировать
+                </button>
+              )}
+
+              <button
+                className="menu-item"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(false);
+                  onEdit(item.id);
+                }}
+              >
+                Изменить
+              </button>
+
+              <button
+                className="menu-item delete"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen(false);
+                  onDelete(item.id);
+                }}
+              >
+                Удалить
+              </button>
+            </div>
           )}
 
-          <button
-            className="item-btn edit-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(item.id);
-            }}
-          >
-            Изменить
-          </button>
-
-          <button
-            className="item-btn delete-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(item.id);
-            }}
-          >
-            Удалить
-          </button>
         </div>
       )}
 

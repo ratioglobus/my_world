@@ -210,6 +210,33 @@ function MyProfilePage() {
 
   if (!user) return <AuthForm onLogin={() => fetchItems()} />;
 
+  const handleArchive = async (id: string) => {
+    if (!user) return;
+
+    const table = mode === "completed" ? "completed_items" : "planned_items";
+
+    const item = (mode === "completed" ? completedItems : plannedItems).find(i => i.id === id);
+    if (!item) return;
+
+    const updatedItem = { ...item, is_archived: true };
+
+    const { error } = await supabase
+      .from(table)
+      .update(updatedItem)
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .select();
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    if (mode === "completed") setCompletedItems(prev => prev.filter(i => i.id !== id));
+    else setPlannedItems(prev => prev.filter(i => i.id !== id));
+  };
+
+
   return (
     <div className="app-container">
       <div className="top-bar">
@@ -227,6 +254,12 @@ function MyProfilePage() {
             </Link>
             <Link className="top-bar-profile-button" to="/follows">
               Мои подписки
+            </Link>
+            <Link className="top-bar-profile-button" to="/archive-items">
+              Архив
+            </Link>
+            <Link className="top-bar-profile-button" to="/about">
+              О проекте
             </Link>
             <button
               className="signout-btn"
@@ -289,6 +322,7 @@ function MyProfilePage() {
         theme={theme}
         setEditingItemId={setEditingItemId}
         onMarkAsCompleted={handleMarkAsCompleted}
+        onArchive={handleArchive}
       />
 
       {totalPages > 1 && (

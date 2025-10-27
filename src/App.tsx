@@ -7,11 +7,23 @@ import MyProfilePage from "./pages/MyProfilePage";
 import ProfileDetailsPage from "./pages/ProfileDetailsPage";
 import OtherProfilePage from "./pages/OtherProfilePage";
 import MyFollowsPage from "./pages/MyFollowsPage";
+import AboutProjectPage from "./pages/AboutProjectPage";
+import ArchiveItemsPage from "./pages/ArchiveItemsPage";
 import AuthForm from "./components/AuthForm";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    const theme =
+      storedTheme ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+    document.body.classList.remove('dark-theme', 'light-theme');
+    document.body.classList.add(`${theme}-theme`);
+  }, []);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -53,6 +65,8 @@ export default function App() {
           <Route path="/profile" element={<ProfileDetailsPage />} />
           <Route path="/profile/:id" element={<OtherProfilePage />} />
           <Route path="/follows" element={<MyFollowsPage />} />
+          <Route path="/about" element={<AboutProjectPage />} />
+          <Route path="/archive-items" element={<ArchiveItemsPage />} />
         </Routes>
       )}
     </div>

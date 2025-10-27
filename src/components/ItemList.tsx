@@ -7,17 +7,19 @@ import "../style/ItemList.css";
 
 type ItemListProps = {
   items: MediaItemProps[];
-  onDelete: (id: string) => void;
-  onEdit: (id: string) => void;
-  onUpdate: (id: string, updatedItem: MediaItemProps) => void;
+  onDelete?: (id: string) => void;  
+  onEdit?: (id: string) => void;
+  onUpdate?: (id: string, updatedItem: MediaItemProps) => void;
   editingItemId: string | null;
   viewItemId: string | null;
-  onView: (id: string) => void;
+  onView?: (id: string) => void;
   mode: "completed" | "planned";
   theme: 'light' | 'dark';
   isOwner?: boolean;
   setEditingItemId: (id: string | null) => void;
   onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>;
+  isArchiveView?: boolean;
+  onArchive?: (id: string) => void;
 };
 
 export default function ItemList({
@@ -30,6 +32,7 @@ export default function ItemList({
   onView,
   mode,
   theme,
+  onArchive,
   isOwner,
   setEditingItemId,
   onMarkAsCompleted,
@@ -55,22 +58,23 @@ export default function ItemList({
           <ItemCard
             key={item.id}
             item={item}
-            onDelete={() => onDelete(item.id)}
-            onEdit={onEdit}
-            onView={onView}
+            onDelete={() => onDelete?.(item.id)}
+            onEdit={(id) => onEdit?.(id)}
+            onView={(id) => onView?.(id)}
             mode={mode}
             isOwner={isOwner}
             theme={theme}
             onMarkAsCompleted={onMarkAsCompleted}
+            onArchive={onArchive}
           />
         ))}
       </div>
 
-      {viewingItem && (
+      {viewingItem && onView && (
         <ViewModal item={viewingItem} onClose={() => onView("")} mode={mode} />
       )}
 
-      {editingItem && (
+      {editingItem && onUpdate && setEditingItemId && onEdit && (
         <EditModal
           item={editingItem}
           onCancel={() => onEdit("")}

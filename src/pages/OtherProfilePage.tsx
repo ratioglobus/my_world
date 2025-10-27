@@ -42,6 +42,7 @@ export default function OtherProfilePage() {
                 .from("completed_items")
                 .select("*")
                 .eq("user_id", userId)
+                .eq("is_archived", false)
                 .order("createdAt", { ascending: false });
             if (!cError) setCompletedItems(completed || []);
 
@@ -49,6 +50,7 @@ export default function OtherProfilePage() {
                 .from("planned_items")
                 .select("*")
                 .eq("user_id", userId)
+                .eq("is_archived", false)
                 .order("createdAt", { ascending: false });
             if (!pError) setPlannedItems(planned || []);
         };

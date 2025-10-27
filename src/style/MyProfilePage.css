@@ -246,7 +246,7 @@ button:focus-visible {
   justify-content: center;
   align-items: center;
   gap: 12px;
-  margin: 16px 0;
+  margin: 30px 0;
 }
 
 .pagination-text {

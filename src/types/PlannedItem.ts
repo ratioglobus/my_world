@@ -5,4 +5,5 @@ export type PlannedItemProps = {
     comment?: string
     createdAt: string
     priority: string
+    isArchiveView?: boolean
 }

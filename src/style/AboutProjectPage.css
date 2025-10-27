@@ -1,0 +1,109 @@
+.about {
+    padding: 20px;
+    height: 100vh;
+}
+
+.about-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: transparent;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.light-theme .about-container {
+    background-color: transparent;
+    color: #fff;
+}
+
+body.dark-theme .about-container {
+    background-color: transparent;
+    color: #fff;
+}
+
+.about-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+}
+
+.about-intro {
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.about-section {
+    margin-bottom: 3rem;
+}
+
+.about-section-title {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+}
+
+.about-card {
+    background-color: #e0dfff;
+    border-radius: 1rem;
+    padding: 1.2rem;
+    color: #000;
+    text-align: center;
+    transition: transform 0.2s ease, background-color 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+body.dark-theme .about-card {
+    background-color: var(--card-bg);
+    color: #fff;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+}
+
+.about-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.about-footer {
+    text-align: center;
+    margin-top: 3rem;
+    font-weight: 500;
+}
+
+.about-footer-small {
+    margin-top: 0.5rem;
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+    .about-title {
+        font-size: 2rem;
+    }
+
+    .about-intro {
+        font-size: 1rem;
+    }
+
+    .about-card {
+        padding: 1rem;
+    }
+
+    .about-icon {
+        font-size: 1.7rem;
+    }
+}
