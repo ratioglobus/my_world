@@ -127,7 +127,7 @@ export default function ItemCard({
 
               {onArchive && !isArchiveView && (
                 <button
-                  className="menu-item archive"
+                  className="menu-item"
                   onClick={(e) => {
                     e.stopPropagation();
                     setMenuOpen(false);
