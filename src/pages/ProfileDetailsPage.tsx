@@ -3,70 +3,82 @@ import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
 import "../style/ProfileDetailsPage.css";
 
+type Profile = {
+  user_id: string;
+  nickname: string;
+  email: string;
+  is_public: boolean;
+};
+
 export default function ProfileDetailsPage() {
-  const [profile, setProfile] = useState<{ nickname: string; email: string } | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [isPublic, setIsPublic] = useState(false);
-  const navigate = useNavigate();
-  const [showCopiedToast, setShowCopiedToast] = useState(false);
   const [editingNickname, setEditingNickname] = useState(false);
-  const [nicknameDraft, setNicknameDraft] = useState<string>("");
+  const [nicknameDraft, setNicknameDraft] = useState("");
   const [savingNickname, setSavingNickname] = useState(false);
+  const [showCopiedToast, setShowCopiedToast] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
     if (storedTheme) {
-      document.body.classList.remove('light-theme', 'dark-theme');
+      document.body.classList.remove("light-theme", "dark-theme");
       document.body.classList.add(`${storedTheme}-theme`);
     }
   }, []);
 
   useEffect(() => {
-    const fetchOrCreateProfile = async () => {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError || !session?.user) return;
-
+    const fetchProfile = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) return;
       const userId = session.user.id;
       setUserId(userId);
-
+      
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, nickname, email, is_public")
-        .eq("user_id", userId);
+        .select("user_id, nickname, email, is_public")
+        .eq("user_id", userId)
+        .limit(1);
 
-      if (error && error.code !== "PGRST116") {
+      if (error) {
         console.error(error);
         return;
       }
 
-      let profileData = data?.[0];
+      let profileData: Profile | null = data?.[0] ?? null;
 
       if (!profileData) {
         const newProfile = {
           user_id: userId,
-          email: session.user.email,
           nickname: session.user.email?.split("@")[0] || "Новый пользователь",
+          email: session.user.email || "",
+          is_public: false,
         };
 
         const { data: inserted, error: insertError } = await supabase
           .from("profiles")
           .insert([newProfile])
-          .select();
+          .select()
+          .single();
 
         if (insertError) {
           console.error(insertError);
           return;
         }
 
-        profileData = inserted?.[0];
+        profileData = inserted;
       }
 
-      setProfile(profileData ? { nickname: profileData.nickname, email: profileData.email } : null);
-      setIsPublic(!!profileData?.is_public);
+      if (!profileData) return;
+
+      setProfile(profileData);
+      setIsPublic(!!profileData.is_public);
     };
 
-    fetchOrCreateProfile();
+    fetchProfile();
   }, []);
 
   useEffect(() => {
@@ -87,25 +99,21 @@ export default function ProfileDetailsPage() {
     const { error } = await supabase
       .from("profiles")
       .update({ is_public: newValue })
-      .eq("email", profile.email);
+      .eq("user_id", profile.user_id);
 
-    if (error) {
-      console.error("Ошибка при обновлении is_public:", error);
-    }
+    if (error) console.error("Ошибка при обновлении публичности:", error);
   };
 
   const handleSaveNickname = async () => {
     if (!userId || !profile) return;
     const newNick = nicknameDraft.trim();
-    if (newNick.length === 0) return;
-
-    if (newNick === profile.nickname) {
+    if (newNick.length === 0 || newNick === profile.nickname) {
       setEditingNickname(false);
       return;
     }
 
     const prevNick = profile.nickname;
-    setProfile({ nickname: newNick, email: profile.email });
+    setProfile({ ...profile, nickname: newNick });
     setSavingNickname(true);
 
     try {
@@ -115,15 +123,47 @@ export default function ProfileDetailsPage() {
         .eq("user_id", userId);
 
       if (error) {
-        setProfile({ nickname: prevNick, email: profile.email });
         console.error("Ошибка при обновлении ника:", error);
-        return;
+        setProfile({ ...profile, nickname: prevNick });
+      } else {
+        setEditingNickname(false);
       }
-
-      setEditingNickname(false);
     } finally {
       setSavingNickname(false);
     }
+  };
+
+  const handleCopyLink = async () => {
+    const url = `${window.location.origin}/profile/${profile.user_id}`;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch {
+        fallbackCopyTextToClipboard(url);
+      }
+    } else {
+      fallbackCopyTextToClipboard(url);
+    }
+
+    setShowCopiedToast(true);
+    setTimeout(() => setShowCopiedToast(false), 2500);
+  };
+
+  const fallbackCopyTextToClipboard = (text: string) => {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    try {
+      document.execCommand("copy");
+    } catch (err) {
+      console.error("Fallback: Не удалось скопировать", err);
+    }
+    document.body.removeChild(textarea);
   };
 
   return (
@@ -138,7 +178,6 @@ export default function ProfileDetailsPage() {
 
           <p className="profile-field nickname-row">
             <strong>Никнейм:</strong>
-
             {!editingNickname ? (
               <span className="nickname-view">
                 {profile.nickname}
@@ -156,7 +195,7 @@ export default function ProfileDetailsPage() {
             ) : (
               <span className="nickname-edit-wrapper">
                 <input
-                  ref={(el) => { nicknameInputRef.current = el; }}
+                  ref={nicknameInputRef}
                   className="nickname-input"
                   value={nicknameDraft}
                   onChange={(e) => setNicknameDraft(e.target.value)}
@@ -172,7 +211,6 @@ export default function ProfileDetailsPage() {
                 <button
                   className="icon-btn save-nick-btn"
                   onClick={handleSaveNickname}
-                  aria-label="Сохранить никнейм"
                   disabled={savingNickname || nicknameDraft.trim().length === 0}
                 >
                   {savingNickname ? "..." : "✅"}
@@ -188,11 +226,7 @@ export default function ProfileDetailsPage() {
           <div className="public-toggle">
             <span className="toggle-label">Публичный профиль</span>
             <label className="toggle-switch">
-              <input
-                type="checkbox"
-                checked={isPublic}
-                onChange={handleTogglePublic}
-              />
+              <input type="checkbox" checked={isPublic} onChange={handleTogglePublic} />
               <span className="slider"></span>
             </label>
           </div>
@@ -202,38 +236,7 @@ export default function ProfileDetailsPage() {
             В частном режиме профиль виден только вам.
           </p>
 
-          <button
-            className="share-profile-btn"
-            onClick={async () => {
-              const { data: { session } } = await supabase.auth.getSession();
-              if (!session?.user) return;
-
-              const url = `${window.location.origin}/profile/${session.user.id}`;
-              try {
-                if (navigator.clipboard && window.isSecureContext) {
-                  await navigator.clipboard.writeText(url);
-                } else {
-                  const textArea = document.createElement("textarea");
-                  textArea.value = url;
-                  textArea.style.position = "fixed";
-                  textArea.style.top = "-1000px";
-                  document.body.appendChild(textArea);
-                  textArea.focus();
-                  textArea.select();
-                  document.execCommand("copy");
-                  document.body.removeChild(textArea);
-                }
-
-                setShowCopiedToast(true);
-                setTimeout(() => setShowCopiedToast(false), 2500);
-              } catch (err) {
-                console.error("Ошибка копирования:", err);
-              }
-
-              setShowCopiedToast(true);
-              setTimeout(() => setShowCopiedToast(false), 2500);
-            }}
-          >
+          <button className="share-profile-btn" onClick={handleCopyLink}>
             Скопировать ссылку на профиль
           </button>
         </div>
@@ -246,5 +249,4 @@ export default function ProfileDetailsPage() {
       </div>
     </div>
   );
-
 }
