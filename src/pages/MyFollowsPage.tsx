@@ -6,12 +6,10 @@ import "../style/MyFollowsPage.css";
 
 export default function MyFollowsPage() {
     const navigate = useNavigate();
-
     const [subscriptions, setSubscriptions] = useState<
         { followed_id: string; nickname: string; key: string }[]
     >([]);
     const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState<
         { user_id: string; nickname: string }[]
@@ -106,23 +104,6 @@ export default function MyFollowsPage() {
             </button>
 
             <div className="profile-main">
-                <div className="subscriptions-card">
-                    <h2 className="subscriptions-title">Мои подписки</h2>
-                    <ul className="subscriptions-list">
-                        {subscriptions.length === 0 && <li>Нет подписок</li>}
-                        {subscriptions.map(sub => (
-                            <li key={sub.key}>
-                                <button
-                                    className="subscription-link"
-                                    onClick={() => navigate(`/profile/${sub.followed_id}`)}
-                                >
-                                    {sub.nickname}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
                 <div className="search-section">
                     <h2 className="subscriptions-title">Поиск публичных профилей</h2>
                     <input
@@ -148,6 +129,23 @@ export default function MyFollowsPage() {
                             ))}
                         </div>
                     )}
+                </div>
+
+                <div className="subscriptions-card">
+                    <h2 className="subscriptions-title">Мои подписки</h2>
+                    <ul className="subscriptions-list">
+                        {subscriptions.length === 0 && <li>Нет подписок</li>}
+                        {subscriptions.map(sub => (
+                            <li key={sub.key}>
+                                <button
+                                    className="subscription-link"
+                                    onClick={() => navigate(`/profile/${sub.followed_id}`)}
+                                >
+                                    {sub.nickname}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             </div>
         </div>

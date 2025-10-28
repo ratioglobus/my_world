@@ -147,7 +147,7 @@ export default function ItemCard({
                     onToggleHidden(item.id, !item.is_hidden);
                   }}
                 >
-                  {item.is_hidden ? "Сделать видимой" : "Скрыть"}
+                  {item.is_hidden ? "Показать" : "Скрыть"}
                 </button>
               )}
 

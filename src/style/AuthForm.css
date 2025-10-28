@@ -75,6 +75,91 @@
   color: #5a67d8;
 }
 
+/* Тёмная тема через класс (если вручную включается) */
+body.dark-theme .auth-container {
+  background: linear-gradient(135deg, #1e1b4b 0%, #3c2e82 100%);
+}
+
+body.dark-theme .auth-form {
+  background-color: #2a2159;
+  color: #e5e7eb;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .auth-title {
+  color: #e5e7eb;
+}
+
+body.dark-theme .auth-input {
+  background-color: #3a2f6d;
+  border: 1px solid #5b51a2;
+  color: #e5e7eb;
+}
+
+body.dark-theme .auth-input:focus {
+  border-color: #8b7cfb;
+  box-shadow: 0 0 4px rgba(139, 124, 251, 0.4);
+}
+
+body.dark-theme .auth-button {
+  background-color: #6b5dd6;
+}
+
+body.dark-theme .auth-button:hover {
+  background-color: #8b7cfb;
+}
+
+body.dark-theme .auth-switch {
+  color: #a5b4fc;
+}
+
+body.dark-theme .auth-switch:hover {
+  color: #c7d2fe;
+}
+
+@media (prefers-color-scheme: dark) {
+  .auth-container {
+    background: linear-gradient(135deg, #1e1b4b 0%, #3c2e82 100%);
+  }
+
+  .auth-form {
+    background-color: #2a2159;
+    color: #e5e7eb;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  .auth-title {
+    color: #e5e7eb;
+  }
+
+  .auth-input {
+    background-color: #3a2f6d;
+    border: 1px solid #5b51a2;
+    color: #e5e7eb;
+  }
+
+  .auth-input:focus {
+    border-color: #8b7cfb;
+    box-shadow: 0 0 4px rgba(139, 124, 251, 0.4);
+  }
+
+  .auth-button {
+    background-color: #6b5dd6;
+  }
+
+  .auth-button:hover {
+    background-color: #8b7cfb;
+  }
+
+  .auth-switch {
+    color: #a5b4fc;
+  }
+
+  .auth-switch:hover {
+    color: #c7d2fe;
+  }
+}
+
 @media (max-width: 480px) {
   .auth-form {
     padding: 24px;
