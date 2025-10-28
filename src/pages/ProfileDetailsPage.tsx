@@ -150,7 +150,7 @@ export default function ProfileDetailsPage() {
                     setEditingNickname(true);
                   }}
                 >
-                  <img src="./edit-icon.png" alt="edit profile button"/>
+                  <img src="./edit-icon.png" alt="edit profile button" />
                 </button>
               </span>
             ) : (
@@ -209,7 +209,26 @@ export default function ProfileDetailsPage() {
               if (!session?.user) return;
 
               const url = `${window.location.origin}/profile/${session.user.id}`;
-              await navigator.clipboard.writeText(url);
+              try {
+                if (navigator.clipboard && window.isSecureContext) {
+                  await navigator.clipboard.writeText(url);
+                } else {
+                  const textArea = document.createElement("textarea");
+                  textArea.value = url;
+                  textArea.style.position = "fixed";
+                  textArea.style.top = "-1000px";
+                  document.body.appendChild(textArea);
+                  textArea.focus();
+                  textArea.select();
+                  document.execCommand("copy");
+                  document.body.removeChild(textArea);
+                }
+
+                setShowCopiedToast(true);
+                setTimeout(() => setShowCopiedToast(false), 2500);
+              } catch (err) {
+                console.error("Ошибка копирования:", err);
+              }
 
               setShowCopiedToast(true);
               setTimeout(() => setShowCopiedToast(false), 2500);

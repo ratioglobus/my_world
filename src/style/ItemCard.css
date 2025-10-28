@@ -306,5 +306,6 @@ body.dark-theme .menu-item:hover {
 
   .menu-button {
     padding: 3px;
+    margin-top: -3px;
   }
 }
