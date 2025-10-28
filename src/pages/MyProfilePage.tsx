@@ -12,6 +12,7 @@ import AuthForm from "../components/AuthForm";
 import FilterByType from "../components/FilterByType";
 import FilterByPriority from "../components/FilterByPriority";
 import FilterIdeasButton from "../components/FilterIdeasButton";
+import FilterByHidden from "../components/FilterByHidden";
 
 
 function MyProfilePage() {
@@ -29,7 +30,7 @@ function MyProfilePage() {
   const [burgerOpen, setBurgerOpen] = useState(false);
   const [selectedType, setSelectedType] = useState("Все типы");
   const [selectedPriority, setSelectedPriority] = useState("Все приоритеты");
-
+  const [showHiddenOnly, setShowHiddenOnly] = useState(false);  
   const ITEMS_PER_PAGE = 16;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -197,9 +198,36 @@ function MyProfilePage() {
     setRatingItem(null);
   };
 
+  const handleToggleHidden = async (id: string, hidden: boolean) => {
+    if (!user) return;
+    const table = mode === "completed" ? "completed_items" : "planned_items";
+
+    const { error } = await supabase
+      .from(table)
+      .update({ is_hidden: hidden })
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    if (mode === "completed") {
+      setCompletedItems(prev =>
+        prev.map(i => (i.id === id ? { ...i, is_hidden: hidden } : i))
+      );
+    } else {
+      setPlannedItems(prev =>
+        prev.map(i => (i.id === id ? { ...i, is_hidden: hidden } : i))
+      );
+    }
+  };
+
+
   const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(
     item =>
-      !item.is_archived &&
+      !item.is_archived && (!showHiddenOnly || item.is_hidden) &&
       item.title.toLowerCase().includes(query.toLowerCase()) &&
       (selectedType === "Все типы" || item.type === selectedType) &&
       (selectedPriority === "Все приоритеты" || item.priority === selectedPriority)
@@ -307,6 +335,7 @@ function MyProfilePage() {
         <div className="filters-row">
           <FilterByType selectedType={selectedType} onTypeChange={onTypeChange} />
           <FilterByPriority selectedPriority={selectedPriority} onPriorityChange={onPriorityChange} />
+          <FilterByHidden isActive={showHiddenOnly} onToggle={() => setShowHiddenOnly(prev => !prev)} />
           <FilterIdeasButton selectedType={selectedType} onTypeChange={onTypeChange} />
         </div>
       </div>
@@ -324,6 +353,7 @@ function MyProfilePage() {
         setEditingItemId={setEditingItemId}
         onMarkAsCompleted={handleMarkAsCompleted}
         onArchive={handleArchive}
+        onToggleHidden={handleToggleHidden}
       />
 
       {totalPages > 1 && (

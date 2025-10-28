@@ -91,23 +91,26 @@
 
 @media (max-width: 480px) {
   .filters-row {
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    gap: 10px 12px;
     justify-content: center;
-    gap: 12px 8px;
+    align-items: center;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
   }
 
-  .filters-row > :nth-child(1),
-  .filters-row > :nth-child(2) {
-    max-width: 160px;
-    flex: 1 1 auto;
+  .filters-row > * {
+    width: 100%;
+    max-width: none;
   }
 
-  .filters-row > :nth-child(3) {
-    flex-basis: 150px; 
-    max-width: 150px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 12px;
+  .filter-select,
+  .filter-idea-btn,
+  .filter-hidden-btn {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 0.9rem;
   }
 }

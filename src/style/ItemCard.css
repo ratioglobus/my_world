@@ -39,10 +39,18 @@ body.dark-theme {
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible;
   cursor: pointer;
   position: relative;
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hidden-icon {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  color: var(--muted-text);
+  opacity: 0.8;
 }
 
 .item-card-content {

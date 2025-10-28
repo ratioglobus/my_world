@@ -43,6 +43,7 @@ export default function OtherProfilePage() {
                 .select("*")
                 .eq("user_id", userId)
                 .eq("is_archived", false)
+                .eq("is_hidden", false)
                 .order("createdAt", { ascending: false });
             if (!cError) setCompletedItems(completed || []);
 
@@ -51,6 +52,7 @@ export default function OtherProfilePage() {
                 .select("*")
                 .eq("user_id", userId)
                 .eq("is_archived", false)
+                .eq("is_hidden", false)
                 .order("createdAt", { ascending: false });
             if (!pError) setPlannedItems(planned || []);
         };

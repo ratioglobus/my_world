@@ -1,0 +1,59 @@
+.filter-hidden-btn {
+  width: 160px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: #764ba2;
+  font-size: 0.95rem;
+  color: #fff;
+  cursor: pointer;
+  box-sizing: border-box;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  border: none;
+  text-align: center;
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+}
+
+.filter-hidden-btn:hover {
+  transform: scale(1.03);
+  background-color: #8767a8;
+}
+
+.filter-hidden-btn:focus {
+  outline: none;
+  background-color: #572c82;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.filter-hidden-btn.active {
+  background-color: #5a3d91;
+  color: #fff;
+}
+
+[data-theme="dark"] .filter-hidden-btn {
+  background-color: #3a2970;
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .filter-hidden-btn:hover {
+  transform: scale(1.03);
+  background-color: #4b3795;
+}
+
+[data-theme="dark"] .filter-hidden-btn:focus {
+  border: 1px solid #a78bfa;
+  box-shadow: 0 0 4px rgba(167, 139, 250, 0.4);
+}
+
+[data-theme="dark"] .filter-hidden-btn.active {
+  background-color: #5b47b2;
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .filter-hidden-btn {
+    width: 150px;
+    margin: 0 auto;
+  }
+}

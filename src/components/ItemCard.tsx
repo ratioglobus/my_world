@@ -2,7 +2,8 @@ import type { MediaItemProps } from "../types/MediaItem";
 import { useState, useRef, useEffect } from "react";
 import "../style/ItemCard.css";
 import RatingModal from "./RatingModal";
-import { MoreVertical } from "lucide-react";
+import { MoreVertical, EyeOff } from "lucide-react";
+
 
 type ItemCardProps = {
   item: MediaItemProps;
@@ -16,6 +17,7 @@ type ItemCardProps = {
   onArchive?: (id: string) => void;
   isArchiveView?: boolean;
   onRestore?: (id: string) => void;
+  onToggleHidden?: (id: string, hidden: boolean) => void;
 };
 
 export default function ItemCard({
@@ -29,6 +31,7 @@ export default function ItemCard({
   onArchive,
   isOwner = true,
   isArchiveView = false,
+  onToggleHidden,
   onRestore,
 }: ItemCardProps) {
   const [showRatingModal, setShowRatingModal] = useState(false);
@@ -54,12 +57,17 @@ export default function ItemCard({
       className={`item-card ${item.type === "Идея" ? "idea" : ""}`}
       onClick={handleCardClick}
     >
+      {item.is_hidden && (
+        <div className="hidden-icon" title="Эта карточка скрыта даже в режиме публичного профиля">
+          <EyeOff size={18} />
+        </div>
+      )}
       <div
         className={`priority-bar ${item.priority === "Критичное"
-            ? "priority-critical"
-            : item.priority === "Важное"
-              ? "priority-important"
-              : "priority-normal"
+          ? "priority-critical"
+          : item.priority === "Важное"
+            ? "priority-important"
+            : "priority-normal"
           }`}
       />
 
@@ -127,6 +135,19 @@ export default function ItemCard({
                   }}
                 >
                   Архивировать
+                </button>
+              )}
+
+              {onToggleHidden && (
+                <button
+                  className="menu-item"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen(false);
+                    onToggleHidden(item.id, !item.is_hidden);
+                  }}
+                >
+                  {item.is_hidden ? "Сделать видимой" : "Скрыть"}
                 </button>
               )}
 

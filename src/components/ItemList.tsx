@@ -21,6 +21,7 @@ type ItemListProps = {
   isArchiveView?: boolean;
   onArchive?: (id: string) => void;
   onRestore?: (id: string) => void;
+  onToggleHidden?: (id: string, hidden: boolean) => void;
 };
 
 export default function ItemList({
@@ -38,6 +39,7 @@ export default function ItemList({
   isOwner,
   setEditingItemId,
   onMarkAsCompleted,
+  onToggleHidden,
   isArchiveView,
 }: ItemListProps) {
   const editingItem = useMemo(
@@ -71,6 +73,7 @@ export default function ItemList({
             onArchive={onArchive}
             isArchiveView={isArchiveView}
             onRestore={onRestore}
+            onToggleHidden={onToggleHidden}
           />
         ))}
       </div>

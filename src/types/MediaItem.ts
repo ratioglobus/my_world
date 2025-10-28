@@ -9,4 +9,5 @@ export type MediaItemProps = {
     theme?: string
     isArchiveView?: boolean
     is_archived?: boolean
+    is_hidden?: boolean
 }
