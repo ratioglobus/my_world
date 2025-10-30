@@ -4,16 +4,16 @@ import { supabase } from "../supabaseClient";
 import type { MediaItemProps } from "../types/MediaItem";
 import ItemList from "../components/ItemList";
 import AuthForm from "../components/AuthForm";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function ArchiveItemsPage() {
     const [user, setUser] = useState<any>(null);
     const [archivedCompleted, setArchivedCompleted] = useState<MediaItemProps[]>([]);
     const [archivedPlanned, setArchivedPlanned] = useState<MediaItemProps[]>([]);
+    const [burgerOpen, setBurgerOpen] = useState(false);
     const [theme] = useState<"light" | "dark">(
         () => (localStorage.getItem("theme") as "light" | "dark") || "light"
     );
-    const navigate = useNavigate();
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -92,9 +92,40 @@ export default function ArchiveItemsPage() {
 
     return (
         <div className="archive-main">
-            <button className="back-button" onClick={() => navigate("/")}>
-                ← На главную
-            </button>
+            <div className="top-bar">
+                <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
+                    <button
+                        className="burger-btn mobile-only"
+                        onClick={() => setBurgerOpen(prev => !prev)}
+                    >
+                        ☰
+                    </button>
+
+                    <div className="burger-menu">
+                        <Link className="top-bar-profile-button" to="/">
+                            На главную
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/profile">
+                            Профиль
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/follows">
+                            Подписки
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/projects">
+                            Проекты
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/about">
+                            О проекте
+                        </Link>
+                        <button
+                            className="signout-btn"
+                            onClick={() => supabase.auth.signOut()}
+                        >
+                            Выйти
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div className="archive">
                 <h1 className="archive-title">Архив карточек</h1>
 
@@ -110,10 +141,10 @@ export default function ArchiveItemsPage() {
                             onRestore={(id) => handleRestore(id, "completed")}
                             editingItemId={null}
                             viewItemId={null}
-                            onEdit={() => {}}
-                            onUpdate={() => {}}
-                            onView={() => {}}
-                            setEditingItemId={() => {}}
+                            onEdit={() => { }}
+                            onUpdate={() => { }}
+                            onView={() => { }}
+                            setEditingItemId={() => { }}
                         />
                     ) : (
                         <p className="archive-empty">Нет архивированных готовых карточек</p>
@@ -132,10 +163,10 @@ export default function ArchiveItemsPage() {
                             onRestore={(id) => handleRestore(id, "planned")}
                             editingItemId={null}
                             viewItemId={null}
-                            onEdit={() => {}}
-                            onUpdate={() => {}}
-                            onView={() => {}}
-                            setEditingItemId={() => {}}
+                            onEdit={() => { }}
+                            onUpdate={() => { }}
+                            onView={() => { }}
+                            setEditingItemId={() => { }}
                         />
                     ) : (
                         <p className="archive-empty">Нет архивированных планируемых карточек</p>

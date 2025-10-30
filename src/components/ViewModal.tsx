@@ -4,7 +4,7 @@ import "../style/ViewModal.css";
 type ViewModalProps = {
   item: MediaItemProps;
   onClose: () => void;
-  mode: "completed" | "planned";
+  mode: "completed" | "planned" | "projects";
 };
 
 export default function ViewModal({ item, onClose, mode }: ViewModalProps) {

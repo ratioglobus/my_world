@@ -7,7 +7,7 @@ type EditModalProps = {
   onCancel: () => void;
   onClose: () => void;
   onSave: (updatedItem: MediaItemProps) => void;
-  mode: "completed" | "planned";
+  mode: "completed" | "planned" | "projects";
 };
 
 export default function EditModal({
@@ -19,7 +19,7 @@ export default function EditModal({
 }: EditModalProps) {
   const [title, setTitle] = useState(item.title);
   const [type, setType] = useState(item.type);
-  const [rating, setRating] = useState(item.rating);
+  const [rating, setRating] = useState(item.rating ?? 0);
   const [comment, setComment] = useState(item.comment || "");
   const [priority, setPriority] = useState(item.priority);
 
@@ -27,7 +27,7 @@ export default function EditModal({
     const updated: MediaItemProps = {
       ...item,
       title,
-      type,
+      type: mode === "projects" ? "Проект" : type,
       priority,
       rating: mode === "planned" ? 0 : rating,
       comment,
@@ -38,30 +38,34 @@ export default function EditModal({
   return (
     <div className="edit-modal-overlay" onClick={onClose}>
       <div className="edit-modal" onClick={(e) => e.stopPropagation()}>
-        <h2 className="edit-modal-title">Редактировать элемент</h2>
+        <h2 className="edit-modal-title">
+          {mode === "projects" ? "Редактировать проект" : "Редактировать элемент"}
+        </h2>
 
         <div className="edit-modal-fields">
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Название"
+            placeholder={mode === "projects" ? "Название проекта" : "Название"}
             className="edit-modal-input"
           />
 
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className="edit-modal-input"
-          >
-            <option value="Фильм">Фильм</option>
-            <option value="Сериал">Сериал</option>
-            <option value="Книга">Книга</option>
-            <option value="Аниме">Аниме</option>
-            <option value="Игра">Игра</option>
-            <option value="Идея">Идея</option>
-            <option value="YouTube">YouTube</option>
-          </select>
+          {mode !== "projects" && (
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="edit-modal-input"
+            >
+              <option value="Фильм">Фильм</option>
+              <option value="Сериал">Сериал</option>
+              <option value="Книга">Книга</option>
+              <option value="Аниме">Аниме</option>
+              <option value="Игра">Игра</option>
+              <option value="Идея">Идея</option>
+              <option value="YouTube">YouTube</option>
+            </select>
+          )}
 
           <select
             value={priority}
@@ -90,7 +94,7 @@ export default function EditModal({
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            placeholder="Комментарий"
+            placeholder={mode === "projects" ? "Описание проекта" : "Комментарий"}
             rows={3}
             className="edit-modal-input edit-modal-textarea"
           />

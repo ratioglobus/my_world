@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../style/ProfileDetailsPage.css";
 
 type Profile = {
@@ -18,9 +18,9 @@ export default function ProfileDetailsPage() {
   const [savingNickname, setSavingNickname] = useState(false);
   const [showCopiedToast, setShowCopiedToast] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [burgerOpen, setBurgerOpen] = useState(false);
 
   const nicknameInputRef = useRef<HTMLInputElement | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
@@ -36,7 +36,7 @@ export default function ProfileDetailsPage() {
       if (!session?.user) return;
       const userId = session.user.id;
       setUserId(userId);
-      
+
       const { data, error } = await supabase
         .from("profiles")
         .select("user_id, nickname, email, is_public")
@@ -168,13 +168,44 @@ export default function ProfileDetailsPage() {
 
   return (
     <div className="profile-container">
-      <button className="back-button" onClick={() => navigate("/")}>
-        ← На главную
-      </button>
+      <div className="top-bar">
+        <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
+          <button
+            className="burger-btn mobile-only"
+            onClick={() => setBurgerOpen(prev => !prev)}
+          >
+            ☰
+          </button>
+
+          <div className="burger-menu">
+            <Link className="top-bar-profile-button" to="/">
+              На главную
+            </Link>
+            <Link className="top-bar-profile-button" to="/profile">
+              Профиль
+            </Link>
+            <Link className="top-bar-profile-button" to="/projects">
+              Проекты
+            </Link>
+            <Link className="top-bar-profile-button" to="/archive-items">
+              Архив
+            </Link>
+            <Link className="top-bar-profile-button" to="/about">
+              О проекте
+            </Link>
+            <button
+              className="signout-btn"
+              onClick={() => supabase.auth.signOut()}
+            >
+              Выйти
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div className="profile-main">
         <div className="profile-card">
-          <h1 className="profile-title">Мой профиль</h1>
+          <h1 className="profile-title">Профиль</h1>
 
           <p className="profile-field nickname-row">
             <strong>Никнейм:</strong>

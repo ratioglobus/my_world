@@ -1,14 +1,47 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../style/AboutProjectPage.css";
+import { useState } from "react";
+import { supabase } from "../supabaseClient";
 
 export default function AboutProjectPage() {
-    const navigate = useNavigate();
+    const [burgerOpen, setBurgerOpen] = useState(false);
 
     return (
         <div className="about">
-            <button className="back-button" onClick={() => navigate("/")}>
-                ← На главную
-            </button>
+            <div className="top-bar">
+                <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
+                    <button
+                        className="burger-btn mobile-only"
+                        onClick={() => setBurgerOpen(prev => !prev)}
+                    >
+                        ☰
+                    </button>
+
+                    <div className="burger-menu">
+                        <Link className="top-bar-profile-button" to="/">
+                            На главную
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/profile">
+                            Профиль
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/follows">
+                            Подписки
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/projects">
+                            Проекты
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/archive-items">
+                            Архив
+                        </Link>
+                        <button
+                            className="signout-btn"
+                            onClick={() => supabase.auth.signOut()}
+                        >
+                            Выйти
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div className="about-container">
 
                 <h1 className="about-title">Researcher</h1>
@@ -59,7 +92,7 @@ export default function AboutProjectPage() {
                     </div>
                 </div>
 
-                <div className="about-footer">            
+                <div className="about-footer">
                     <p className="about-footer-small">Исследуй и делись открытиями с другими</p>
                     <p>Спасибо ❤️</p>
                 </div>

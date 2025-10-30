@@ -30,7 +30,7 @@ function MyProfilePage() {
   const [burgerOpen, setBurgerOpen] = useState(false);
   const [selectedType, setSelectedType] = useState("Все типы");
   const [selectedPriority, setSelectedPriority] = useState("Все приоритеты");
-  const [showHiddenOnly, setShowHiddenOnly] = useState(false);  
+  const [showHiddenOnly, setShowHiddenOnly] = useState(false);
   const ITEMS_PER_PAGE = 16;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -224,7 +224,6 @@ function MyProfilePage() {
     }
   };
 
-
   const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(
     item =>
       !item.is_archived && (!showHiddenOnly || item.is_hidden) &&
@@ -279,10 +278,13 @@ function MyProfilePage() {
 
           <div className="burger-menu">
             <Link className="top-bar-profile-button" to="/profile">
-              Мой профиль
+              Профиль
             </Link>
             <Link className="top-bar-profile-button" to="/follows">
-              Мои подписки
+              Подписки
+            </Link>
+            <Link className="top-bar-profile-button" to="/projects">
+              Проекты
             </Link>
             <Link className="top-bar-profile-button" to="/archive-items">
               Архив
@@ -323,7 +325,6 @@ function MyProfilePage() {
           {theme === "light" ? "🌙" : "☀️"}
         </button>
       </div>
-
 
       <h1 className="section-title">{mode === "completed" ? "Добавить исследование" : "Запланировать исследование"}</h1>
       <AddItemForm onAdd={handleAdd} mode={mode} />

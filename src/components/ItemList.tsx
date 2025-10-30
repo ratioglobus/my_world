@@ -7,13 +7,13 @@ import "../style/ItemList.css";
 
 type ItemListProps = {
   items: MediaItemProps[];
-  onDelete?: (id: string) => void;  
+  onDelete?: (id: string) => void;
   onEdit?: (id: string) => void;
   onUpdate?: (id: string, updatedItem: MediaItemProps) => void;
   editingItemId: string | null;
   viewItemId: string | null;
   onView?: (id: string) => void;
-  mode: "completed" | "planned";
+  mode: "completed" | "planned" | "projects";
   theme: 'light' | 'dark';
   isOwner?: boolean;
   setEditingItemId: (id: string | null) => void;
@@ -53,7 +53,23 @@ export default function ItemList({
   );
 
   if (!items || items.length === 0) {
-    return <p className="item-list-empty">Список пуст — добавь первый элемент!</p>;
+    let emptyMessage = "";
+
+    switch (mode) {
+      case "completed":
+        emptyMessage = 'Список пуст — добавь первый элемент. Например - "Прочитать Гиперион Дэна Симонса"';
+        break;
+      case "planned":
+        emptyMessage = 'Нет запланированных элементов. Добавь то, что хочешь сделать!';
+        break;
+      case "projects":
+        emptyMessage = 'У тебя пока нет проектов. Добавь первый, например, "Выучить японский"';
+        break;
+      default:
+        emptyMessage = "Список пуст.";
+    }
+
+    return <p className="item-list-empty">{emptyMessage}</p>;
   }
 
   return (

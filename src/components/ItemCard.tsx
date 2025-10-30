@@ -10,7 +10,7 @@ type ItemCardProps = {
   onDelete: (id: string) => void;
   onEdit: (id: string) => void;
   onView: (id: string) => void;
-  mode: "completed" | "planned";
+  mode: "completed" | "planned" | "projects";
   theme: "dark" | "light";
   onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>;
   isOwner?: boolean;

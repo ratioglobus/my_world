@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../style/ProfileDetailsPage.css";
 import "../style/MyFollowsPage.css";
 
@@ -11,6 +11,7 @@ export default function MyFollowsPage() {
     >([]);
     const [currentUserId, setCurrentUserId] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [burgerOpen, setBurgerOpen] = useState(false);
     const [searchResults, setSearchResults] = useState<
         { user_id: string; nickname: string }[]
     >([]);
@@ -99,9 +100,40 @@ export default function MyFollowsPage() {
 
     return (
         <div className="profile-container">
-            <button className="back-button" onClick={() => navigate("/")}>
-                ← На главную
-            </button>
+            <div className="top-bar">
+                <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
+                    <button
+                        className="burger-btn mobile-only"
+                        onClick={() => setBurgerOpen(prev => !prev)}
+                    >
+                        ☰
+                    </button>
+
+                    <div className="burger-menu">
+                        <Link className="top-bar-profile-button" to="/">
+                            На главную
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/profile">
+                            Профиль
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/projects">
+                            Проекты
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/archive-items">
+                            Архив
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/about">
+                            О проекте
+                        </Link>
+                        <button
+                            className="signout-btn"
+                            onClick={() => supabase.auth.signOut()}
+                        >
+                            Выйти
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <div className="profile-main">
                 <div className="search-section">
@@ -132,7 +164,7 @@ export default function MyFollowsPage() {
                 </div>
 
                 <div className="subscriptions-card">
-                    <h2 className="subscriptions-title">Мои подписки</h2>
+                    <h2 className="subscriptions-title">Профиль</h2>
                     <ul className="subscriptions-list">
                         {subscriptions.length === 0 && <li>Нет подписок</li>}
                         {subscriptions.map(sub => (

@@ -10,4 +10,5 @@ export type MediaItemProps = {
     isArchiveView?: boolean
     is_archived?: boolean
     is_hidden?: boolean
+    user_id?: string
 }

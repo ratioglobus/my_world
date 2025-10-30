@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import ItemList from "../components/ItemList";
 import SearchBar from "../components/SearchBar";
@@ -11,7 +11,6 @@ import "../style/OtherProfilePage.css";
 import type { MediaItemProps } from "../types/MediaItem";
 
 export default function OtherProfilePage() {
-    const navigate = useNavigate();
     const { id: userId } = useParams<{ id: string }>();
     const [completedItems, setCompletedItems] = useState<MediaItemProps[]>([]);
     const [plannedItems, setPlannedItems] = useState<MediaItemProps[]>([]);
@@ -25,6 +24,7 @@ export default function OtherProfilePage() {
     const [currentUserId, setCurrentUserId] = useState<string | null>(null);
     const [isFollowing, setIsFollowing] = useState(false);
     const [loadingFollow, setLoadingFollow] = useState(true);
+    const [burgerOpen, setBurgerOpen] = useState(false);
 
     useEffect(() => {
         const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
@@ -122,12 +122,43 @@ export default function OtherProfilePage() {
 
     return (
         <div className="app-container">
-            <button
-                className="top-bar-other-profile-button"
-                onClick={() => navigate("/")}
-            >
-                На главную
-            </button>
+            <div className="top-bar">
+                <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
+                    <button
+                        className="burger-btn mobile-only"
+                        onClick={() => setBurgerOpen(prev => !prev)}
+                    >
+                        ☰
+                    </button>
+
+                    <div className="burger-menu">
+                        <Link className="top-bar-profile-button" to="/">
+                            На главную
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/profile">
+                            Профиль
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/follows">
+                            Подписки
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/projects">
+                            Проекты
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/archive-items">
+                            Архив
+                        </Link>
+                        <Link className="top-bar-profile-button" to="/about">
+                            О проекте
+                        </Link>
+                        <button
+                            className="signout-btn"
+                            onClick={() => supabase.auth.signOut()}
+                        >
+                            Выйти
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <div className="top-bar-other-profile-wrapper">
                 <div className="top-bar-other-profile">
@@ -137,14 +168,14 @@ export default function OtherProfilePage() {
                             : `Профиль ${profile.nickname}`
                         : "Загрузка..."}
 
-                                        {currentUserId !== userId && !loadingFollow && (
-                    <button
-                        className="top-bar-button-follow"
-                        onClick={handleFollowToggle}
-                    >
-                        {isFollowing ? "Отписаться" : "Подписаться"}
-                    </button>
-                )}
+                    {currentUserId !== userId && !loadingFollow && (
+                        <button
+                            className="top-bar-button-follow"
+                            onClick={handleFollowToggle}
+                        >
+                            {isFollowing ? "Отписаться" : "Подписаться"}
+                        </button>
+                    )}
                 </div>
             </div>
 

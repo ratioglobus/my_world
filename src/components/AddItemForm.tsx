@@ -4,7 +4,7 @@ import "../style/AddItemForm.css";
 
 type AddItemFormProps = {
   onAdd: (item: Omit<MediaItemProps, "id" | "user_id">) => void;
-  mode: "completed" | "planned";
+  mode: "completed" | "planned" | "projects";
 };
 
 export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
@@ -16,11 +16,11 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title) return;
+    if (!title.trim()) return;
 
     const newItem: Omit<MediaItemProps, "id" | "user_id"> = {
       title,
-      type,
+      type: mode === "projects" ? "Проект" : type,
       priority,
       comment: comment || undefined,
       createdAt: new Date().toISOString(),
@@ -29,7 +29,7 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
 
     onAdd(newItem);
     setTitle("");
-    setPriority("Среднее")
+    setPriority("Среднее");
     setType("Фильм");
     setRating(5);
     setComment("");
@@ -40,26 +40,28 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
       <div className="add-item-row">
         <input
           type="text"
-          placeholder="Название"
+          placeholder={mode === "projects" ? "Название проекта" : "Название"}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="add-item-input"
           required
         />
 
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          className="add-item-input add-item-select-type"
-        >
-          <option value="Фильм">Фильм</option>
-          <option value="Сериал">Сериал</option>
-          <option value="Книга">Книга</option>
-          <option value="Аниме">Аниме</option>
-          <option value="Игра">Игра</option>
-          <option value="Идея">Идея</option>
-          <option value="YouTube">YouTube</option>
-        </select>
+        {mode !== "projects" && (
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="add-item-input add-item-select-type"
+          >
+            <option value="Фильм">Фильм</option>
+            <option value="Сериал">Сериал</option>
+            <option value="Книга">Книга</option>
+            <option value="Аниме">Аниме</option>
+            <option value="Игра">Игра</option>
+            <option value="Идея">Идея</option>
+            <option value="YouTube">YouTube</option>
+          </select>
+        )}
 
         <select
           value={priority}
@@ -88,7 +90,7 @@ export default function AddItemForm({ onAdd, mode }: AddItemFormProps) {
 
       <div className="add-item-row">
         <textarea
-          placeholder="Комментарий"
+          placeholder={mode === "projects" ? "Описание проекта" : "Комментарий"}
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           rows={2}

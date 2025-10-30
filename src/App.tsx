@@ -8,6 +8,7 @@ import OtherProfilePage from "./pages/OtherProfilePage";
 import MyFollowsPage from "./pages/MyFollowsPage";
 import AboutProjectPage from "./pages/AboutProjectPage";
 import ArchiveItemsPage from "./pages/ArchiveItemsPage";
+import ProjectsPage from "./pages/ProjectsPage";
 import AuthForm from "./components/AuthForm";
 
 export default function App() {
@@ -66,6 +67,7 @@ export default function App() {
           <Route path="/follows" element={<MyFollowsPage />} />
           <Route path="/about" element={<AboutProjectPage />} />
           <Route path="/archive-items" element={<ArchiveItemsPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
         </Routes>
       )}
     </div>
