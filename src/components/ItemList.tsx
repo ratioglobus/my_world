@@ -22,6 +22,7 @@ type ItemListProps = {
   onArchive?: (id: string) => void;
   onRestore?: (id: string) => void;
   onToggleHidden?: (id: string, hidden: boolean) => void;
+  user?: any;
 };
 
 export default function ItemList({
@@ -37,6 +38,7 @@ export default function ItemList({
   onArchive,
   onRestore,
   isOwner,
+  user,
   setEditingItemId,
   onMarkAsCompleted,
   onToggleHidden,
@@ -95,7 +97,12 @@ export default function ItemList({
       </div>
 
       {viewingItem && onView && (
-        <ViewModal item={viewingItem} onClose={() => onView("")} mode={mode} />
+        <ViewModal
+          item={viewingItem}
+          onClose={() => onView("")}
+          mode={mode}
+          user={user}
+        />
       )}
 
       {editingItem && onUpdate && setEditingItemId && onEdit && !isArchiveView && (

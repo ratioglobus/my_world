@@ -1,13 +1,15 @@
 import type { MediaItemProps } from "../types/MediaItem";
 import "../style/ViewModal.css";
+import ProjectSteps from "./ProjectSteps";
 
 type ViewModalProps = {
   item: MediaItemProps;
   onClose: () => void;
   mode: "completed" | "planned" | "projects";
+  user?: any;
 };
 
-export default function ViewModal({ item, onClose, mode }: ViewModalProps) {
+export default function ViewModal({ item, onClose, mode, user }: ViewModalProps) {
   const renderCommentWithLinks = (text: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
 
@@ -63,6 +65,10 @@ export default function ViewModal({ item, onClose, mode }: ViewModalProps) {
           <div className="view-modal-comment">
             {renderCommentWithLinks(item.comment)}
           </div>
+        )}
+
+        {mode === "projects" && user && (
+          <ProjectSteps projectId={item.id} userId={user.id} />
         )}
       </div>
     </div>

@@ -154,6 +154,7 @@ function ProjectsPage() {
                 theme={theme}
                 onView={handleView}
                 viewItemId={viewItemId}
+                user={user}
             />
 
             {confirmDeleteId && (
