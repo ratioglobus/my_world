@@ -164,7 +164,7 @@ export default function MyFollowsPage() {
                 </div>
 
                 <div className="subscriptions-card">
-                    <h2 className="subscriptions-title">Профиль</h2>
+                    <h2 className="subscriptions-title">Подписки</h2>
                     <ul className="subscriptions-list">
                         {subscriptions.length === 0 && <li>Нет подписок</li>}
                         {subscriptions.map(sub => (

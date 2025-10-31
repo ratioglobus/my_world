@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type { MediaItemProps } from "../types/MediaItem";
 import "../style/ViewModal.css";
 import ProjectSteps from "./ProjectSteps";
@@ -7,9 +8,16 @@ type ViewModalProps = {
   onClose: () => void;
   mode: "completed" | "planned" | "projects";
   user?: any;
+  onProgressUpdate?: () => void;
 };
 
-export default function ViewModal({ item, onClose, mode, user }: ViewModalProps) {
+export default function ViewModal({
+  item,
+  onClose,
+  mode,
+  user,
+  onProgressUpdate,
+}: ViewModalProps) {
   const renderCommentWithLinks = (text: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
 
@@ -31,10 +39,40 @@ export default function ViewModal({ item, onClose, mode, user }: ViewModalProps)
     });
   };
 
+  const handleClose = () => {
+    try {
+      if (onProgressUpdate) onProgressUpdate();
+    } finally {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (onProgressUpdate) {
+        try {
+          onProgressUpdate();
+        } catch (e) {
+          console.error("onProgressUpdate error on unmount:", e);
+        }
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onProgressUpdate]);
+
   return (
-    <div className="view-modal-overlay" onClick={onClose}>
+    <div className="view-modal-overlay" onClick={handleClose}>
       <div className="view-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="view-modal-close" onClick={onClose}>
+        <button className="view-modal-close" onClick={handleClose}>
           ✖
         </button>
 

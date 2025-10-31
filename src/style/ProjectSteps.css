@@ -41,6 +41,7 @@
   padding: 10px 14px;
   margin-bottom: 8px;
   transition: all 0.25s ease;
+  animation: stepAppear 0.25s ease;
 }
 
 .step-item:hover {
@@ -134,7 +135,6 @@
   transform: translateY(1px);
 }
 
-/* ✨ Анимация появления шагов */
 @keyframes stepAppear {
   from {
     opacity: 0;
@@ -146,11 +146,6 @@
   }
 }
 
-.step-item {
-  animation: stepAppear 0.25s ease;
-}
-
-/* ------------------ Мобильная адаптация ------------------ */
 @media (max-width: 768px) {
   .project-steps {
     padding: 16px;

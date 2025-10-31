@@ -11,4 +11,6 @@ export type MediaItemProps = {
     is_archived?: boolean
     is_hidden?: boolean
     user_id?: string
+    progress?: number
+    deadline?: string
 }

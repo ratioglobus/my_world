@@ -1,9 +1,10 @@
 import type { MediaItemProps } from "../types/MediaItem";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import "../style/ItemCard.css";
+import "../style/MyProfilePage.css";
+import "../style/ProjectSteps.css";
 import RatingModal from "./RatingModal";
 import { MoreVertical, EyeOff } from "lucide-react";
-
 
 type ItemCardProps = {
   item: MediaItemProps;
@@ -52,13 +53,43 @@ export default function ItemCard({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const progress = useMemo(() => {
+    if (item.progress != null) {
+      const n = Number(item.progress);
+      return Number.isFinite(n) ? Math.max(0, Math.min(100, Math.round(n))) : 0;
+    }
+
+    const steps = (item as any).steps;
+    if (Array.isArray(steps) && steps.length > 0) {
+      const isCompleted = (s: any) =>
+        Boolean(
+          s.completed ??
+          s.done ??
+          s.is_done ??
+          s.is_completed ??
+          s.completed_at ??
+          s.finished_at
+        );
+      const total = steps.length;
+      const done = steps.filter((s) => isCompleted(s)).length;
+      return Math.round((done / total) * 100);
+    }
+
+    return 0;
+  }, [item]);
+
   return (
     <div
       className={`item-card ${item.type === "Идея" ? "idea" : ""}`}
       onClick={handleCardClick}
+      role="button"
+      aria-label={item.title}
     >
       {item.is_hidden && (
-        <div className="hidden-icon" title="Эта карточка скрыта даже в режиме публичного профиля">
+        <div
+          className="hidden-icon"
+          title="Эта карточка скрыта даже в режиме публичного профиля"
+        >
           <EyeOff size={18} />
         </div>
       )}
@@ -83,13 +114,44 @@ export default function ItemCard({
         ) : (
           <p className="item-card-type">
             {item.type}
-            {mode === "completed" && <> · рейтинг – <strong>{item.rating}/10</strong></>}
+            {mode === "completed" && (
+              <>
+                {" "}
+                · рейтинг – <strong>{item.rating}/10</strong>
+              </>
+            )}
           </p>
         )}
 
         <p className="item-card-date">
           Добавлено: {new Date(item.createdAt).toLocaleDateString("ru-RU")}
         </p>
+
+        {mode === "projects" && (
+          <div className="project-info">
+            <div className="project-progress">
+              <div
+                className="progress-bar"
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={progress}
+              >
+                <div
+                  className="progress-bar-fill"
+                  style={{ width: `${progress ?? 0}%` }}
+                />
+              </div>
+            </div>
+
+            {item.deadline && (
+              <p className="project-deadline">
+                Дедлайн:{" "}
+                <strong>{new Date(item.deadline).toLocaleDateString("ru-RU")}</strong>
+              </p>
+            )}
+          </div>
+        )}
 
         {item.comment && (
           <p className="item-card-comment" title={item.comment}>

@@ -1,4 +1,5 @@
 import "../style/MyProfilePage.css";
+import "../style/ProjectSteps.css";
 import { useState, useEffect } from "react";
 import type { MediaItemProps } from "../types/MediaItem";
 import { supabase } from "../supabaseClient";
@@ -53,14 +54,38 @@ function ProjectsPage() {
 
     const fetchProjects = async () => {
         if (!user) return;
-        const { data, error } = await supabase
+
+        const { data: projectsData, error: projectsError } = await supabase
             .from("projects")
             .select("*")
             .eq("user_id", user.id)
             .order("createdAt", { ascending: false });
 
-        if (error) console.error(error);
-        else setProjects(data || []);
+        if (projectsError) {
+            console.error(projectsError);
+            return;
+        }
+
+        const { data: stepsData, error: stepsError } = await supabase
+            .from("project_steps")
+            .select("project_id, completed");
+
+        if (stepsError) {
+            console.error(stepsError);
+        }
+
+        const projectsWithProgress = projectsData.map(project => {
+            const projectSteps = stepsData?.filter(s => s.project_id === project.id) || [];
+            const completedSteps = projectSteps.filter(s => s.completed).length;
+            const progress =
+                projectSteps.length > 0
+                    ? Math.round((completedSteps / projectSteps.length) * 100)
+                    : 0;
+
+            return { ...project, progress };
+        });
+
+        setProjects(projectsWithProgress);
     };
 
     const handleAdd = async (item: Omit<MediaItemProps, "id" | "user_id">) => {
@@ -155,6 +180,7 @@ function ProjectsPage() {
                 onView={handleView}
                 viewItemId={viewItemId}
                 user={user}
+                onProgressUpdate={fetchProjects}
             />
 
             {confirmDeleteId && (

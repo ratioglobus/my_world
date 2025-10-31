@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { supabase } from "../supabaseClient";
 import type { ProjectStep } from "../types/ProjectStep";
 import "../style/ProjectSteps.css";
@@ -61,9 +61,26 @@ export default function ProjectSteps({ projectId, userId }: ProjectStepsProps) {
     else setSteps((prev) => prev.filter((s) => s.id !== stepId));
   };
 
+  const progress = useMemo(() => {
+    if (steps.length === 0) return 0;
+    const completedCount = steps.filter((s) => s.completed).length;
+    return Math.round((completedCount / steps.length) * 100);
+  }, [steps]);
+
   return (
     <div className="project-steps">
       <h3 className="steps-title">Шаги проекта</h3>
+
+      <div className="progress-container">
+        <div className="progress-bar">
+          <div
+            className="progress-bar-fill"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+        <span className="progress-text">{progress}%</span>
+      </div>
+
       <ul className="steps-list">
         {steps.map((step) => (
           <li key={step.id} className={`step-item ${step.completed ? "done" : ""}`}>

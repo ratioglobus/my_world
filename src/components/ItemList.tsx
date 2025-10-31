@@ -23,6 +23,7 @@ type ItemListProps = {
   onRestore?: (id: string) => void;
   onToggleHidden?: (id: string, hidden: boolean) => void;
   user?: any;
+  onProgressUpdate?: () => void;
 };
 
 export default function ItemList({
@@ -42,6 +43,7 @@ export default function ItemList({
   setEditingItemId,
   onMarkAsCompleted,
   onToggleHidden,
+  onProgressUpdate,
   isArchiveView,
 }: ItemListProps) {
   const editingItem = useMemo(
@@ -102,6 +104,7 @@ export default function ItemList({
           onClose={() => onView("")}
           mode={mode}
           user={user}
+          onProgressUpdate={onProgressUpdate}
         />
       )}
 
