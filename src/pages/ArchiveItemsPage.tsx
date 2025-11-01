@@ -127,7 +127,7 @@ export default function ArchiveItemsPage() {
                 </div>
             </div>
             <div className="archive">
-                <h1 className="archive-title">Архив карточек</h1>
+                <h1 className="archive-title">Архив исследований</h1>
 
                 <section className="archive-section">
                     <h2 className="archive-subtitle">Готовые</h2>

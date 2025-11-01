@@ -49,15 +49,9 @@ export default function ViewModal({
 
   useEffect(() => {
     return () => {
-      if (onProgressUpdate) {
-        try {
-          onProgressUpdate();
-        } catch (e) {
-          console.error("onProgressUpdate error on unmount:", e);
-        }
-      }
+      onProgressUpdate?.();
     };
-  }, []);
+  }, [onProgressUpdate]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -85,6 +79,12 @@ export default function ViewModal({
         <p className="view-modal-field">
           <strong>Приоритет:</strong> {item.priority}
         </p>
+
+        {mode === "projects" && (
+          <p className="view-modal-field">
+            <strong>Статус:</strong> {item.status || "—"}
+          </p>
+        )}
 
         {mode === "completed" && (
           <p className="view-modal-field">

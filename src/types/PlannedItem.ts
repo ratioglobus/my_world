@@ -13,4 +13,5 @@ export type PlannedItemProps = {
     user_id?: string
     progress?: number
     deadline?: string
+    status?: "Запланировано" | "В процессе" | "Завершено" | "Приостановлено"
 }

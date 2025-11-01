@@ -19,6 +19,9 @@ export default function EditModal({
 }: EditModalProps) {
   const [title, setTitle] = useState(item.title);
   const [type, setType] = useState(item.type);
+  const [statusProject, setStatusProject] = useState<
+    "Запланировано" | "В процессе" | "Завершено" | "Приостановлено"
+  >(item.status || "Запланировано");
   const [rating, setRating] = useState(item.rating ?? 0);
   const [comment, setComment] = useState(item.comment || "");
   const [priority, setPriority] = useState(item.priority);
@@ -29,6 +32,7 @@ export default function EditModal({
       title,
       type: mode === "projects" ? "Проект" : type,
       priority,
+      status: statusProject,
       rating: mode === "planned" ? 0 : rating,
       comment,
     };
@@ -76,6 +80,23 @@ export default function EditModal({
             <option value="Важное">Важное</option>
             <option value="Критичное">Критичное</option>
           </select>
+
+          {mode === "projects" && (
+            <select
+              value={statusProject}
+              className="edit-modal-input"
+              onChange={(e) =>
+                setStatusProject(
+                  e.target.value as "Запланировано" | "В процессе" | "Завершено" | "Приостановлено"
+                )
+              }
+            >
+              <option value="Запланировано">Запланировано</option>
+              <option value="В процессе">В процессе</option>
+              <option value="Приостановлено">Приостановлено</option>
+              <option value="Завершено">Завершено</option>
+            </select>
+          )}
 
           {mode === "completed" && (
             <select

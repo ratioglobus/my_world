@@ -9,6 +9,8 @@ import AddItemForm from "../components/AddItemForm";
 import SearchBar from "../components/SearchBar";
 import ConfirmModal from "../components/ConfirmModal";
 import AuthForm from "../components/AuthForm";
+import FilterProjectsByStatus from "../components/FilterProjectsByStatus";
+import FilterByPriority from "../components/FilterByPriority";
 
 function ProjectsPage() {
     const [user, setUser] = useState<any>(null);
@@ -18,6 +20,8 @@ function ProjectsPage() {
     const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
     const [burgerOpen, setBurgerOpen] = useState(false);
     const [viewItemId, setViewItemId] = useState<string | null>(null);
+    const [selectedStatus, setSelectedStatus] = useState("Все статусы");
+    const [selectedPriority, setSelectedPriority] = useState("Все приоритеты");
     const [theme] = useState<"light" | "dark">(() => {
         try {
             const stored = localStorage.getItem("theme") as "light" | "dark" | null;
@@ -51,6 +55,9 @@ function ProjectsPage() {
         });
         return () => listener.subscription.unsubscribe();
     }, []);
+
+    const onStatusChange = (status: string) => setSelectedStatus(status);
+    const onPriorityChange = (priority: string) => setSelectedPriority(priority);
 
     const fetchProjects = async () => {
         if (!user) return;
@@ -122,7 +129,9 @@ function ProjectsPage() {
     };
 
     const filteredProjects = projects.filter(item =>
-        item.title.toLowerCase().includes(query.toLowerCase())
+        item.title.toLowerCase().includes(query.toLowerCase()) &&
+        (selectedStatus === "Все статусы" || item.status === selectedStatus) &&
+        (selectedPriority === "Все приоритеты" || item.priority === selectedPriority)
     );
 
     if (!user) return <AuthForm onLogin={fetchProjects} />;
@@ -167,6 +176,13 @@ function ProjectsPage() {
             <h1 className="section-title">Добавить долгосрочный проект</h1>
             <AddItemForm onAdd={handleAdd} mode="projects" />
             <SearchBar query={query} onSearch={setQuery} />
+
+            <div className="section-filtered">
+                <div className="filters-row">
+                    <FilterProjectsByStatus selectedStatus={selectedStatus} onStatusChange={onStatusChange} />
+                    <FilterByPriority selectedPriority={selectedPriority} onPriorityChange={onPriorityChange} />
+                </div>
+            </div>
 
             <ItemList
                 items={filteredProjects}

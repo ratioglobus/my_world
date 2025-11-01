@@ -270,6 +270,30 @@ body.dark-theme .menu-item:hover {
   width: 120px;
 }
 
+.project-status {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 10px;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+}
+
+body.light-theme .project-status {
+  color: #fff;
+}
+
+body.dark-theme .project-status {
+  color: #fff;
+}
+
+.project-status:hover {
+  opacity: 0.85;
+  transform: scale(1.02);
+}
+
 .project-progress .progress-bar {
   position: relative;
   flex: 1;

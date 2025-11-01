@@ -144,6 +144,10 @@ export default function ItemCard({
               </div>
             </div>
 
+            {mode === "projects" && (
+              <div className="project-status">{item.status}</div>
+            )}
+
             {item.deadline && (
               <p className="project-deadline">
                 Дедлайн:{" "}
