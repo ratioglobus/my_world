@@ -111,7 +111,7 @@ export default function ItemList({
       {editingItem && onUpdate && setEditingItemId && onEdit && !isArchiveView && (
         <EditModal
           item={editingItem}
-          onCancel={() => onEdit("")}
+          onCancel={() => setEditingItemId(null)}
           onSave={(updatedItem: MediaItemProps) =>
             onUpdate(editingItem.id, updatedItem)
           }

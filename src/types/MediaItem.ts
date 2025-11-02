@@ -13,6 +13,7 @@ export type MediaItemProps = {
     user_id?: string
     progress?: number
     deadline?: string
+    is_pinned?: boolean
     status?: "Запланировано" | "В процессе" | "Завершено" | "Приостановлено"
     statusProject?: "Запланировано" | "В процессе" | "Завершено" | "Приостановлено"
 }

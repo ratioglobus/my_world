@@ -37,6 +37,7 @@ export default function EditModal({
       comment,
     };
     onSave(updated);
+    onClose();
   };
 
   return (

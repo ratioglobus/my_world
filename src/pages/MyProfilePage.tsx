@@ -137,19 +137,36 @@ function MyProfilePage() {
 
   const handleUpdate = async (id: string, updatedItem: MediaItemProps) => {
     if (!user) return;
-    const dbItem = { ...updatedItem, user_id: user.id };
     const table = mode === "completed" ? "completed_items" : "planned_items";
+    const cleanItem = { ...updatedItem };
+    delete cleanItem.status;
+    delete cleanItem.statusProject;
 
     const { data, error } = await supabase
       .from(table)
-      .update(dbItem)
+      .update(cleanItem)
       .eq("id", id)
       .eq("user_id", user.id)
       .select();
     if (error) console.error(error);
     else {
-      if (mode === "completed") setCompletedItems(prev => prev.map(item => (item.id === id ? data[0] : item)));
-      else setPlannedItems(prev => prev.map(item => (item.id === id ? data[0] : item)));
+      if (mode === "completed") {
+        setCompletedItems(prev =>
+          prev.map(item =>
+            item.id === id
+              ? { ...item, ...updatedItem, ...(data?.[0] || {}) }
+              : item
+          )
+        );
+      } else {
+        setPlannedItems(prev =>
+          prev.map(item =>
+            item.id === id
+              ? { ...item, ...updatedItem, ...(data?.[0] || {}) }
+              : item
+          )
+        );
+      }
     }
     setEditingItemId(null);
   };
