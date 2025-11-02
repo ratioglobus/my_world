@@ -241,13 +241,46 @@ function MyProfilePage() {
     }
   };
 
-  const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(
-    item =>
-      !item.is_archived && (!showHiddenOnly || item.is_hidden) &&
+  const handleTogglePin = async (id: string, pinned: boolean) => {
+    if (!user) return;
+    const table = mode === "completed" ? "completed_items" : "planned_items";
+
+    const { error } = await supabase
+      .from(table)
+      .update({ is_pinned: pinned })
+      .eq("id", id)
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    if (mode === "completed") {
+      setCompletedItems(prev =>
+        prev.map(i => (i.id === id ? { ...i, is_pinned: pinned } : i))
+      );
+    } else {
+      setPlannedItems(prev =>
+        prev.map(i => (i.id === id ? { ...i, is_pinned: pinned } : i))
+      );
+    }
+  }
+
+  const filteredItems = (mode === "completed" ? completedItems : plannedItems)
+    .filter(item =>
+      !item.is_archived &&
+      (!showHiddenOnly || item.is_hidden) &&
       item.title.toLowerCase().includes(query.toLowerCase()) &&
       (selectedType === "Все типы" || item.type === selectedType) &&
       (selectedPriority === "Все приоритеты" || item.priority === selectedPriority)
-  );
+    )
+    .sort((a, b) => {
+      if (a.is_pinned === b.is_pinned) {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      return Number(b.is_pinned) - Number(a.is_pinned);
+    });
 
   const totalPages = Math.ceil(filteredItems.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -280,7 +313,6 @@ function MyProfilePage() {
     if (mode === "completed") setCompletedItems(prev => prev.filter(i => i.id !== id));
     else setPlannedItems(prev => prev.filter(i => i.id !== id));
   };
-
 
   return (
     <div className="app-container">
@@ -372,6 +404,7 @@ function MyProfilePage() {
         onMarkAsCompleted={handleMarkAsCompleted}
         onArchive={handleArchive}
         onToggleHidden={handleToggleHidden}
+        onTogglePin={handleTogglePin}
       />
 
       {totalPages > 1 && (

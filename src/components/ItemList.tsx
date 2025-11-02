@@ -22,6 +22,7 @@ type ItemListProps = {
   onArchive?: (id: string) => void;
   onRestore?: (id: string) => void;
   onToggleHidden?: (id: string, hidden: boolean) => void;
+  onTogglePin?: (id: string, pinned: boolean) => void;
   user?: any;
   onProgressUpdate?: () => void;
 };
@@ -43,6 +44,7 @@ export default function ItemList({
   setEditingItemId,
   onMarkAsCompleted,
   onToggleHidden,
+  onTogglePin,
   onProgressUpdate,
   isArchiveView,
 }: ItemListProps) {
@@ -94,6 +96,7 @@ export default function ItemList({
             isArchiveView={isArchiveView}
             onRestore={onRestore}
             onToggleHidden={onToggleHidden}
+            onTogglePin={onTogglePin}
           />
         ))}
       </div>

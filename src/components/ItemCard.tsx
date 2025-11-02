@@ -4,7 +4,7 @@ import "../style/ItemCard.css";
 import "../style/MyProfilePage.css";
 import "../style/ProjectSteps.css";
 import RatingModal from "./RatingModal";
-import { MoreVertical, EyeOff } from "lucide-react";
+import { MoreVertical, EyeOff, Pin } from "lucide-react";
 
 type ItemCardProps = {
   item: MediaItemProps;
@@ -19,6 +19,7 @@ type ItemCardProps = {
   isArchiveView?: boolean;
   onRestore?: (id: string) => void;
   onToggleHidden?: (id: string, hidden: boolean) => void;
+  onTogglePin?: (id: string, pinned: boolean) => void;
 };
 
 export default function ItemCard({
@@ -33,6 +34,7 @@ export default function ItemCard({
   isOwner = true,
   isArchiveView = false,
   onToggleHidden,
+  onTogglePin,
   onRestore,
 }: ItemCardProps) {
   const [showRatingModal, setShowRatingModal] = useState(false);
@@ -85,14 +87,18 @@ export default function ItemCard({
       role="button"
       aria-label={item.title}
     >
-      {item.is_hidden && (
-        <div
-          className="hidden-icon"
-          title="Эта карточка скрыта даже в режиме публичного профиля"
-        >
-          <EyeOff size={18} />
-        </div>
-      )}
+      <div className="item-icons">
+        {item.is_hidden && (
+          <div title="Эта карточка скрыта">
+            <EyeOff size={18} />
+          </div>
+        )}
+        {item.is_pinned && (
+          <div title="Эта карточка закреплена">
+            <Pin size={18} />
+          </div>
+        )}
+      </div>
       <div
         className={`priority-bar ${item.priority === "Критичное"
           ? "priority-critical"
@@ -214,6 +220,19 @@ export default function ItemCard({
                   }}
                 >
                   {item.is_hidden ? "Показать" : "Скрыть"}
+                </button>
+              )}
+
+              {onTogglePin && (
+                <button
+                  className="menu-item"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen(false);
+                    onTogglePin(item.id, !item.is_pinned);
+                  }}
+                >
+                  {item.is_pinned ? "Открепить" : "Закрепить"}
                 </button>
               )}
 

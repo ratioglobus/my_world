@@ -45,12 +45,29 @@ body.dark-theme {
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.hidden-icon {
+.item-icons {
   position: absolute;
   top: 12px;
   left: 14px;
-  color: var(--muted-text);
-  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 4;
+  color: var(--icon-color);
+  opacity: 0.85;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+body.light-theme .item-icons {
+  --icon-color: #1e1b4b;
+}
+
+body.dark-theme .item-icons {
+  --icon-color: #e5e7eb;
+}
+
+.item-icons:hover {
+  opacity: 1;
 }
 
 .item-card-content {
