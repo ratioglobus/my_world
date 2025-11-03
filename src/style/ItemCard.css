@@ -1,5 +1,4 @@
 :root {
-  --card-bg: #ebebfc;
   --text-color: #1e1b4b;
   --btn-edit-bg: #764ba2;
   --btn-edit-hover: #5d3d9b;
@@ -338,6 +337,56 @@ body.dark-theme .project-progress .progress-bar {
   font-size: 0.85rem;
   color: var(--text-muted, #666);
   text-align: center;
+}
+
+.like-section {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.like-btn {
+  margin-top: auto; 
+  align-self: center; 
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  transition: transform 0.2s ease, color 0.2s ease;
+  padding: 0;
+  outline: none;
+}
+
+.like-btn,
+.like-btn:active {
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.like-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.like-btn:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.9);
+  outline-offset: 3px;
+  border-radius: 20px;
+}
+
+.likes-count {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--type-color);
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 @media (max-width: 480px) {

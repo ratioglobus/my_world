@@ -25,6 +25,7 @@ type ItemListProps = {
   onTogglePin?: (id: string, pinned: boolean) => void;
   user?: any;
   onProgressUpdate?: () => void;
+  onToggleLike?: (id: string, liked: boolean) => void;
 };
 
 export default function ItemList({
@@ -40,6 +41,7 @@ export default function ItemList({
   onArchive,
   onRestore,
   isOwner,
+  onToggleLike,
   user,
   setEditingItemId,
   onMarkAsCompleted,
@@ -97,6 +99,7 @@ export default function ItemList({
             onRestore={onRestore}
             onToggleHidden={onToggleHidden}
             onTogglePin={onTogglePin}
+            {...(onToggleLike ? { onToggleLike } : {})}
           />
         ))}
       </div>

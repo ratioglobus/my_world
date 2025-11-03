@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import ItemList from "../components/ItemList";
@@ -26,47 +26,78 @@ export default function OtherProfilePage() {
     const [loadingFollow, setLoadingFollow] = useState(true);
     const [burgerOpen, setBurgerOpen] = useState(false);
 
+    // 🌓 Настройка темы
     useEffect(() => {
         const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
         if (storedTheme) {
             setTheme(storedTheme);
             document.body.classList.remove('light-theme', 'dark-theme');
-            document.body.classList.add(storedTheme === 'dark' ? 'dark-theme' : 'light-theme');
+            document.body.classList.add(`${storedTheme}-theme`);
         }
     }, []);
 
-    useEffect(() => {
-        if (!userId) return;
-        const fetchItems = async () => {
-            const { data: completed, error: cError } = await supabase
-                .from("completed_items")
-                .select("*")
-                .eq("user_id", userId)
-                .eq("is_archived", false)
-                .eq("is_hidden", false)
-                .order("createdAt", { ascending: false });
-            if (!cError) setCompletedItems(completed || []);
+    // 🔁 Функция загрузки карточек
+const fetchItems = useCallback(async () => {
+  if (!userId) return;
 
-            const { data: planned, error: pError } = await supabase
-                .from("planned_items")
-                .select("*")
-                .eq("user_id", userId)
-                .eq("is_archived", false)
-                .eq("is_hidden", false)
-                .order("createdAt", { ascending: false });
-            if (!pError) setPlannedItems(planned || []);
-        };
+  // Получаем текущего пользователя
+  const { data: { user } } = await supabase.auth.getUser();
+  const currentUserId = user?.id || null;
+
+  // Универсальная функция загрузки данных из таблицы
+  const loadItems = async (table: string) => {
+    const { data: items, error } = await supabase
+      .from(table)
+      .select("*")
+      .eq("user_id", userId)
+      .eq("is_archived", false)
+      .eq("is_hidden", false)
+      .order("createdAt", { ascending: false });
+
+    if (error || !items) return [];
+
+    // Получаем все лайки для этих элементов
+    const { data: likesData, error: likesError } = await supabase
+      .from("likes")
+      .select("item_id, user_id")
+      .in("item_id", items.map(i => i.id));
+
+    if (likesError) return items;
+    const enhanced = items.map(item => {
+      const itemLikes = likesData?.filter(l => l.item_id === item.id) || [];
+      return {
+        ...item,
+        likes_count: itemLikes.length,
+        liked_by_me: !!itemLikes.find(l => l.user_id === currentUserId),
+      };
+    });
+
+    return enhanced;
+  };
+
+  const [completed, planned] = await Promise.all([
+    loadItems("completed_items"),
+    loadItems("planned_items"),
+  ]);
+
+  setCompletedItems(completed);
+  setPlannedItems(planned);
+}, [userId]);
+
+
+    useEffect(() => {
         fetchItems();
-    }, [userId]);
+    }, [fetchItems]);
 
     useEffect(() => {
         if (!userId) return;
         const fetchProfile = async () => {
             const { data, error } = await supabase
                 .from("profiles")
-                .select("id, nickname")
+                .select("user_id, nickname")
                 .eq("user_id", userId);
-            if (!error && data && data.length > 0) setProfile({ id: data[0].id, nickname: data[0].nickname });
+            if (!error && data && data.length > 0)
+                setProfile({ id: data[0].user_id, nickname: data[0].nickname });
         };
         fetchProfile();
     }, [userId]);
@@ -90,20 +121,40 @@ export default function OtherProfilePage() {
         fetchCurrentUserAndFollowStatus();
     }, [userId]);
 
-    const handleModeChange = (newMode: "completed" | "planned") => setMode(newMode);
-    const onTypeChange = (type: string) => setSelectedType(type);
-    const onPriorityChange = (priority: string) => setSelectedPriority(priority);
+    const handleToggleLike = async (itemId: string, liked: boolean) => {
+        if (!currentUserId) return;
 
-    const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(
-        item =>
-            item.title.toLowerCase().includes(query.toLowerCase()) &&
-            (selectedType === "Все типы" || item.type === selectedType) &&
-            (selectedPriority === "Все приоритеты" || item.priority === selectedPriority)
-    );
+        if (liked) {
+            await supabase.from("likes").insert([{ user_id: currentUserId, item_id: itemId }]);
+        } else {
+            await supabase.from("likes")
+                .delete()
+                .eq("user_id", currentUserId)
+                .eq("item_id", itemId);
+        }
+
+        const updateLikes = (items: MediaItemProps[]) =>
+            items.map(item =>
+                item.id === itemId
+                    ? {
+                        ...item,
+                        liked_by_me: liked,
+                        likes_count: (item.likes_count || 0) + (liked ? 1 : -1),
+                    }
+                    : item
+            );
+
+        if (mode === "completed") {
+            setCompletedItems(prev => updateLikes(prev));
+        } else {
+            setPlannedItems(prev => updateLikes(prev));
+        }
+    };
 
     const handleFollowToggle = async () => {
         if (!currentUserId) return;
         setLoadingFollow(true);
+
         if (isFollowing) {
             const { error } = await supabase
                 .from("follows")
@@ -117,8 +168,20 @@ export default function OtherProfilePage() {
                 .insert([{ follower_id: currentUserId, following_id: userId }]);
             if (!error) setIsFollowing(true);
         }
+
         setLoadingFollow(false);
     };
+
+    const handleModeChange = (newMode: "completed" | "planned") => setMode(newMode);
+    const onTypeChange = (type: string) => setSelectedType(type);
+    const onPriorityChange = (priority: string) => setSelectedPriority(priority);
+
+    const filteredItems = (mode === "completed" ? completedItems : plannedItems).filter(
+        item =>
+            item.title.toLowerCase().includes(query.toLowerCase()) &&
+            (selectedType === "Все типы" || item.type === selectedType) &&
+            (selectedPriority === "Все приоритеты" || item.priority === selectedPriority)
+    );
 
     return (
         <div className="app-container">
@@ -132,28 +195,13 @@ export default function OtherProfilePage() {
                     </button>
 
                     <div className="burger-menu">
-                        <Link className="top-bar-profile-button" to="/">
-                            На главную
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/profile">
-                            Профиль
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/follows">
-                            Подписки
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/projects">
-                            Проекты
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/archive-items">
-                            Архив
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/about">
-                            О проекте
-                        </Link>
-                        <button
-                            className="signout-btn"
-                            onClick={() => supabase.auth.signOut()}
-                        >
+                        <Link className="top-bar-profile-button" to="/">На главную</Link>
+                        <Link className="top-bar-profile-button" to="/profile">Профиль</Link>
+                        <Link className="top-bar-profile-button" to="/follows">Подписки</Link>
+                        <Link className="top-bar-profile-button" to="/projects">Проекты</Link>
+                        <Link className="top-bar-profile-button" to="/archive-items">Архив</Link>
+                        <Link className="top-bar-profile-button" to="/about">О проекте</Link>
+                        <button className="signout-btn" onClick={() => supabase.auth.signOut()}>
                             Выйти
                         </button>
                     </div>
@@ -201,7 +249,10 @@ export default function OtherProfilePage() {
                 </div>
             </div>
 
-            <h1 className="section-title">{mode === "completed" ? "Готовые исследования" : "Запланированное"}</h1>
+            <h1 className="section-title">
+                {mode === "completed" ? "Готовые исследования" : "Запланированное"}
+            </h1>
+
             <SearchBar query={query} onSearch={setQuery} />
 
             <div className="section-filtered">
@@ -224,6 +275,7 @@ export default function OtherProfilePage() {
                 theme={theme}
                 setEditingItemId={() => { }}
                 isOwner={false}
+                onToggleLike={handleToggleLike}
             />
         </div>
     );

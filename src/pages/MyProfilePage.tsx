@@ -14,7 +14,6 @@ import FilterByPriority from "../components/FilterByPriority";
 import FilterIdeasButton from "../components/FilterIdeasButton";
 import FilterByHidden from "../components/FilterByHidden";
 
-
 function MyProfilePage() {
   const [user, setUser] = useState<any>(null);
   const [completedItems, setCompletedItems] = useState<MediaItemProps[]>([]);
@@ -101,21 +100,24 @@ function MyProfilePage() {
     if (!user) return;
 
     const { data: completed, error: cError } = await supabase
-      .from("completed_items")
+      .from("completed_items_with_likes")
       .select("*")
       .eq("user_id", user.id)
       .order("createdAt", { ascending: false });
+
     if (cError) console.error(cError);
     else setCompletedItems(completed || []);
 
     const { data: planned, error: pError } = await supabase
-      .from("planned_items")
+      .from("planned_items_with_likes")
       .select("*")
       .eq("user_id", user.id)
       .order("createdAt", { ascending: false });
+
     if (pError) console.error(pError);
     else setPlannedItems(planned || []);
   };
+
 
   useEffect(() => {
     fetchItems();
@@ -405,6 +407,7 @@ function MyProfilePage() {
         onArchive={handleArchive}
         onToggleHidden={handleToggleHidden}
         onTogglePin={handleTogglePin}
+        isOwner={true}
       />
 
       {totalPages > 1 && (

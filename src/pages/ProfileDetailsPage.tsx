@@ -181,8 +181,8 @@ export default function ProfileDetailsPage() {
             <Link className="top-bar-profile-button" to="/">
               На главную
             </Link>
-            <Link className="top-bar-profile-button" to="/profile">
-              Профиль
+            <Link className="top-bar-profile-button" to="/follows">
+              Подписки
             </Link>
             <Link className="top-bar-profile-button" to="/projects">
               Проекты

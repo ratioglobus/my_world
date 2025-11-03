@@ -14,5 +14,7 @@ export type PlannedItemProps = {
     progress?: number
     deadline?: string
     is_pinned?: boolean
+    liked_by_me?: boolean
+    likes_count?: number
     status?: "Запланировано" | "В процессе" | "Завершено" | "Приостановлено"
 }

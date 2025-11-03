@@ -4,7 +4,7 @@ import "../style/ItemCard.css";
 import "../style/MyProfilePage.css";
 import "../style/ProjectSteps.css";
 import RatingModal from "./RatingModal";
-import { MoreVertical, EyeOff, Pin } from "lucide-react";
+import { MoreVertical, EyeOff, Pin, Heart } from "lucide-react";
 
 type ItemCardProps = {
   item: MediaItemProps;
@@ -20,6 +20,7 @@ type ItemCardProps = {
   onRestore?: (id: string) => void;
   onToggleHidden?: (id: string, hidden: boolean) => void;
   onTogglePin?: (id: string, pinned: boolean) => void;
+  onToggleLike?: (id: string, liked: boolean) => void;
 };
 
 export default function ItemCard({
@@ -34,6 +35,7 @@ export default function ItemCard({
   isOwner = true,
   isArchiveView = false,
   onToggleHidden,
+  onToggleLike,
   onTogglePin,
   onRestore,
 }: ItemCardProps) {
@@ -167,6 +169,40 @@ export default function ItemCard({
           <p className="item-card-comment" title={item.comment}>
             {item.comment}
           </p>
+        )}
+      </div>
+
+      <div className="like-section">
+        {isOwner ? (
+          <>
+            <Heart
+              size={20}
+              fill="none"
+              color="currentColor"
+              strokeWidth={1.8}
+              style={{ opacity: 0.7 }}
+            />
+            <span className="likes-count">{item.likes_count}</span>
+          </>
+        ) : (
+          <>
+            <button
+              className={`like-btn ${item.liked_by_me ? "liked" : ""}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleLike?.(item.id, !item.liked_by_me);
+                e.currentTarget.blur();
+              }}
+            >
+              <Heart
+                size={20}
+                fill={item.liked_by_me ? "#ff2b6d" : "none"}
+                color={item.liked_by_me ? "#ff2b6d" : "currentColor"}
+                strokeWidth={1.8}
+              />
+            </button>
+            <span className="likes-count">{item.likes_count || 0}</span>
+          </>
         )}
       </div>
 
