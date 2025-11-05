@@ -71,7 +71,6 @@ function MyProfilePage() {
 
   useEffect(() => window.scrollTo({ top: 0 }), [ui.currentPage]);
 
-  // 🔐 Аутентификация
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
 
@@ -93,7 +92,6 @@ function MyProfilePage() {
   const onPriorityChange = (priority: string) =>
     setUi((prev) => ({ ...prev, selectedPriority: priority }));
 
-  // 🧩 Загрузка элементов
   const fetchItems = async () => {
     if (!user) return;
     try {
@@ -109,7 +107,6 @@ function MyProfilePage() {
     fetchItems();
   }, [user]);
 
-  // 🆕 Добавление
   const handleAdd = async (item: Omit<MediaItemProps, "id" | "user_id">) => {
     if (!user) return;
     try {
@@ -120,7 +117,6 @@ function MyProfilePage() {
     }
   };
 
-  // ✏️ Обновление
   const handleUpdate = async (id: string, updatedItem: MediaItemProps) => {
     if (!user) return;
     try {
@@ -135,7 +131,6 @@ function MyProfilePage() {
     }
   };
 
-  // 🗑️ Удаление
   const handleDelete = async (id: string) => {
     if (!user) return;
     try {
@@ -220,12 +215,11 @@ function MyProfilePage() {
     }
   };
 
-  // 🔄 РЕАЛЬНОЕ ВРЕМЯ (Realtime)
   useEffect(() => {
     if (!user) return;
 
     const channel = supabase
-      .channel("realtime:my_items")
+      .channel(`realtime:my_items:${user.id}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "completed_items", filter: `user_id=eq.${user.id}` },
@@ -236,14 +230,19 @@ function MyProfilePage() {
         { event: "*", schema: "public", table: "planned_items", filter: `user_id=eq.${user.id}` },
         () => fetchItems()
       )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "likes" },
+        () => fetchItems()
+      )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user]);
+  }, [user, fetchItems]);
 
-  // 🔍 Фильтрация и сортировка
+
   const filteredItems = useMemo(() => {
     return items[ui.mode]
       .filter(

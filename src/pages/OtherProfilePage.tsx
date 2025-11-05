@@ -161,12 +161,18 @@ export default function OtherProfilePage() {
                 { event: "*", schema: "public", table: "planned_items", filter: `user_id=eq.${userId}` },
                 () => fetchItems()
             )
+            .on(
+                "postgres_changes",
+                { event: "*", schema: "public", table: "likes" },
+                () => fetchItems()
+            )
             .subscribe();
 
         return () => {
             supabase.removeChannel(channel);
         };
     }, [userId, fetchItems]);
+
 
     const handleFollowToggle = async () => {
         if (!currentUserId) return;
