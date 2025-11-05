@@ -1,0 +1,161 @@
+.discoveries-page {
+  min-height: 100vh;
+  background: transparent;
+  color: #fff;
+  transition: background-color 0.3s, color 0.3s;
+  padding-bottom: 3rem;
+}
+
+.discoveries-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.discoveries-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.discoveries-subtitle {
+  text-align: center;
+  font-weight: 400;
+  font-size: 1.3rem;
+}
+
+.discoveries-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(224, 223, 255, 0.8);
+  border-radius: 1rem;
+  padding: 0.4rem 0.6rem;
+  margin: 0 auto 1.5rem;
+  max-width: 500px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+body.dark-theme .discoveries-input-row {
+  background-color: rgba(40, 40, 60, 0.9);
+}
+
+.discoveries-input-inline {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: inherit;
+  font-size: 1rem;
+  padding: 0.4rem 0;
+}
+
+.discoveries-input-inline::placeholder {
+  color: #bbb;
+}
+
+.discoveries-add-icon {
+  background: #6b6cff;
+  color: white;
+  border: none;
+  border-radius: 0.6rem;
+  font-size: 1.3rem;
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.discoveries-add-icon:hover {
+  background: #5a5bef;
+  transform: scale(1.05);
+}
+
+.discoveries-list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 500px;
+}
+
+.discoveries-item {
+  background-color: rgba(224, 223, 255, 0.8);
+  border-radius: 1rem;
+  padding: 0.2rem 1rem;
+  margin-bottom: 0.7rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #000;
+  transition: transform 0.15s ease, background-color 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+body.dark-theme .discoveries-item {
+  background-color: rgba(40, 40, 60, 0.9);
+  color: #fff;
+}
+
+.discoveries-item:hover {
+  transform: translateY(-2px);
+}
+
+.discoveries-item-title {
+  font-size: 1rem;
+  word-break: break-word;
+}
+
+.discoveries-delete-btn {
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.discoveries-delete-btn:hover {
+  color: #ff5555;
+}
+
+.discoveries-empty,
+.discoveries-loading {
+  text-align: center;
+  opacity: 0.8;
+  color: #ccc;
+  margin-top: 1.5rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+  .discoveries-container {
+    padding: 0 0.8rem;
+  }
+
+  .discoveries-title {
+    font-size: 1.6rem;
+  }
+
+  .discoveries-input-row {
+    padding: 0.3rem 0.5rem;
+  }
+
+  .discoveries-input-inline {
+    font-size: 0.95rem;
+  }
+
+  .discoveries-add-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+  }
+
+  .discoveries-item {
+    padding: 0.6rem 0.8rem;
+  }
+}

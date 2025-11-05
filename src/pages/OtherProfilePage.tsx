@@ -218,6 +218,7 @@ export default function OtherProfilePage() {
                         { path: "/", label: "На главную" },
                         { path: "/profile", label: "Профиль" },
                         { path: "/follows", label: "Подписки" },
+                        { path: "/discovery", label: "Открытия" },
                         { path: "/projects", label: "Проекты" },
                         { path: "/archive-items", label: "Архив" },
                         { path: "/about", label: "О проекте" },

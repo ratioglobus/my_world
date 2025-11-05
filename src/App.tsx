@@ -10,6 +10,7 @@ import AboutProjectPage from "./pages/AboutProjectPage";
 import ArchiveItemsPage from "./pages/ArchiveItemsPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import AuthForm from "./components/AuthForm";
+import DiscoveryPage from "./pages/DiscoveryPage";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -68,6 +69,7 @@ export default function App() {
           <Route path="/about" element={<AboutProjectPage />} />
           <Route path="/archive-items" element={<ArchiveItemsPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/discovery" element={<DiscoveryPage />} />
         </Routes>
       )}
     </div>

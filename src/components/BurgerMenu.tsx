@@ -22,6 +22,7 @@ export default function BurgerMenu({ isOpen, onToggle, onClose, customPages }: B
         { path: "/profile", label: "Профиль" },
         { path: "/follows", label: "Подписки" },
         { path: "/projects", label: "Проекты" },
+        { path: "/discovery", label: "Открытия" },
         { path: "/archive-items", label: "Архив" },
         { path: "/about", label: "О проекте" },
     ];

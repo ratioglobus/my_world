@@ -110,6 +110,7 @@ export default function MyFollowsPage() {
                         { path: "/", label: "На главную" },
                         { path: "/profile", label: "Профиль" },
                         { path: "/projects", label: "Проекты" },
+                        { path: "/discovery", label: "Открытия" },
                         { path: "/archive-items", label: "Архив" },
                         { path: "/about", label: "О проекте" },
                     ]}

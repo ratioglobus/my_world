@@ -146,6 +146,7 @@ function ProjectsPage() {
                     customPages={[
                         { path: "/", label: "На главную" },
                         { path: "/profile", label: "Профиль" },
+                        { path: "/discovery", label: "Открытия" },
                         { path: "/follows", label: "Подписки" },
                         { path: "/archive-items", label: "Архив" },
                         { path: "/about", label: "О проекте" },
