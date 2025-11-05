@@ -4,7 +4,7 @@ import { supabase } from "../supabaseClient";
 import type { MediaItemProps } from "../types/MediaItem";
 import ItemList from "../components/ItemList";
 import AuthForm from "../components/AuthForm";
-import { Link } from "react-router-dom";
+import BurgerMenu from "../components/BurgerMenu";
 
 export default function ArchiveItemsPage() {
     const [user, setUser] = useState<any>(null);
@@ -56,36 +56,30 @@ export default function ArchiveItemsPage() {
 
     const handleRestore = async (id: string, mode: "completed" | "planned") => {
         if (!user) return;
-
         const table = mode === "completed" ? "completed_items" : "planned_items";
+
         const { error } = await supabase
             .from(table)
             .update({ is_archived: false })
             .eq("id", id)
             .eq("user_id", user.id);
 
-        if (!error) {
-            fetchArchivedItems();
-        } else {
-            console.error(error);
-        }
+        if (!error) fetchArchivedItems();
+        else console.error(error);
     };
 
     const handleDelete = async (id: string, mode: "completed" | "planned") => {
         if (!user) return;
-
         const table = mode === "completed" ? "completed_items" : "planned_items";
+
         const { error } = await supabase
             .from(table)
             .delete()
             .eq("id", id)
             .eq("user_id", user.id);
 
-        if (!error) {
-            fetchArchivedItems();
-        } else {
-            console.error(error);
-        }
+        if (!error) fetchArchivedItems();
+        else console.error(error);
     };
 
     if (!user) return <AuthForm onLogin={() => fetchArchivedItems()} />;
@@ -93,39 +87,20 @@ export default function ArchiveItemsPage() {
     return (
         <div className="archive-main">
             <div className="top-bar">
-                <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
-                    <button
-                        className="burger-btn mobile-only"
-                        onClick={() => setBurgerOpen(prev => !prev)}
-                    >
-                        ☰
-                    </button>
-
-                    <div className="burger-menu">
-                        <Link className="top-bar-profile-button" to="/">
-                            На главную
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/profile">
-                            Профиль
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/follows">
-                            Подписки
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/projects">
-                            Проекты
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/about">
-                            О проекте
-                        </Link>
-                        <button
-                            className="signout-btn"
-                            onClick={() => supabase.auth.signOut()}
-                        >
-                            Выйти
-                        </button>
-                    </div>
-                </div>
+                <BurgerMenu
+                    isOpen={burgerOpen}
+                    onToggle={() => setBurgerOpen((prev) => !prev)}
+                    onClose={() => setBurgerOpen(false)}
+                    customPages={[
+                        { path: "/", label: "На главную" },
+                        { path: "/profile", label: "Профиль" },
+                        { path: "/follows", label: "Подписки" },
+                        { path: "/projects", label: "Проекты" },
+                        { path: "/about", label: "О проекте" },
+                    ]}
+                />
             </div>
+
             <div className="archive">
                 <h1 className="archive-title">Архив исследований</h1>
 

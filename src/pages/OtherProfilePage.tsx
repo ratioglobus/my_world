@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import ItemList from "../components/ItemList";
 import SearchBar from "../components/SearchBar";
@@ -9,6 +9,7 @@ import FilterIdeasButton from "../components/FilterIdeasButton";
 import "../style/MyProfilePage.css";
 import "../style/OtherProfilePage.css";
 import type { MediaItemProps } from "../types/MediaItem";
+import BurgerMenu from "../components/BurgerMenu";
 
 export default function OtherProfilePage() {
     const { id: userId } = useParams<{ id: string }>();
@@ -209,23 +210,19 @@ export default function OtherProfilePage() {
     return (
         <div className="app-container">
             <div className="top-bar">
-                <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
-                    <button className="burger-btn mobile-only" onClick={() => setBurgerOpen((prev) => !prev)}>
-                        ☰
-                    </button>
-
-                    <div className="burger-menu">
-                        <Link className="top-bar-profile-button" to="/">На главную</Link>
-                        <Link className="top-bar-profile-button" to="/profile">Профиль</Link>
-                        <Link className="top-bar-profile-button" to="/follows">Подписки</Link>
-                        <Link className="top-bar-profile-button" to="/projects">Проекты</Link>
-                        <Link className="top-bar-profile-button" to="/archive-items">Архив</Link>
-                        <Link className="top-bar-profile-button" to="/about">О проекте</Link>
-                        <button className="signout-btn" onClick={() => supabase.auth.signOut()}>
-                            Выйти
-                        </button>
-                    </div>
-                </div>
+                <BurgerMenu
+                    isOpen={burgerOpen}
+                    onToggle={() => setBurgerOpen((prev) => !prev)}
+                    onClose={() => setBurgerOpen(false)}
+                    customPages={[
+                        { path: "/", label: "На главную" },
+                        { path: "/profile", label: "Профиль" },
+                        { path: "/follows", label: "Подписки" },
+                        { path: "/projects", label: "Проекты" },
+                        { path: "/archive-items", label: "Архив" },
+                        { path: "/about", label: "О проекте" },
+                    ]}
+                />
             </div>
 
             <div className="top-bar-other-profile-wrapper">

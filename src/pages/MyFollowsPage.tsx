@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../style/ProfileDetailsPage.css";
 import "../style/MyFollowsPage.css";
+import BurgerMenu from "../components/BurgerMenu";
 
 export default function MyFollowsPage() {
     const navigate = useNavigate();
@@ -101,38 +102,18 @@ export default function MyFollowsPage() {
     return (
         <div className="profile-container">
             <div className="top-bar">
-                <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
-                    <button
-                        className="burger-btn mobile-only"
-                        onClick={() => setBurgerOpen(prev => !prev)}
-                    >
-                        ☰
-                    </button>
-
-                    <div className="burger-menu">
-                        <Link className="top-bar-profile-button" to="/">
-                            На главную
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/profile">
-                            Профиль
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/projects">
-                            Проекты
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/archive-items">
-                            Архив
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/about">
-                            О проекте
-                        </Link>
-                        <button
-                            className="signout-btn"
-                            onClick={() => supabase.auth.signOut()}
-                        >
-                            Выйти
-                        </button>
-                    </div>
-                </div>
+                <BurgerMenu
+                    isOpen={burgerOpen}
+                    onToggle={() => setBurgerOpen((prev) => !prev)}
+                    onClose={() => setBurgerOpen(false)}
+                    customPages={[
+                        { path: "/", label: "На главную" },
+                        { path: "/profile", label: "Профиль" },
+                        { path: "/projects", label: "Проекты" },
+                        { path: "/archive-items", label: "Архив" },
+                        { path: "/about", label: "О проекте" },
+                    ]}
+                />
             </div>
 
             <div className="profile-main">

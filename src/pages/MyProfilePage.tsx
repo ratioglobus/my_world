@@ -2,7 +2,6 @@ import "../style/MyProfilePage.css";
 import { useState, useEffect, useMemo } from "react";
 import type { MediaItemProps } from "../types/MediaItem";
 import { supabase } from "../supabaseClient";
-import { Link } from "react-router-dom";
 import ItemList from "../components/ItemList";
 import AddItemForm from "../components/AddItemForm";
 import SearchBar from "../components/SearchBar";
@@ -13,6 +12,7 @@ import FilterByType from "../components/FilterByType";
 import FilterByPriority from "../components/FilterByPriority";
 import FilterIdeasButton from "../components/FilterIdeasButton";
 import FilterByHidden from "../components/FilterByHidden";
+import BurgerMenu from "../components/BurgerMenu";
 import { ItemService } from "../services/ItemService";
 
 function MyProfilePage() {
@@ -121,10 +121,19 @@ function MyProfilePage() {
     if (!user) return;
     try {
       const updated = await ItemService.updateItem(user.id, id, updatedItem, ui.mode);
+
       setItems((prev) => ({
         ...prev,
-        [ui.mode]: prev[ui.mode].map((item) => (item.id === id ? updated : item)),
+        [ui.mode]: prev[ui.mode].map((item) =>
+          item.id === id
+            ? {
+              ...item,
+              ...updated,
+            }
+            : item
+        ),
       }));
+
       setUi((prev) => ({ ...prev, editingItemId: null }));
     } catch (err) {
       console.error("Failed to update item:", err);
@@ -270,34 +279,11 @@ function MyProfilePage() {
   return (
     <div className="app-container">
       <div className="top-bar">
-        <div className={`burger-wrapper ${ui.burgerOpen ? "open" : ""}`}>
-          <button
-            className="burger-btn mobile-only"
-            onClick={() => setUi((prev) => ({ ...prev, burgerOpen: !prev.burgerOpen }))}
-          >
-            ☰
-          </button>
-          <div className="burger-menu">
-            <Link className="top-bar-profile-button" to="/profile">
-              Профиль
-            </Link>
-            <Link className="top-bar-profile-button" to="/follows">
-              Подписки
-            </Link>
-            <Link className="top-bar-profile-button" to="/projects">
-              Проекты
-            </Link>
-            <Link className="top-bar-profile-button" to="/archive-items">
-              Архив
-            </Link>
-            <Link className="top-bar-profile-button" to="/about">
-              О проекте
-            </Link>
-            <button className="signout-btn" onClick={() => supabase.auth.signOut()}>
-              Выйти
-            </button>
-          </div>
-        </div>
+        <BurgerMenu
+          isOpen={ui.burgerOpen}
+          onToggle={() => setUi((prev) => ({ ...prev, burgerOpen: !prev.burgerOpen }))}
+          onClose={() => setUi((prev) => ({ ...prev, burgerOpen: false }))}
+        />
 
         <div className="top-bar-center">
           <div className="mode-toggle">

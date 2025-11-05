@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
 import "../style/AboutProjectPage.css";
 import { useState } from "react";
-import { supabase } from "../supabaseClient";
+import BurgerMenu from "../components/BurgerMenu";
 
 export default function AboutProjectPage() {
     const [burgerOpen, setBurgerOpen] = useState(false);
@@ -9,41 +8,21 @@ export default function AboutProjectPage() {
     return (
         <div className="about">
             <div className="top-bar">
-                <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
-                    <button
-                        className="burger-btn mobile-only"
-                        onClick={() => setBurgerOpen(prev => !prev)}
-                    >
-                        ☰
-                    </button>
-
-                    <div className="burger-menu">
-                        <Link className="top-bar-profile-button" to="/">
-                            На главную
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/profile">
-                            Профиль
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/follows">
-                            Подписки
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/projects">
-                            Проекты
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/archive-items">
-                            Архив
-                        </Link>
-                        <button
-                            className="signout-btn"
-                            onClick={() => supabase.auth.signOut()}
-                        >
-                            Выйти
-                        </button>
-                    </div>
-                </div>
+                <BurgerMenu
+                    isOpen={burgerOpen}
+                    onToggle={() => setBurgerOpen((prev) => !prev)}
+                    onClose={() => setBurgerOpen(false)}
+                    customPages={[
+                        { path: "/", label: "На главную" },
+                        { path: "/profile", label: "Профиль" },
+                        { path: "/follows", label: "Подписки" },
+                        { path: "/projects", label: "Проекты" },
+                        { path: "/archive-items", label: "Архив" },
+                    ]}
+                />
             </div>
-            <div className="about-container">
 
+            <div className="about-container">
                 <h1 className="about-title">Researcher</h1>
                 <p className="about-intro">
                     Проект создан для тех, кто любит исследовать, изучать и делиться своими открытиями.

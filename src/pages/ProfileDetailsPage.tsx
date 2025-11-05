@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
-import { Link } from "react-router-dom";
 import "../style/ProfileDetailsPage.css";
+import BurgerMenu from "../components/BurgerMenu";
 
 type Profile = {
   user_id: string;
@@ -169,38 +169,18 @@ export default function ProfileDetailsPage() {
   return (
     <div className="profile-container">
       <div className="top-bar">
-        <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
-          <button
-            className="burger-btn mobile-only"
-            onClick={() => setBurgerOpen(prev => !prev)}
-          >
-            ☰
-          </button>
-
-          <div className="burger-menu">
-            <Link className="top-bar-profile-button" to="/">
-              На главную
-            </Link>
-            <Link className="top-bar-profile-button" to="/follows">
-              Подписки
-            </Link>
-            <Link className="top-bar-profile-button" to="/projects">
-              Проекты
-            </Link>
-            <Link className="top-bar-profile-button" to="/archive-items">
-              Архив
-            </Link>
-            <Link className="top-bar-profile-button" to="/about">
-              О проекте
-            </Link>
-            <button
-              className="signout-btn"
-              onClick={() => supabase.auth.signOut()}
-            >
-              Выйти
-            </button>
-          </div>
-        </div>
+        <BurgerMenu
+          isOpen={burgerOpen}
+          onToggle={() => setBurgerOpen((prev) => !prev)}
+          onClose={() => setBurgerOpen(false)}
+          customPages={[
+            { path: "/", label: "На главную" },
+            { path: "/follows", label: "Подписки" },
+            { path: "/projects", label: "Проекты" },
+            { path: "/archive-items", label: "Архив" },
+            { path: "/about", label: "О проекте" },
+          ]}
+        />
       </div>
 
       <div className="profile-main">
@@ -263,7 +243,7 @@ export default function ProfileDetailsPage() {
           </div>
 
           <p className="public-hint">
-            Если профиль публичный — другие пользователи смогут просматривать ваши карточки (кроме проектов). 
+            Если профиль публичный — другие пользователи смогут просматривать ваши карточки (кроме проектов).
             Вы также можете скрывать отдельные карточки даже в публичном режиме.
             В частном режиме профиль виден только вам.
           </p>

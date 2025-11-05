@@ -3,7 +3,6 @@ import "../style/ProjectSteps.css";
 import { useState, useEffect } from "react";
 import type { MediaItemProps } from "../types/MediaItem";
 import { supabase } from "../supabaseClient";
-import { Link } from "react-router-dom";
 import ItemList from "../components/ItemList";
 import AddItemForm from "../components/AddItemForm";
 import SearchBar from "../components/SearchBar";
@@ -11,6 +10,7 @@ import ConfirmModal from "../components/ConfirmModal";
 import AuthForm from "../components/AuthForm";
 import FilterProjectsByStatus from "../components/FilterProjectsByStatus";
 import FilterByPriority from "../components/FilterByPriority";
+import BurgerMenu from "../components/BurgerMenu";
 
 function ProjectsPage() {
     const [user, setUser] = useState<any>(null);
@@ -139,38 +139,18 @@ function ProjectsPage() {
     return (
         <div className="app-container">
             <div className="top-bar">
-                <div className={`burger-wrapper ${burgerOpen ? "open" : ""}`}>
-                    <button
-                        className="burger-btn mobile-only"
-                        onClick={() => setBurgerOpen(prev => !prev)}
-                    >
-                        ☰
-                    </button>
-
-                    <div className="burger-menu">
-                        <Link className="top-bar-profile-button" to="/">
-                            На главную
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/profile">
-                            Профиль
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/follows">
-                            Подписки
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/archive-items">
-                            Архив
-                        </Link>
-                        <Link className="top-bar-profile-button" to="/about">
-                            О проекте
-                        </Link>
-                        <button
-                            className="signout-btn"
-                            onClick={() => supabase.auth.signOut()}
-                        >
-                            Выйти
-                        </button>
-                    </div>
-                </div>
+                <BurgerMenu
+                    isOpen={burgerOpen}
+                    onToggle={() => setBurgerOpen((prev) => !prev)}
+                    onClose={() => setBurgerOpen(false)}
+                    customPages={[
+                        { path: "/", label: "На главную" },
+                        { path: "/profile", label: "Профиль" },
+                        { path: "/follows", label: "Подписки" },
+                        { path: "/archive-items", label: "Архив" },
+                        { path: "/about", label: "О проекте" },
+                    ]}
+                />
             </div>
 
             <h1 className="section-title">Добавить долгосрочный проект</h1>

@@ -171,7 +171,6 @@ button:focus-visible {
   background: transparent;
   border: 1px solid #c4b9b9;
   color: #fff;
-  padding: 6px 12px;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s ease;
