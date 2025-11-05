@@ -1,0 +1,153 @@
+.discovery-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    animation: fadeIn 0.2s ease;
+}
+
+.discovery-modal {
+    background-color: var(--card-bg);
+    color: white;
+    border-radius: 0.8rem;
+    padding: 1.5rem 2rem;
+    max-width: 420px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.25s ease;
+}
+
+.discovery-modal-title {
+    font-size: 1.3rem;
+    text-align: center;
+    margin: 0 0 1rem 0;
+}
+
+.discovery-modal-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #ccc;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.discovery-modal-close {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.8rem;
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.discovery-modal-close:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.discovery-modal-input,
+.discovery-modal-textarea {
+    width: 100%;
+    border: 1px solid #444;
+    background: #222;
+    color: white;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+    transition: border 0.2s ease, background 0.2s ease;
+}
+
+.discovery-modal-input:focus,
+.discovery-modal-textarea:focus {
+    border-color: #6b6cff;
+    background: #1a1a1a;
+}
+
+.discovery-modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.6rem;
+}
+
+.discovery-modal-edit,
+.discovery-modal-save,
+.discovery-modal-cancel,
+.discovery-modal-close-btn {
+    flex: 1;
+    background: #6b6cff;
+    border: none;
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.discovery-modal-edit:hover,
+.discovery-modal-save:hover,
+.discovery-modal-cancel:hover,
+.discovery-modal-close-btn:hover {
+    background: #5a5bef;
+    transform: scale(1.03);
+}
+
+.discovery-modal-cancel {
+    background: #444;
+}
+
+.discovery-modal-close-btn {
+    background: #555;
+}
+
+body.light-theme .discovery-modal {
+    background-color: #fff;
+    color: #000;
+}
+
+body.light-theme .discovery-modal-input,
+body.light-theme .discovery-modal-textarea {
+    background: #f8f8f8;
+    border: 1px solid #ccc;
+    color: #222;
+}
+
+body.light-theme .discovery-modal-description {
+    color: #555;
+}
+
+@media (max-width: 600px) {
+    .discovery-modal {
+        padding: 1.2rem;
+        width: 92%;
+    }
+
+    .discovery-modal-title {
+        font-size: 1.1rem;
+    }
+
+    .discovery-modal-actions {
+        flex-direction: column;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

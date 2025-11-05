@@ -1,161 +1,263 @@
 .discoveries-page {
-  min-height: 100vh;
-  background: transparent;
-  color: #fff;
-  transition: background-color 0.3s, color 0.3s;
-  padding-bottom: 3rem;
+    min-height: 100vh;
+    background: transparent;
+    color: #fff;
+    transition: background-color 0.3s, color 0.3s;
+    padding-bottom: 3rem;
 }
 
 .discoveries-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
 }
 
 .discoveries-title {
-  font-size: 2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
 }
 
 .discoveries-subtitle {
-  text-align: center;
-  font-weight: 400;
-  font-size: 1.3rem;
+    text-align: center;
+    font-weight: 400;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
 }
 
 .discoveries-input-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: rgba(224, 223, 255, 0.8);
-  border-radius: 1rem;
-  padding: 0.4rem 0.6rem;
-  margin: 0 auto 1.5rem;
-  max-width: 500px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--card-bg);
+    border-radius: 0.6rem;
+    padding: 0.5rem 0.6rem;
+    margin: 0 auto 1.5rem;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
 }
 
 body.dark-theme .discoveries-input-row {
-  background-color: rgba(40, 40, 60, 0.9);
+    background-color: var(--card-bg);
 }
 
 .discoveries-input-inline {
-  flex: 1;
-  border: none;
-  background: transparent;
-  outline: none;
-  color: inherit;
-  font-size: 1rem;
-  padding: 0.4rem 0;
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    color: inherit;
+    font-size: 1rem;
+    padding: 0.4rem 0;
 }
 
 .discoveries-input-inline::placeholder {
-  color: #bbb;
+    color: #bbb;
+}
+
+body.light-theme .discoveries-input-inline {
+    color: #000;
+}
+
+body.light-theme .discoveries-input-inline::placeholder {
+    color: #7a7878;
 }
 
 .discoveries-add-icon {
-  background: #6b6cff;
-  color: white;
-  border: none;
-  border-radius: 0.6rem;
-  font-size: 1.3rem;
-  cursor: pointer;
-  width: 34px;
-  height: 34px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: background 0.2s ease, transform 0.2s ease;
+    background: #6b6cff;
+    color: white;
+    outline: none;
+    border: none;
+    border-radius: 0.6rem;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .discoveries-add-icon:hover {
-  background: #5a5bef;
-  transform: scale(1.05);
+    background: #5a5bef;
+    transform: scale(1.05);
+    outline: none;
+}
+
+.discoveries-add-icon:active {
+    outline: none;
+}
+
+.discoveries-add-icon:focus,
+.discoveries-add-icon:focus-visible {
+    outline: none;
+    box-shadow: none;
 }
 
 .discoveries-list {
-  list-style: none;
-  margin: 0 auto;
-  padding: 0;
-  max-width: 500px;
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: transparent;
+    border-radius: 0.6rem;
+    padding: 7px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: visible;
+    backdrop-filter: blur(6px);
+}
+
+body.dark-theme .discoveries-list {
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .discoveries-item {
-  background-color: rgba(224, 223, 255, 0.8);
-  border-radius: 1rem;
-  padding: 0.2rem 1rem;
-  margin-bottom: 0.7rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #000;
-  transition: transform 0.15s ease, background-color 0.3s ease;
-  backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 0.9rem;
+    color: #fff;
+    border-radius: 0.4rem;
+    background-color: transparent;
+    transition: background 0.2s ease;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.discoveries-item:last-child {
+    margin-bottom: 0;
+}
+
+body.light-theme .discoveries-item {
+    background-color: rgba(224, 223, 255, 0.8);
+    color: #000;
 }
 
 body.dark-theme .discoveries-item {
-  background-color: rgba(40, 40, 60, 0.9);
-  color: #fff;
+    background-color: transparent;
+    color: #fff;
 }
 
 .discoveries-item:hover {
-  transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.04);
 }
 
 .discoveries-item-title {
-  font-size: 1rem;
-  word-break: break-word;
+    flex: 1;
+    font-size: 1rem;
+    word-break: break-word;
 }
 
 .discoveries-delete-btn {
-  background: transparent;
-  border: none;
-  color: #999;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: color 0.2s;
+    background: transparent;
+    border: none;
+    color: #ccc;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0.3em 0em;
+    outline: none;
 }
 
 .discoveries-delete-btn:hover {
-  color: #ff5555;
+    color: #ff6666;
+    transform: scale(1.2);
+    outline: none;
+}
+
+.discoveries-delete-btn:focus {
+    outline: none;
+}
+
+body.light-theme .discoveries-delete-btn {
+    color: #ff6666;
 }
 
 .discoveries-empty,
 .discoveries-loading {
-  text-align: center;
-  opacity: 0.8;
-  color: #ccc;
-  margin-top: 1.5rem;
-  font-size: 1rem;
+    text-align: center;
+    opacity: 0.8;
+    color: #ccc;
+    margin-top: 1.5rem;
+    font-size: 1rem;
 }
 
+.discoveries-load-more-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.2rem;
+}
+
+.discoveries-load-more-btn {
+    background: #6b6cff;
+    color: white;
+    border: none;
+    border-radius: 0.6rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.discoveries-load-more-btn:hover:not(:disabled) {
+    background: #5a5bef;
+    transform: scale(1.05);
+}
+
+.discoveries-load-more-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+
 @media (max-width: 600px) {
-  .discoveries-container {
-    padding: 0 0.8rem;
-  }
+    .discoveries-container {
+        padding: 0 0.8rem;
+    }
 
-  .discoveries-title {
-    font-size: 1.6rem;
-  }
+    .discoveries-title {
+        font-size: 1.6rem;
+        margin-bottom: 0.8rem;
+    }
 
-  .discoveries-input-row {
-    padding: 0.3rem 0.5rem;
-  }
+    .discoveries-subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.2rem;
+    }
 
-  .discoveries-input-inline {
-    font-size: 0.95rem;
-  }
+    .discoveries-input-row {
+        max-width: 90%;
+        padding: 0.3rem 0.5rem;
+    }
 
-  .discoveries-add-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 1.2rem;
-  }
+    .discoveries-input-inline {
+        font-size: 0.95rem;
+    }
 
-  .discoveries-item {
-    padding: 0.6rem 0.8rem;
-  }
+    .discoveries-add-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 1.2rem;
+    }
+
+    .discoveries-list {
+        width: 100%;
+        padding: 6px;
+    }
+
+    .discoveries-item {
+        padding: 0.3rem 0.7rem;
+        margin-bottom: 6px;
+    }
+
+    .discoveries-item:last-child {
+        margin-bottom: 0;
+    }
 }

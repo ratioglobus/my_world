@@ -3,6 +3,7 @@ import { supabase } from "../supabaseClient";
 import "../style/DiscoveryPage.css";
 import BurgerMenu from "../components/BurgerMenu";
 import AuthForm from "../components/AuthForm";
+import DiscoveryModal from "../components/DiscoveryModal";
 
 export default function DiscoveryPage() {
     const [user, setUser] = useState<any>(null);
@@ -10,6 +11,10 @@ export default function DiscoveryPage() {
     const [newDiscovery, setNewDiscovery] = useState("");
     const [loading, setLoading] = useState(true);
     const [burgerOpen, setBurgerOpen] = useState(false);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const itemsPerPage = 10;
+    const [selectedDiscovery, setSelectedDiscovery] = useState<any | null>(null);
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -33,17 +38,26 @@ export default function DiscoveryPage() {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [user]);
+    }, [user, page]);
 
     const fetchDiscoveries = async () => {
         setLoading(true);
-        const { data, error } = await supabase
-            .from("discoveries")
-            .select("*")
-            .eq("user_id", user.id)
-            .order("created_at", { ascending: false });
 
-        if (!error) setDiscoveries(data || []);
+        const from = (page - 1) * itemsPerPage;
+        const to = from + itemsPerPage - 1;
+
+        const { data, error, count } = await supabase
+            .from("discoveries")
+            .select("*", { count: "exact" })
+            .eq("user_id", user.id)
+            .order("created_at", { ascending: false })
+            .range(from, to);
+
+        if (!error && data) {
+            setDiscoveries(data);
+            setTotalPages(Math.ceil((count || 0) / itemsPerPage));
+        }
+
         setLoading(false);
     };
 
@@ -53,12 +67,7 @@ export default function DiscoveryPage() {
 
         const { data, error } = await supabase
             .from("discoveries")
-            .insert([
-                {
-                    title,
-                    user_id: user.id,
-                },
-            ])
+            .insert([{ title, user_id: user.id }])
             .select();
 
         if (!error && data && data.length > 0) {
@@ -78,6 +87,32 @@ export default function DiscoveryPage() {
 
         if (!error) {
             setDiscoveries((prev) => prev.filter((item) => item.id !== id));
+        }
+    };
+
+    const handleOpenModal = (discovery: any) => {
+        setSelectedDiscovery(discovery);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedDiscovery(null);
+    };
+
+    const handleSave = async (id: string, data: { title: string; description: string }) => {
+        if (!user) return;
+
+        const { error, data: updatedData } = await supabase
+            .from("discoveries")
+            .update({ title: data.title, description: data.description })
+            .eq("id", id)
+            .eq("user_id", user.id)
+            .select();
+
+        if (!error && updatedData && updatedData.length > 0) {
+            setDiscoveries((prev) =>
+                prev.map((item) => (item.id === id ? updatedData[0] : item))
+            );
+            setSelectedDiscovery(updatedData[0]);
         }
     };
 
@@ -103,7 +138,7 @@ export default function DiscoveryPage() {
 
             <div className="discoveries-container">
                 <h1 className="discoveries-title">Мои открытия</h1>
-                <h2 className="discoveries-subtitle">Понравившиеся вселенные, идеи и события </h2>
+                <h2 className="discoveries-subtitle">Понравившиеся вселенные, идеи и события</h2>
 
                 <div className="discoveries-input-row">
                     <input
@@ -124,22 +159,61 @@ export default function DiscoveryPage() {
                 ) : discoveries.length === 0 ? (
                     <p className="discoveries-empty">Пока нет открытий</p>
                 ) : (
-                    <ul className="discoveries-list">
-                        {discoveries.map((item) => (
-                            <li key={item.id} className="discoveries-item">
-                                <span className="discoveries-item-title">{item.title}</span>
-                                <button
-                                    className="discoveries-delete-btn"
-                                    onClick={() => deleteDiscovery(item.id)}
-                                    title="Удалить"
+                    <>
+                        <ul className="discoveries-list">
+                            {discoveries.map((item) => (
+                                <li
+                                    key={item.id}
+                                    className="discoveries-item"
+                                    onClick={() => handleOpenModal(item)}
                                 >
-                                    ✕
+                                    <span className="discoveries-item-title">{item.title}</span>
+                                    <button
+                                        className="discoveries-delete-btn"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteDiscovery(item.id);
+                                        }}
+                                        title="Удалить"
+                                    >
+                                        ✕
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+
+                        {totalPages > 1 && (
+                            <div className="pagination">
+                                <button
+                                    onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                                    disabled={page === 1}
+                                >
+                                    ◀
                                 </button>
-                            </li>
-                        ))}
-                    </ul>
+                                <span>
+                                    {page} / {totalPages}
+                                </span>
+                                <button
+                                    onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+                                    disabled={page === totalPages}
+                                >
+                                    ▶
+                                </button>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
+
+            {selectedDiscovery && (
+                <DiscoveryModal
+                    isOpen={!!selectedDiscovery}
+                    title={selectedDiscovery.title}
+                    description={selectedDiscovery.description || ""}
+                    onClose={handleCloseModal}
+                    onSave={(data) => handleSave(selectedDiscovery.id, data)}
+                />
+            )}
         </div>
     );
 }
