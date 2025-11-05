@@ -61,9 +61,9 @@ function MyProfilePage() {
   }, [ui.theme]);
 
   const toggleTheme = () =>
-    setUi(prev => ({ ...prev, theme: prev.theme === "light" ? "dark" : "light" }));
+    setUi((prev) => ({ ...prev, theme: prev.theme === "light" ? "dark" : "light" }));
 
-  useEffect(() => setUi(prev => ({ ...prev, currentPage: 1 })), [
+  useEffect(() => setUi((prev) => ({ ...prev, currentPage: 1 })), [
     ui.query,
     ui.selectedType,
     ui.selectedPriority,
@@ -71,6 +71,7 @@ function MyProfilePage() {
 
   useEffect(() => window.scrollTo({ top: 0 }), [ui.currentPage]);
 
+  // 🔐 Аутентификация
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
 
@@ -81,16 +82,18 @@ function MyProfilePage() {
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  useEffect(() => setUi(prev => ({ ...prev, burgerOpen: false })), []);
+  useEffect(() => setUi((prev) => ({ ...prev, burgerOpen: false })), []);
 
   const handleModeChange = (newMode: "completed" | "planned") => {
-    setUi(prev => ({ ...prev, mode: newMode }));
+    setUi((prev) => ({ ...prev, mode: newMode }));
     localStorage.setItem("mode", newMode);
   };
 
-  const onTypeChange = (type: string) => setUi(prev => ({ ...prev, selectedType: type }));
-  const onPriorityChange = (priority: string) => setUi(prev => ({ ...prev, selectedPriority: priority }));
+  const onTypeChange = (type: string) => setUi((prev) => ({ ...prev, selectedType: type }));
+  const onPriorityChange = (priority: string) =>
+    setUi((prev) => ({ ...prev, selectedPriority: priority }));
 
+  // 🧩 Загрузка элементов
   const fetchItems = async () => {
     if (!user) return;
     try {
@@ -106,53 +109,59 @@ function MyProfilePage() {
     fetchItems();
   }, [user]);
 
+  // 🆕 Добавление
   const handleAdd = async (item: Omit<MediaItemProps, "id" | "user_id">) => {
     if (!user) return;
     try {
       const newItem = await ItemService.addItem(user.id, item, ui.mode);
-      setItems(prev => ({ ...prev, [ui.mode]: [newItem, ...prev[ui.mode]] }));
+      setItems((prev) => ({ ...prev, [ui.mode]: [newItem, ...prev[ui.mode]] }));
     } catch (err) {
       console.error("Failed to add item:", err);
     }
   };
 
+  // ✏️ Обновление
   const handleUpdate = async (id: string, updatedItem: MediaItemProps) => {
     if (!user) return;
     try {
       const updated = await ItemService.updateItem(user.id, id, updatedItem, ui.mode);
-      setItems(prev => ({
+      setItems((prev) => ({
         ...prev,
-        [ui.mode]: prev[ui.mode].map(item => (item.id === id ? updated : item)),
+        [ui.mode]: prev[ui.mode].map((item) => (item.id === id ? updated : item)),
       }));
-      setUi(prev => ({ ...prev, editingItemId: null }));
+      setUi((prev) => ({ ...prev, editingItemId: null }));
     } catch (err) {
       console.error("Failed to update item:", err);
     }
   };
 
+  // 🗑️ Удаление
   const handleDelete = async (id: string) => {
     if (!user) return;
     try {
       await ItemService.deleteItem(user.id, id, ui.mode);
-      setItems(prev => ({ ...prev, [ui.mode]: prev[ui.mode].filter(item => item.id !== id) }));
-      setUi(prev => ({ ...prev, confirmDeleteId: null }));
+      setItems((prev) => ({
+        ...prev,
+        [ui.mode]: prev[ui.mode].filter((item) => item.id !== id),
+      }));
+      setUi((prev) => ({ ...prev, confirmDeleteId: null }));
     } catch (err) {
       console.error("Failed to delete item:", err);
     }
   };
 
-  const handleView = (id: string) => setUi(prev => ({ ...prev, viewItemId: id }));
-  const handleEdit = (id: string) => setUi(prev => ({ ...prev, editingItemId: id }));
+  const handleView = (id: string) => setUi((prev) => ({ ...prev, viewItemId: id }));
+  const handleEdit = (id: string) => setUi((prev) => ({ ...prev, editingItemId: id }));
 
   const handleMarkAsCompleted = async (item: MediaItemProps, rating: number) => {
     if (!user) return;
     try {
       const completedItem = await ItemService.moveToCompleted(user.id, item, rating);
-      setItems(prev => ({
+      setItems((prev) => ({
         completed: [completedItem, ...prev.completed],
-        planned: prev.planned.filter(i => i.id !== item.id),
+        planned: prev.planned.filter((i) => i.id !== item.id),
       }));
-      setUi(prev => ({ ...prev, viewItemId: null }));
+      setUi((prev) => ({ ...prev, viewItemId: null }));
     } catch (err) {
       console.error("Failed to mark as completed:", err);
     }
@@ -162,11 +171,11 @@ function MyProfilePage() {
     if (!user) return;
     try {
       const completedItem = await ItemService.moveToCompleted(user.id, item, rating);
-      setItems(prev => ({
+      setItems((prev) => ({
         completed: [completedItem, ...prev.completed],
-        planned: prev.planned.filter(i => i.id !== item.id),
+        planned: prev.planned.filter((i) => i.id !== item.id),
       }));
-      setUi(prev => ({ ...prev, ratingItem: null }));
+      setUi((prev) => ({ ...prev, ratingItem: null }));
     } catch (err) {
       console.error("Failed to save rating:", err);
     }
@@ -176,9 +185,9 @@ function MyProfilePage() {
     if (!user) return;
     try {
       await ItemService.toggleHidden(user.id, id, hidden, ui.mode);
-      setItems(prev => ({
+      setItems((prev) => ({
         ...prev,
-        [ui.mode]: prev[ui.mode].map(i => (i.id === id ? { ...i, is_hidden: hidden } : i)),
+        [ui.mode]: prev[ui.mode].map((i) => (i.id === id ? { ...i, is_hidden: hidden } : i)),
       }));
     } catch (err) {
       console.error(err);
@@ -189,9 +198,9 @@ function MyProfilePage() {
     if (!user) return;
     try {
       await ItemService.togglePin(user.id, id, pinned, ui.mode);
-      setItems(prev => ({
+      setItems((prev) => ({
         ...prev,
-        [ui.mode]: prev[ui.mode].map(i => (i.id === id ? { ...i, is_pinned: pinned } : i)),
+        [ui.mode]: prev[ui.mode].map((i) => (i.id === id ? { ...i, is_pinned: pinned } : i)),
       }));
     } catch (err) {
       console.error(err);
@@ -202,23 +211,48 @@ function MyProfilePage() {
     if (!user) return;
     try {
       await ItemService.archiveItem(user.id, id, ui.mode);
-      setItems(prev => ({
+      setItems((prev) => ({
         ...prev,
-        [ui.mode]: prev[ui.mode].filter(i => i.id !== id),
+        [ui.mode]: prev[ui.mode].filter((i) => i.id !== id),
       }));
     } catch (err) {
       console.error(err);
     }
   };
 
+  // 🔄 РЕАЛЬНОЕ ВРЕМЯ (Realtime)
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel("realtime:my_items")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "completed_items", filter: `user_id=eq.${user.id}` },
+        () => fetchItems()
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "planned_items", filter: `user_id=eq.${user.id}` },
+        () => fetchItems()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
+  // 🔍 Фильтрация и сортировка
   const filteredItems = useMemo(() => {
     return items[ui.mode]
-      .filter(item =>
-        !item.is_archived &&
-        (!ui.showHiddenOnly || item.is_hidden) &&
-        item.title.toLowerCase().includes(ui.query.toLowerCase()) &&
-        (ui.selectedType === "Все типы" || item.type === ui.selectedType) &&
-        (ui.selectedPriority === "Все приоритеты" || item.priority === ui.selectedPriority)
+      .filter(
+        (item) =>
+          !item.is_archived &&
+          (!ui.showHiddenOnly || item.is_hidden) &&
+          item.title.toLowerCase().includes(ui.query.toLowerCase()) &&
+          (ui.selectedType === "Все типы" || item.type === ui.selectedType) &&
+          (ui.selectedPriority === "Все приоритеты" || item.priority === ui.selectedPriority)
       )
       .sort((a, b) => {
         if (a.is_pinned === b.is_pinned) {
@@ -238,38 +272,76 @@ function MyProfilePage() {
     <div className="app-container">
       <div className="top-bar">
         <div className={`burger-wrapper ${ui.burgerOpen ? "open" : ""}`}>
-          <button className="burger-btn mobile-only" onClick={() => setUi(prev => ({ ...prev, burgerOpen: !prev.burgerOpen }))}>☰</button>
+          <button
+            className="burger-btn mobile-only"
+            onClick={() => setUi((prev) => ({ ...prev, burgerOpen: !prev.burgerOpen }))}
+          >
+            ☰
+          </button>
           <div className="burger-menu">
-            <Link className="top-bar-profile-button" to="/profile">Профиль</Link>
-            <Link className="top-bar-profile-button" to="/follows">Подписки</Link>
-            <Link className="top-bar-profile-button" to="/projects">Проекты</Link>
-            <Link className="top-bar-profile-button" to="/archive-items">Архив</Link>
-            <Link className="top-bar-profile-button" to="/about">О проекте</Link>
-            <button className="signout-btn" onClick={() => supabase.auth.signOut()}>Выйти</button>
+            <Link className="top-bar-profile-button" to="/profile">
+              Профиль
+            </Link>
+            <Link className="top-bar-profile-button" to="/follows">
+              Подписки
+            </Link>
+            <Link className="top-bar-profile-button" to="/projects">
+              Проекты
+            </Link>
+            <Link className="top-bar-profile-button" to="/archive-items">
+              Архив
+            </Link>
+            <Link className="top-bar-profile-button" to="/about">
+              О проекте
+            </Link>
+            <button className="signout-btn" onClick={() => supabase.auth.signOut()}>
+              Выйти
+            </button>
           </div>
         </div>
 
         <div className="top-bar-center">
           <div className="mode-toggle">
             <div className={`toggle-slider ${ui.mode}`} />
-            <button className={`toggle-btn ${ui.mode === "completed" ? "active" : ""}`} onClick={() => handleModeChange("completed")} onMouseDown={e => e.preventDefault()}>Готовые</button>
-            <button className={`toggle-btn ${ui.mode === "planned" ? "active" : ""}`} onClick={() => handleModeChange("planned")} onMouseDown={e => e.preventDefault()}>Планируемые</button>
+            <button
+              className={`toggle-btn ${ui.mode === "completed" ? "active" : ""}`}
+              onClick={() => handleModeChange("completed")}
+              onMouseDown={(e) => e.preventDefault()}
+            >
+              Готовые
+            </button>
+            <button
+              className={`toggle-btn ${ui.mode === "planned" ? "active" : ""}`}
+              onClick={() => handleModeChange("planned")}
+              onMouseDown={(e) => e.preventDefault()}
+            >
+              Планируемые
+            </button>
           </div>
         </div>
 
-        <button className="theme-toggle" onClick={toggleTheme}>{ui.theme === "light" ? "🌙" : "☀️"}</button>
+        <button className="theme-toggle" onClick={toggleTheme}>
+          {ui.theme === "light" ? "🌙" : "☀️"}
+        </button>
       </div>
 
-      <h1 className="section-title">{ui.mode === "completed" ? "Добавить исследование" : "Запланировать исследование"}</h1>
+      <h1 className="section-title">
+        {ui.mode === "completed" ? "Добавить исследование" : "Запланировать исследование"}
+      </h1>
       <AddItemForm onAdd={handleAdd} mode={ui.mode} />
-      <h1 className="section-title">{ui.mode === "completed" ? "Готовые исследования" : "Запланированное"}</h1>
-      <SearchBar query={ui.query} onSearch={q => setUi(prev => ({ ...prev, query: q }))} />
+      <h1 className="section-title">
+        {ui.mode === "completed" ? "Готовые исследования" : "Запланированное"}
+      </h1>
+      <SearchBar query={ui.query} onSearch={(q) => setUi((prev) => ({ ...prev, query: q }))} />
 
       <div className="section-filtered">
         <div className="filters-row">
           <FilterByType selectedType={ui.selectedType} onTypeChange={onTypeChange} />
           <FilterByPriority selectedPriority={ui.selectedPriority} onPriorityChange={onPriorityChange} />
-          <FilterByHidden isActive={ui.showHiddenOnly} onToggle={() => setUi(prev => ({ ...prev, showHiddenOnly: !prev.showHiddenOnly }))} />
+          <FilterByHidden
+            isActive={ui.showHiddenOnly}
+            onToggle={() => setUi((prev) => ({ ...prev, showHiddenOnly: !prev.showHiddenOnly }))}
+          />
           <FilterIdeasButton selectedType={ui.selectedType} onTypeChange={onTypeChange} />
         </div>
       </div>
@@ -277,14 +349,14 @@ function MyProfilePage() {
       <ItemList
         items={visibleItems}
         editingItemId={ui.editingItemId}
-        onDelete={id => setUi(prev => ({ ...prev, confirmDeleteId: id }))}
+        onDelete={(id) => setUi((prev) => ({ ...prev, confirmDeleteId: id }))}
         onEdit={handleEdit}
         onUpdate={handleUpdate}
         onView={handleView}
         viewItemId={ui.viewItemId}
         mode={ui.mode}
         theme={ui.theme}
-        setEditingItemId={id => setUi(prev => ({ ...prev, editingItemId: id }))}
+        setEditingItemId={(id) => setUi((prev) => ({ ...prev, editingItemId: id }))}
         onMarkAsCompleted={handleMarkAsCompleted}
         onArchive={handleArchive}
         onToggleHidden={handleToggleHidden}
@@ -294,14 +366,42 @@ function MyProfilePage() {
 
       {totalPages > 1 && (
         <div className="pagination">
-          <button onClick={() => setUi(prev => ({ ...prev, currentPage: Math.max(prev.currentPage - 1, 1) }))} disabled={ui.currentPage === 1}>Предыдущая</button>
-          <span className="pagination-text">Страница {ui.currentPage} из {totalPages}</span>
-          <button onClick={() => setUi(prev => ({ ...prev, currentPage: Math.min(prev.currentPage + 1, totalPages) }))} disabled={ui.currentPage === totalPages}>Следующая</button>
+          <button
+            onClick={() =>
+              setUi((prev) => ({ ...prev, currentPage: Math.max(prev.currentPage - 1, 1) }))
+            }
+            disabled={ui.currentPage === 1}
+          >
+            Предыдущая
+          </button>
+          <span className="pagination-text">
+            Страница {ui.currentPage} из {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setUi((prev) => ({ ...prev, currentPage: Math.min(prev.currentPage + 1, totalPages) }))
+            }
+            disabled={ui.currentPage === totalPages}
+          >
+            Следующая
+          </button>
         </div>
       )}
 
-      {ui.ratingItem && <RatingModal item={ui.ratingItem} onSubmit={handleRatingSave} onClose={() => setUi(prev => ({ ...prev, ratingItem: null }))} />}
-      {ui.confirmDeleteId && <ConfirmModal message="Вы точно хотите удалить элемент?" onConfirm={() => handleDelete(ui.confirmDeleteId!)} onCancel={() => setUi(prev => ({ ...prev, confirmDeleteId: null }))} />}
+      {ui.ratingItem && (
+        <RatingModal
+          item={ui.ratingItem}
+          onSubmit={handleRatingSave}
+          onClose={() => setUi((prev) => ({ ...prev, ratingItem: null }))}
+        />
+      )}
+      {ui.confirmDeleteId && (
+        <ConfirmModal
+          message="Вы точно хотите удалить элемент?"
+          onConfirm={() => handleDelete(ui.confirmDeleteId!)}
+          onCancel={() => setUi((prev) => ({ ...prev, confirmDeleteId: null }))}
+        />
+      )}
     </div>
   );
 }
