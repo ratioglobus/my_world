@@ -1,35 +1,37 @@
-import type { MediaItemProps } from "../types/MediaItem";
-import ItemCard from "./ItemCard";
-import EditModal from "./EditModal";
-import ViewModal from "./ViewModal";
-import { useMemo } from "react";
-import "../style/ItemList.css";
+import type { MediaItemProps } from "../types/MediaItem"
+import ItemCard from "./ItemCard"
+import EditModal from "./EditModal"
+import ViewModal from "./ViewModal"
+import { useMemo } from "react"
+import "../style/ItemList.css"
 
 type ItemListProps = {
-  items: MediaItemProps[];
-  onDelete?: (id: string) => void;
-  onEdit?: (id: string) => void;
-  onUpdate?: (id: string, updatedItem: MediaItemProps) => void;
-  editingItemId: string | null;
-  viewItemId: string | null;
-  onView?: (id: string) => void;
-  mode: "completed" | "planned" | "projects";
-  theme: 'light' | 'dark';
-  isOwner?: boolean;
-  setEditingItemId: (id: string | null) => void;
-  onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>;
-  isArchiveView?: boolean;
-  onArchive?: (id: string) => void;
-  onRestore?: (id: string) => void;
-  onToggleHidden?: (id: string, hidden: boolean) => void;
-  onTogglePin?: (id: string, pinned: boolean) => void;
-  user?: any;
-  onProgressUpdate?: () => void;
-  onToggleLike?: (id: string, liked: boolean) => void;
-};
+  items: MediaItemProps[]
+  onDelete?: (id: string) => void
+  loading?: boolean
+  onEdit?: (id: string) => void
+  onUpdate?: (id: string, updatedItem: MediaItemProps) => void
+  editingItemId: string | null
+  viewItemId: string | null
+  onView?: (id: string) => void
+  mode: "completed" | "planned" | "projects"
+  theme: "light" | "dark"
+  isOwner?: boolean
+  setEditingItemId: (id: string | null) => void
+  onMarkAsCompleted?: (item: MediaItemProps, rating: number) => Promise<void>
+  isArchiveView?: boolean
+  onArchive?: (id: string) => void
+  onRestore?: (id: string) => void
+  onToggleHidden?: (id: string, hidden: boolean) => void
+  onTogglePin?: (id: string, pinned: boolean) => void
+  user?: any
+  onProgressUpdate?: () => void
+  onToggleLike?: (id: string, liked: boolean) => void
+}
 
 export default function ItemList({
   items,
+  loading,
   onDelete,
   onEdit,
   onUpdate,
@@ -53,31 +55,39 @@ export default function ItemList({
   const editingItem = useMemo(
     () => items.find((item) => item.id === editingItemId),
     [items, editingItemId]
-  );
+  )
 
   const viewingItem = useMemo(
     () => items.find((item) => item.id === viewItemId),
     [items, viewItemId]
-  );
+  )
+
+  if (loading) {
+    return (
+      <div className="item-list-loader">
+        <div className="spinner"></div>
+        <p>Загружаем исследования...</p>
+      </div>
+    )
+  }
 
   if (!items || items.length === 0) {
-    let emptyMessage = "";
-
+    let emptyMessage = ""
     switch (mode) {
       case "completed":
-        emptyMessage = 'Список пуст — добавь первый элемент. Например - "Прочитать Гиперион Дэна Симонса"';
-        break;
+        emptyMessage =
+          'Список пуст — добавь первый элемент. Например: "Прочитать Гиперион Дэна Симонса"'
+        break
       case "planned":
-        emptyMessage = 'Нет запланированных элементов. Добавь то, что хочешь сделать!';
-        break;
+        emptyMessage = "Нет запланированных элементов. Добавь то, что хочешь сделать!"
+        break
       case "projects":
-        emptyMessage = 'У тебя пока нет проектов. Добавь первый, например, "Выучить японский"';
-        break;
+        emptyMessage = 'У тебя пока нет проектов. Добавь первый, например, "Выучить японский"'
+        break
       default:
-        emptyMessage = "Список пуст.";
+        emptyMessage = "Список пуст."
     }
-
-    return <p className="item-list-empty">{emptyMessage}</p>;
+    return <p className="item-list-empty">{emptyMessage}</p>
   }
 
   return (
@@ -126,5 +136,5 @@ export default function ItemList({
         />
       )}
     </div>
-  );
+  )
 }

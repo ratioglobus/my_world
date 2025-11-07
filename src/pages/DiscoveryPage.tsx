@@ -15,6 +15,7 @@ export default function DiscoveryPage() {
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 10;
     const [selectedDiscovery, setSelectedDiscovery] = useState<any | null>(null);
+    const [loadingMore, setLoadingMore] = useState(false);
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -24,26 +25,27 @@ export default function DiscoveryPage() {
 
     useEffect(() => {
         if (!user) return;
-        fetchDiscoveries();
+        fetchDiscoveries(1, true);
 
         const channel = supabase
             .channel("realtime:discoveries")
             .on(
                 "postgres_changes",
                 { event: "*", schema: "public", table: "discoveries", filter: `user_id=eq.${user.id}` },
-                () => fetchDiscoveries()
+                () => fetchDiscoveries(1, true)
             )
             .subscribe();
 
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [user, page]);
+    }, [user]);
 
-    const fetchDiscoveries = async () => {
-        setLoading(true);
+    const fetchDiscoveries = async (pageToFetch: number, replace = false) => {
+        if (replace) setLoading(true);
+        else setLoadingMore(true);
 
-        const from = (page - 1) * itemsPerPage;
+        const from = (pageToFetch - 1) * itemsPerPage;
         const to = from + itemsPerPage - 1;
 
         const { data, error, count } = await supabase
@@ -54,11 +56,12 @@ export default function DiscoveryPage() {
             .range(from, to);
 
         if (!error && data) {
-            setDiscoveries(data);
+            setDiscoveries((prev) => (replace ? data : [...prev, ...data]));
             setTotalPages(Math.ceil((count || 0) / itemsPerPage));
         }
 
         setLoading(false);
+        setLoadingMore(false);
     };
 
     const addDiscovery = async () => {
@@ -116,7 +119,15 @@ export default function DiscoveryPage() {
         }
     };
 
-    if (!user) return <AuthForm onLogin={() => fetchDiscoveries()} />;
+    if (!user) return <AuthForm onLogin={() => fetchDiscoveries(1, true)} />;
+
+    const handleLoadMore = () => {
+        if (page < totalPages) {
+            const nextPage = page + 1;
+            setPage(nextPage);
+            fetchDiscoveries(nextPage, false);
+        }
+    };
 
     return (
         <div className="discoveries-page">
@@ -155,12 +166,15 @@ export default function DiscoveryPage() {
                 </div>
 
                 {loading ? (
-                    <p className="discoveries-loading">Загрузка...</p>
+                    <div className="discoveries-loader">
+                        <div className="spinner"></div>
+                        <p>Загружаем открытия...</p>
+                    </div>
                 ) : discoveries.length === 0 ? (
                     <p className="discoveries-empty">Пока нет открытий</p>
                 ) : (
                     <>
-                        <ul className="discoveries-list">
+                        <ul className="discoveries-list fade-in">
                             {discoveries.map((item) => (
                                 <li
                                     key={item.id}
@@ -182,22 +196,14 @@ export default function DiscoveryPage() {
                             ))}
                         </ul>
 
-                        {totalPages > 1 && (
-                            <div className="pagination">
+                        {page < totalPages && (
+                            <div className="discoveries-load-more-container">
                                 <button
-                                    onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                                    disabled={page === 1}
+                                    className="discoveries-load-more-btn"
+                                    onClick={handleLoadMore}
+                                    disabled={loadingMore}
                                 >
-                                    ◀
-                                </button>
-                                <span>
-                                    {page} / {totalPages}
-                                </span>
-                                <button
-                                    onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                                    disabled={page === totalPages}
-                                >
-                                    ▶
+                                    {loadingMore ? "Загрузка..." : "Показать ещё"}
                                 </button>
                             </div>
                         )}

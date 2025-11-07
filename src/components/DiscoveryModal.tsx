@@ -38,6 +38,7 @@ const DiscoveryModal: React.FC<DiscoveryModalProps> = ({
             >
                 {editMode ? (
                     <>
+                        <p className="discodery-modal-text">Режим редактирования</p>
                         <input
                             className="discovery-modal-input"
                             value={editedTitle}
@@ -52,22 +53,24 @@ const DiscoveryModal: React.FC<DiscoveryModalProps> = ({
                         />
                         <div className="discovery-modal-actions">
                             <button
+                                className="discovery-modal-cancel"
+                                onClick={() => setEditMode(false)}
+                            >
+                                Отмена
+                            </button>
+                            <button
                                 className="discovery-modal-save"
                                 onClick={() => {
                                     onSave({
                                         title: editedTitle.trim(),
                                         description: editedDescription.trim(),
                                     });
+                                    setEditMode(false);
                                 }}
                             >
-                                💾 Сохранить
+                                Сохранить
                             </button>
-                            <button
-                                className="discovery-modal-cancel"
-                                onClick={() => setEditMode(false)}
-                            >
-                                ✕ Отмена
-                            </button>
+
                         </div>
                     </>
                 ) : (
@@ -76,7 +79,7 @@ const DiscoveryModal: React.FC<DiscoveryModalProps> = ({
                         <p className="discovery-modal-description">
                             {description
                                 ? description
-                                : "Описание пока отсутствует..."}
+                                : "Описание отсутствует"}
                         </p>
 
                         <div className="discovery-modal-actions">
@@ -84,13 +87,7 @@ const DiscoveryModal: React.FC<DiscoveryModalProps> = ({
                                 className="discovery-modal-edit"
                                 onClick={() => setEditMode(true)}
                             >
-                                ✏️ Редактировать
-                            </button>
-                            <button
-                                className="discovery-modal-close-btn"
-                                onClick={onClose}
-                            >
-                                Закрыть
+                                Редактировать
                             </button>
                         </div>
                     </>

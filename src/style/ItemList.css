@@ -22,6 +22,21 @@
   padding: 20px 0;
 }
 
+.item-list-loader {
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: #ccc;
+    font-size: 1rem;
+    z-index: 999;
+}
+
 @media (max-width: 1024px) {
   .item-list-grid {
     grid-template-columns: repeat(3, 1fr);

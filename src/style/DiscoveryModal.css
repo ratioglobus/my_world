@@ -20,6 +20,9 @@
     position: relative;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     animation: slideUp 0.25s ease;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
 }
 
 .discovery-modal-title {
@@ -39,11 +42,11 @@
 .discovery-modal-close {
     position: absolute;
     top: 0.6rem;
-    right: 0.8rem;
+    right: 0.2rem;
     background: transparent;
     border: none;
     color: #aaa;
-    font-size: 1.2rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: color 0.2s ease, transform 0.2s ease;
 }
@@ -62,6 +65,7 @@
     padding: 0.6rem 0.8rem;
     border-radius: 0.5rem;
     margin-bottom: 0.8rem;
+    margin-top: 1.2rem;
     font-size: 1rem;
     resize: none;
     outline: none;
@@ -72,15 +76,21 @@
 .discovery-modal-textarea:focus {
     border-color: #6b6cff;
     background: #1a1a1a;
+    outline: none;
+}
+
+.discovery-modal-input:active,
+.discovery-modal-textarea:active {
+    outline: none;
 }
 
 .discovery-modal-actions {
     display: flex;
     justify-content: space-between;
     gap: 0.6rem;
+    margin-top: 10px;
 }
 
-.discovery-modal-edit,
 .discovery-modal-save,
 .discovery-modal-cancel,
 .discovery-modal-close-btn {
@@ -91,7 +101,35 @@
     padding: 0.6rem 1rem;
     border-radius: 0.5rem;
     cursor: pointer;
+    width: 150px;
     font-size: 0.9rem;
+    outline: none;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.discovery-modal-save:focus,
+.discovery-modal-edit:focus,
+.discovery-modal-cancel:focus,
+.discovery-modal-close-btn:focus {
+    outline: none;
+}
+
+.discovery-modal-save:active,
+.discovery-modal-edit:active,
+.discovery-modal-cancel:active,
+.discovery-modal-close-btn:active {
+    outline: none;
+}
+
+.discovery-modal-edit {
+    background: #6b6cff;
+    border: none;
+    color: white;
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    width: 150px;
     transition: background 0.2s ease, transform 0.1s ease;
 }
 
@@ -127,10 +165,15 @@ body.light-theme .discovery-modal-description {
     color: #555;
 }
 
+.discodery-modal-text {
+    padding: 0;
+    margin: 0;
+}
+
 @media (max-width: 600px) {
     .discovery-modal {
         padding: 1.2rem;
-        width: 92%;
+        width: 82%;
     }
 
     .discovery-modal-title {
@@ -140,14 +183,30 @@ body.light-theme .discovery-modal-description {
     .discovery-modal-actions {
         flex-direction: column;
     }
+
+    .discovery-modal-close {
+        right: -0.1rem;
+    }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes slideUp {
-    from { transform: translateY(10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }

@@ -16,6 +16,7 @@ export type MediaItemProps = {
     is_pinned?: boolean
     liked_by_me?: boolean
     likes_count?: number
+    loading?: boolean
     status?: "Запланировано" | "В процессе" | "Завершено" | "Приостановлено"
     statusProject?: "Запланировано" | "В процессе" | "Завершено" | "Приостановлено"
 }

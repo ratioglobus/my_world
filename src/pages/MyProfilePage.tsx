@@ -17,6 +17,7 @@ import { ItemService } from "../services/ItemService";
 
 function MyProfilePage() {
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   const [items, setItems] = useState<{ completed: MediaItemProps[]; planned: MediaItemProps[] }>({
     completed: [],
@@ -100,7 +101,9 @@ function MyProfilePage() {
       setItems({ completed, planned });
     } catch (err) {
       console.error("Failed to fetch items:", err);
-    }
+    } finally {
+    setLoading(false);
+  }
   };
 
   useEffect(() => {
@@ -347,6 +350,7 @@ function MyProfilePage() {
         onToggleHidden={handleToggleHidden}
         onTogglePin={handleTogglePin}
         isOwner={true}
+        loading={loading}
       />
 
       {totalPages > 1 && (
