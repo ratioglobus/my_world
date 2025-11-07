@@ -18,12 +18,10 @@ import { ItemService } from "../services/ItemService";
 function MyProfilePage() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
   const [items, setItems] = useState<{ completed: MediaItemProps[]; planned: MediaItemProps[] }>({
     completed: [],
     planned: [],
   });
-
   const [ui, setUi] = useState({
     query: "",
     editingItemId: null as string | null,
@@ -52,17 +50,17 @@ function MyProfilePage() {
   const ITEMS_PER_PAGE = 16;
 
   useEffect(() => {
-    try {
-      document.body.classList.toggle("dark-theme", ui.theme === "dark");
-      document.body.classList.toggle("light-theme", ui.theme === "light");
-      localStorage.setItem("theme", ui.theme);
-    } catch (err) {
-      console.error("Failed to apply theme", err);
-    }
-  }, [ui.theme]);
+    const handleStorage = () => {
+      const current = localStorage.getItem("theme") as "light" | "dark" | null;
+      if (current && current !== ui.theme) {
+        setUi((prev) => ({ ...prev, theme: current }));
+      }
+    };
 
-  const toggleTheme = () =>
-    setUi((prev) => ({ ...prev, theme: prev.theme === "light" ? "dark" : "light" }));
+    handleStorage();
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [ui.theme]);
 
   useEffect(() => setUi((prev) => ({ ...prev, currentPage: 1 })), [
     ui.query,
@@ -102,8 +100,8 @@ function MyProfilePage() {
     } catch (err) {
       console.error("Failed to fetch items:", err);
     } finally {
-    setLoading(false);
-  }
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -307,10 +305,6 @@ function MyProfilePage() {
             </button>
           </div>
         </div>
-
-        <button className="theme-toggle" onClick={toggleTheme}>
-          {ui.theme === "light" ? "🌙" : "☀️"}
-        </button>
       </div>
 
       <h1 className="section-title">

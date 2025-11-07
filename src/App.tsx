@@ -11,6 +11,7 @@ import ArchiveItemsPage from "./pages/ArchiveItemsPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import AuthForm from "./components/AuthForm";
 import DiscoveryPage from "./pages/DiscoveryPage";
+import ThemeToggle from "./components/ThemeToggle";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -53,6 +54,7 @@ export default function App() {
 
   return (
     <div className="app-content fade-in">
+      <ThemeToggle />
       {!session ? (
         <AuthForm
           onLogin={async () => {

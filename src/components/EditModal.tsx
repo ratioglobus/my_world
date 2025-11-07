@@ -1,14 +1,14 @@
-import { useState } from "react";
-import type { MediaItemProps } from "../types/MediaItem";
-import "../style/EditModal.css";
+import { useState, useEffect, useRef } from "react"
+import type { MediaItemProps } from "../types/MediaItem"
+import "../style/EditModal.css"
 
 type EditModalProps = {
-  item: MediaItemProps;
-  onCancel: () => void;
-  onClose: () => void;
-  onSave: (updatedItem: MediaItemProps) => void;
-  mode: "completed" | "planned" | "projects";
-};
+  item: MediaItemProps
+  onCancel: () => void
+  onClose: () => void
+  onSave: (updatedItem: MediaItemProps) => void
+  mode: "completed" | "planned" | "projects"
+}
 
 export default function EditModal({
   item,
@@ -17,14 +17,28 @@ export default function EditModal({
   onClose,
   mode,
 }: EditModalProps) {
-  const [title, setTitle] = useState(item.title);
-  const [type, setType] = useState(item.type);
+  const [title, setTitle] = useState(item.title)
+  const [type, setType] = useState(item.type)
   const [statusProject, setStatusProject] = useState<
     "Запланировано" | "В процессе" | "Завершено" | "Приостановлено"
-  >(item.status || "Запланировано");
-  const [rating, setRating] = useState(item.rating ?? 0);
-  const [comment, setComment] = useState(item.comment || "");
-  const [priority, setPriority] = useState(item.priority);
+  >(item.status || "Запланировано")
+  const [rating, setRating] = useState(item.rating ?? 0)
+  const [comment, setComment] = useState(item.comment || "")
+  const [priority, setPriority] = useState(item.priority)
+  const modalRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose()
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [onClose])
 
   const handleSave = () => {
     const updated: MediaItemProps = {
@@ -35,16 +49,18 @@ export default function EditModal({
       status: statusProject,
       rating: mode === "planned" ? 0 : rating,
       comment,
-    };
-    onSave(updated);
-    onClose();
-  };
+    }
+    onSave(updated)
+    onClose()
+  }
 
   return (
-    <div className="edit-modal-overlay" onClick={onClose}>
-      <div className="edit-modal" onClick={(e) => e.stopPropagation()}>
+    <div className="edit-modal-overlay">
+      <div ref={modalRef} className="edit-modal">
         <h2 className="edit-modal-title">
-          {mode === "projects" ? "Редактировать проект" : "Редактировать элемент"}
+          {mode === "projects"
+            ? "Редактировать проект"
+            : "Редактировать элемент"}
         </h2>
 
         <div className="edit-modal-fields">
@@ -88,7 +104,11 @@ export default function EditModal({
               className="edit-modal-input"
               onChange={(e) =>
                 setStatusProject(
-                  e.target.value as "Запланировано" | "В процессе" | "Завершено" | "Приостановлено"
+                  e.target.value as
+                    | "Запланировано"
+                    | "В процессе"
+                    | "Завершено"
+                    | "Приостановлено"
                 )
               }
             >
@@ -132,5 +152,5 @@ export default function EditModal({
         </div>
       </div>
     </div>
-  );
+  )
 }

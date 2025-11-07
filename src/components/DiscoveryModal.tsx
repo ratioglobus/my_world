@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import "../style/DiscoveryModal.css";
+import React, { useState, useEffect, useRef } from "react"
+import "../style/DiscoveryModal.css"
 
 interface DiscoveryModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title: string;
-    description?: string;
-    onSave: (data: { title: string; description: string }) => void;
+    isOpen: boolean
+    onClose: () => void
+    title: string
+    description?: string
+    onSave: (data: { title: string; description: string }) => void
 }
 
 const DiscoveryModal: React.FC<DiscoveryModalProps> = ({
@@ -16,26 +16,39 @@ const DiscoveryModal: React.FC<DiscoveryModalProps> = ({
     description = "",
     onSave,
 }) => {
-    const [editMode, setEditMode] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(title);
-    const [editedDescription, setEditedDescription] = useState(description);
+    const [editMode, setEditMode] = useState(false)
+    const [editedTitle, setEditedTitle] = useState(title)
+    const [editedDescription, setEditedDescription] = useState(description)
+    const modalRef = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
         if (isOpen) {
-            setEditedTitle(title);
-            setEditedDescription(description);
-            setEditMode(false);
+            setEditedTitle(title)
+            setEditedDescription(description)
+            setEditMode(false)
         }
-    }, [isOpen, title, description]);
+    }, [isOpen, title, description])
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+                onClose()
+            }
+        }
+
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside)
+        }
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside)
+        }
+    }, [isOpen, onClose])
+
+    if (!isOpen) return null
 
     return (
-        <div className="discovery-modal-overlay" onClick={onClose}>
-            <div
-                className="discovery-modal"
-                onClick={(e) => e.stopPropagation()}
-            >
+        <div className="discovery-modal-overlay">
+            <div ref={modalRef} className="discovery-modal">
                 {editMode ? (
                     <>
                         <p className="discodery-modal-text">Режим редактирования</p>
@@ -64,24 +77,20 @@ const DiscoveryModal: React.FC<DiscoveryModalProps> = ({
                                     onSave({
                                         title: editedTitle.trim(),
                                         description: editedDescription.trim(),
-                                    });
-                                    setEditMode(false);
+                                    })
+                                    setEditMode(false)
                                 }}
                             >
                                 Сохранить
                             </button>
-
                         </div>
                     </>
                 ) : (
                     <>
                         <h2 className="discovery-modal-title">{title}</h2>
                         <p className="discovery-modal-description">
-                            {description
-                                ? description
-                                : "Описание отсутствует"}
+                            {description || "Описание отсутствует"}
                         </p>
-
                         <div className="discovery-modal-actions">
                             <button
                                 className="discovery-modal-edit"
@@ -98,7 +107,7 @@ const DiscoveryModal: React.FC<DiscoveryModalProps> = ({
                 </button>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default DiscoveryModal;
+export default DiscoveryModal

@@ -148,6 +148,10 @@ button:focus-visible {
 }
 
 .theme-toggle {
+  position: fixed;
+  right: 55px;
+  top: 35px;
+  z-index: 9999;
   background: transparent;
   border: 1px solid #c4b9b9;
   color: #fff;
@@ -155,11 +159,6 @@ button:focus-visible {
   padding: 9px 15px;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
-  display: inline-block;
-  position: absolute;
-  right: 55px;
-  top: 35px;
-  margin: 0;
 }
 
 .theme-toggle:hover {
