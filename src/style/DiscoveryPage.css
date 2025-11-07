@@ -32,12 +32,12 @@
     align-items: center;
     gap: 0.5rem;
     background-color: var(--card-bg);
-    border-radius: 0.6rem;
-    padding: 0.5rem 0.6rem;
+    border-radius: 6px;
+    padding: 0.42rem 0.6rem;
     margin: 0 auto 1.5rem;
     width: 100%;
     max-width: 600px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
 }
 
@@ -75,7 +75,7 @@ body.light-theme .discoveries-input-inline::placeholder {
     font-size: 1rem;
     cursor: pointer;
     width: 34px;
-    height: 28px;
+    height: 27px;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -20,7 +20,7 @@
   width: 640px;
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #374151;
+  border: 1px solid #000;
   background-color: var(--card-bg, #fff);
   color: #fff !important;
   font-size: 1rem;
@@ -47,7 +47,7 @@ body.light-theme .searchbar-input {
     max-width: 95%;
     margin-bottom: 20px;
     gap: 6px;
-    max-width: 320px;
+    max-width: 350px;
   }
 
   .searchbar-input {
