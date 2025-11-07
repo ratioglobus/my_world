@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { MediaItemProps } from "../types/MediaItem";
 import "../style/ViewModal.css";
 import ProjectSteps from "./ProjectSteps";
@@ -18,6 +18,8 @@ export default function ViewModal({
   user,
   onProgressUpdate,
 }: ViewModalProps) {
+  const modalRef = useRef<HTMLDivElement | null>(null)
+
   const renderCommentWithLinks = (text: string) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
 
@@ -63,9 +65,22 @@ export default function ViewModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [onProgressUpdate]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose()
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [onClose])
+
   return (
-    <div className="view-modal-overlay" onClick={handleClose}>
-      <div className="view-modal" onClick={(e) => e.stopPropagation()}>
+    <div className="view-modal-overlay">
+      <div ref={modalRef} className="view-modal">
         <button className="view-modal-close" onClick={handleClose}>
           ✖
         </button>
