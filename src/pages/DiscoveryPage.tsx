@@ -4,6 +4,7 @@ import "../style/DiscoveryPage.css";
 import BurgerMenu from "../components/BurgerMenu";
 import AuthForm from "../components/AuthForm";
 import DiscoveryModal from "../components/DiscoveryModal";
+import SearchBar from "../components/SearchBar";
 
 export default function DiscoveryPage() {
     const [user, setUser] = useState<any>(null);
@@ -16,12 +17,17 @@ export default function DiscoveryPage() {
     const itemsPerPage = 10;
     const [selectedDiscovery, setSelectedDiscovery] = useState<any | null>(null);
     const [loadingMore, setLoadingMore] = useState(false);
+    const [query, setQuery] = useState('');
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
             setUser(session?.user ?? null);
         });
     }, []);
+
+    useEffect(() => {
+        if (user) fetchDiscoveries(1, true, query);
+    }, [query]);
 
     useEffect(() => {
         if (!user) return;
@@ -41,17 +47,23 @@ export default function DiscoveryPage() {
         };
     }, [user]);
 
-    const fetchDiscoveries = async (pageToFetch: number, replace = false) => {
+    const fetchDiscoveries = async (pageToFetch: number, replace = false, search = '') => {
         if (replace) setLoading(true);
         else setLoadingMore(true);
 
         const from = (pageToFetch - 1) * itemsPerPage;
         const to = from + itemsPerPage - 1;
 
-        const { data, error, count } = await supabase
+        let queryBuilder = supabase
             .from("discoveries")
             .select("*", { count: "exact" })
-            .eq("user_id", user.id)
+            .eq("user_id", user.id);
+
+        if (search.trim()) {
+            queryBuilder = queryBuilder.ilike("title", `%${search.trim()}%`);
+        }
+
+        const { data, error, count } = await queryBuilder
             .order("created_at", { ascending: false })
             .range(from, to);
 
@@ -164,6 +176,8 @@ export default function DiscoveryPage() {
                         ＋
                     </button>
                 </div>
+
+                <SearchBar query={query} onSearch={setQuery} />
 
                 {loading ? (
                     <div className="discoveries-loader">

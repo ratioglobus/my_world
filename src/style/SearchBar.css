@@ -22,7 +22,7 @@
   border-radius: 6px;
   border: 1px solid #374151;
   background-color: var(--card-bg, #fff);
-  color: #737373 !important;
+  color: #fff !important;
   font-size: 1rem;
   outline: none;
   caret-color: #737373;
@@ -30,12 +30,16 @@
 }
 
 .searchbar-input::placeholder {
-  color: #6b7280;
+  color: #737373;
 }
 
 .searchbar-input:focus {
   border-color: #818cf8;
   box-shadow: 0 0 4px rgba(129, 140, 248, 0.4);
+}
+
+body.light-theme .searchbar-input {
+  color: #000 !important;
 }
 
 @media (max-width: 480px) {

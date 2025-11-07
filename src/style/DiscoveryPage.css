@@ -52,11 +52,10 @@ body.dark-theme .discoveries-input-row {
     outline: none;
     color: inherit;
     font-size: 1rem;
-    padding: 0.4rem 0;
 }
 
 .discoveries-input-inline::placeholder {
-    color: #bbb;
+    color: #737373 ;
 }
 
 body.light-theme .discoveries-input-inline {
@@ -76,7 +75,7 @@ body.light-theme .discoveries-input-inline::placeholder {
     font-size: 1rem;
     cursor: pointer;
     width: 34px;
-    height: 34px;
+    height: 28px;
     display: flex;
     justify-content: center;
     align-items: center;

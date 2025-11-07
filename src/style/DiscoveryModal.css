@@ -56,9 +56,24 @@
     transform: scale(1.1);
 }
 
-.discovery-modal-input,
+.discovery-modal-input {
+    width: 100%;
+    border: 1px solid #444;
+    background: #222;
+    color: white;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.8rem;
+    margin-top: 1.2rem;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+    transition: border 0.2s ease, background 0.2s ease;
+}
+
 .discovery-modal-textarea {
     width: 100%;
+    height: 150px;
     border: 1px solid #444;
     background: #222;
     color: white;
@@ -135,10 +150,8 @@
 
 .discovery-modal-edit:hover,
 .discovery-modal-save:hover,
-.discovery-modal-cancel:hover,
 .discovery-modal-close-btn:hover {
     background: #5a5bef;
-    transform: scale(1.03);
 }
 
 .discovery-modal-cancel {
