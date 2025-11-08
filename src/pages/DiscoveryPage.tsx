@@ -6,18 +6,27 @@ import AuthForm from "../components/AuthForm";
 import DiscoveryModal from "../components/DiscoveryModal";
 import SearchBar from "../components/SearchBar";
 
+interface Discovery {
+    id: string;
+    title: string;
+    description?: string;
+    tags?: string[];
+    user_id?: string;
+    created_at?: string;
+}
+
 export default function DiscoveryPage() {
     const [user, setUser] = useState<any>(null);
-    const [discoveries, setDiscoveries] = useState<any[]>([]);
+    const [discoveries, setDiscoveries] = useState<Discovery[]>([]);
     const [newDiscovery, setNewDiscovery] = useState("");
     const [loading, setLoading] = useState(true);
     const [burgerOpen, setBurgerOpen] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const itemsPerPage = 10;
-    const [selectedDiscovery, setSelectedDiscovery] = useState<any | null>(null);
+    const [selectedDiscovery, setSelectedDiscovery] = useState<Discovery | null>(null);
     const [loadingMore, setLoadingMore] = useState(false);
-    const [query, setQuery] = useState('');
+    const [query, setQuery] = useState("");
 
     useEffect(() => {
         supabase.auth.getSession().then(({ data: { session } }) => {
@@ -27,7 +36,7 @@ export default function DiscoveryPage() {
 
     useEffect(() => {
         if (user) fetchDiscoveries(1, true, query);
-    }, [query]);
+    }, [query, user]);
 
     useEffect(() => {
         if (!user) return;
@@ -37,7 +46,12 @@ export default function DiscoveryPage() {
             .channel("realtime:discoveries")
             .on(
                 "postgres_changes",
-                { event: "*", schema: "public", table: "discoveries", filter: `user_id=eq.${user.id}` },
+                {
+                    event: "*",
+                    schema: "public",
+                    table: "discoveries",
+                    filter: `user_id=eq.${user.id}`,
+                },
                 () => fetchDiscoveries(1, true)
             )
             .subscribe();
@@ -47,7 +61,9 @@ export default function DiscoveryPage() {
         };
     }, [user]);
 
-    const fetchDiscoveries = async (pageToFetch: number, replace = false, search = '') => {
+    const fetchDiscoveries = async (pageToFetch: number, replace = false, search = "") => {
+        if (!user) return;
+
         if (replace) setLoading(true);
         else setLoadingMore(true);
 
@@ -68,7 +84,7 @@ export default function DiscoveryPage() {
             .range(from, to);
 
         if (!error && data) {
-            setDiscoveries((prev) => (replace ? data : [...prev, ...data]));
+            setDiscoveries((prev: Discovery[]) => (replace ? data : [...prev, ...data]));
             setTotalPages(Math.ceil((count || 0) / itemsPerPage));
         }
 
@@ -82,11 +98,11 @@ export default function DiscoveryPage() {
 
         const { data, error } = await supabase
             .from("discoveries")
-            .insert([{ title, user_id: user.id }])
+            .insert([{ title, user_id: user.id, tags: [] }])
             .select();
 
         if (!error && data && data.length > 0) {
-            setDiscoveries((prev) => [data[0], ...prev]);
+            setDiscoveries((prev: Discovery[]) => [data[0], ...prev]);
             setNewDiscovery("");
         }
     };
@@ -101,11 +117,11 @@ export default function DiscoveryPage() {
             .eq("user_id", user.id);
 
         if (!error) {
-            setDiscoveries((prev) => prev.filter((item) => item.id !== id));
+            setDiscoveries((prev: Discovery[]) => prev.filter((item) => item.id !== id));
         }
     };
 
-    const handleOpenModal = (discovery: any) => {
+    const handleOpenModal = (discovery: Discovery) => {
         setSelectedDiscovery(discovery);
     };
 
@@ -116,7 +132,7 @@ export default function DiscoveryPage() {
     const handleSave = async (id: string, data: { title: string; description: string }) => {
         if (!user) return;
 
-        const { error, data: updatedData } = await supabase
+        const { data: updatedData, error } = await supabase
             .from("discoveries")
             .update({ title: data.title, description: data.description })
             .eq("id", id)
@@ -124,7 +140,7 @@ export default function DiscoveryPage() {
             .select();
 
         if (!error && updatedData && updatedData.length > 0) {
-            setDiscoveries((prev) =>
+            setDiscoveries((prev: Discovery[]) =>
                 prev.map((item) => (item.id === id ? updatedData[0] : item))
             );
             setSelectedDiscovery(updatedData[0]);
@@ -228,10 +244,22 @@ export default function DiscoveryPage() {
             {selectedDiscovery && (
                 <DiscoveryModal
                     isOpen={!!selectedDiscovery}
+                    discoveryId={selectedDiscovery.id}
                     title={selectedDiscovery.title}
                     description={selectedDiscovery.description || ""}
+                    initialTags={selectedDiscovery.tags || []}
                     onClose={handleCloseModal}
                     onSave={(data) => handleSave(selectedDiscovery.id, data)}
+                    onTagsUpdate={(updatedTags: string[]) => {
+                        setSelectedDiscovery((prev: Discovery | null) =>
+                            prev ? { ...prev, tags: updatedTags } : prev
+                        );
+                        setDiscoveries((prev: Discovery[]) =>
+                            prev.map((d) =>
+                                d.id === selectedDiscovery.id ? { ...d, tags: updatedTags } : d
+                            )
+                        );
+                    }}
                 />
             )}
         </div>

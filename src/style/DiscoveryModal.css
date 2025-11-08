@@ -11,92 +11,106 @@
 }
 
 .discovery-modal {
-    background-color: var(--card-bg);
-    color: white;
-    border-radius: 0.8rem;
-    padding: 1.5rem 2rem;
-    max-width: 420px;
+    background: var(--card-bg);
+    color: #f0f0f0;
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 480px;
     width: 90%;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
     position: relative;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    animation: slideUp 0.25s ease;
-    align-items: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    animation: modalSlideUp 0.25s ease;
+    transition: all 0.3s ease;
 }
 
 .discovery-modal-title {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+    font-weight: 600;
     text-align: center;
-    margin: 0 0 1rem 0;
+    margin-bottom: 1rem;
+    letter-spacing: 0.3px;
 }
 
 .discovery-modal-description {
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: #ccc;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #cfcfcf;
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .discovery-modal-close {
     position: absolute;
-    top: 0.6rem;
-    right: 0.2rem;
-    background: transparent;
+    top: 0.8rem;
+    right: 0.8rem;
+    background: rgba(255, 255, 255, 0.08);
     border: none;
-    color: #aaa;
-    font-size: 1rem;
+    color: #ddd;
+    font-size: 1.2rem;
     cursor: pointer;
-    transition: color 0.2s ease, transform 0.2s ease;
+    border-radius: 25%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .discovery-modal-close:hover {
-    color: #fff;
-    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
 }
 
-.discovery-modal-input {
+.discovery-modal-input,
+.discovery-modal-textarea {
     width: 100%;
-    border: 1px solid #444;
-    background: #222;
+    border: 1px solid #fff;
+    background: transparent;
     color: white;
     padding: 0.6rem 0.8rem;
     border-radius: 0.5rem;
-    margin-bottom: 0.8rem;
-    margin-top: 1.2rem;
     font-size: 1rem;
-    resize: none;
+    outline: none;
+    margin-bottom: 15px;
+    transition: border 0.2s ease, background 0.2s ease;
+}
+
+body.light-theme .discovery-modal-input {
+    width: 100%;
+    border: 1px solid #000;
+    color: #000;
+}
+
+body.light-theme .discovery-modal-textarea {
+    width: 100%;
+    border: 1px solid #000;
+    color: #000;
+}
+
+.discovery-modal-input-tags {
+    width: 100%;
+    border: 1px solid #fff;
+    background: transparent;
+    color: white;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
     outline: none;
     transition: border 0.2s ease, background 0.2s ease;
 }
 
 .discovery-modal-textarea {
-    width: 100%;
     height: 150px;
-    border: 1px solid #444;
-    background: #222;
-    color: white;
-    padding: 0.6rem 0.8rem;
-    border-radius: 0.5rem;
-    margin-bottom: 0.8rem;
-    margin-top: 1.2rem;
-    font-size: 1rem;
-    resize: none;
-    outline: none;
-    transition: border 0.2s ease, background 0.2s ease;
 }
 
 .discovery-modal-input:focus,
 .discovery-modal-textarea:focus {
     border-color: #6b6cff;
-    background: #1a1a1a;
-    outline: none;
-}
-
-.discovery-modal-input:active,
-.discovery-modal-textarea:active {
-    outline: none;
+    background: transparent;
 }
 
 .discovery-modal-actions {
@@ -104,11 +118,12 @@
     justify-content: space-between;
     gap: 0.6rem;
     margin-top: 10px;
+    margin-bottom: 1.7rem;
 }
 
 .discovery-modal-save,
 .discovery-modal-cancel,
-.discovery-modal-close-btn {
+.discovery-modal-edit {
     flex: 1;
     background: #6b6cff;
     border: none;
@@ -116,41 +131,12 @@
     padding: 0.6rem 1rem;
     border-radius: 0.5rem;
     cursor: pointer;
-    width: 150px;
     font-size: 0.9rem;
-    outline: none;
-    transition: background 0.2s ease, transform 0.1s ease;
-}
-
-.discovery-modal-save:focus,
-.discovery-modal-edit:focus,
-.discovery-modal-cancel:focus,
-.discovery-modal-close-btn:focus {
-    outline: none;
-}
-
-.discovery-modal-save:active,
-.discovery-modal-edit:active,
-.discovery-modal-cancel:active,
-.discovery-modal-close-btn:active {
-    outline: none;
-}
-
-.discovery-modal-edit {
-    background: #6b6cff;
-    border: none;
-    color: white;
-    padding: 0.6rem 1rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    width: 150px;
     transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .discovery-modal-edit:hover,
-.discovery-modal-save:hover,
-.discovery-modal-close-btn:hover {
+.discovery-modal-save:hover {
     background: #5a5bef;
 }
 
@@ -158,29 +144,203 @@
     background: #444;
 }
 
-.discovery-modal-close-btn {
-    background: #555;
+.discovery-tags {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: stretch;
+}
+
+.discovery-tags-row {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 0.4rem 0.6rem;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+    width: 100%;
+}
+
+.discovery-tags-row input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 0.95rem;
+    padding: 0.4rem;
+    outline: none;
+}
+
+.discovery-tags-row input::placeholder {
+    color: #aaa;
+}
+
+.discoveries-add-icon {
+    background: #6b6cff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.35rem 0.8rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.discoveries-add-icon:hover {
+    background: #5a5bef;
+    transform: scale(1.05);
+}
+
+.discovery-tags-list {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    gap: 0.5rem;
+    padding: 0.5rem 0.2rem;
+    margin: 0;
+    scrollbar-width: none;
+}
+
+.discovery-tags-list::-webkit-scrollbar {
+    height: 6px;
+    display: none;
+}
+
+.discovery-tags-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+}
+
+.discovery-tags-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.discovery-tag-item {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-radius: 1rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.discovery-tag-item:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+
+.discovery-tag-item.placeholder {
+    position: relative;
+    overflow: hidden;
+    color: transparent;
+    background-color: rgba(200, 200, 200, 0.3);
+}
+
+.discovery-tag-item.placeholder::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: loading-skeleton 1.2s infinite;
+    border-radius: 1rem;
+}
+
+
+@keyframes loading-skeleton {
+    0% {
+        left: -100%;
+    }
+
+    50% {
+        left: 100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+.suggested-tags-title {
+    padding: 0;
+    margin: 0;
+}
+
+.discovery-tag-delete {
+    background: transparent;
+    border: none;
+    color: #bbb;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: color 0.2s ease;
+    padding: 5px;
+}
+
+.discovery-tag-delete:hover {
+    color: #f44;
+}
+
+.no-tags-text {
+    font-size: 0.9rem;
+    color: #999;
+    text-align: center;
+    margin-top: 0.5rem;
 }
 
 body.light-theme .discovery-modal {
-    background-color: #fff;
-    color: #000;
-}
-
-body.light-theme .discovery-modal-input,
-body.light-theme .discovery-modal-textarea {
-    background: #f8f8f8;
-    border: 1px solid #ccc;
+    background: #fff;
     color: #222;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 body.light-theme .discovery-modal-description {
-    color: #555;
+    color: #444;
 }
 
-.discodery-modal-text {
-    padding: 0;
-    margin: 0;
+body.light-theme .discovery-tags-row {
+    background: #f7f7f7;
+    border: 1px solid #ccc;
+}
+
+body.light-theme .discoveries-add-icon {
+    background: #6b6cff;
+    color: #fff;
+}
+
+body.light-theme .discovery-tag-item {
+    background: #e6e6e6;
+    color: #333;
+}
+
+body.light-theme .discovery-tag-delete {
+    color: #666;
+}
+
+body.light-theme .discovery-tag-delete:hover {
+    color: #d33;
+}
+
+@keyframes modalSlideUp {
+    from {
+        transform: translateY(15px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 @media (max-width: 600px) {
@@ -196,10 +356,6 @@ body.light-theme .discovery-modal-description {
     .discovery-modal-actions {
         flex-direction: column;
     }
-
-    .discovery-modal-close {
-        right: -0.1rem;
-    }
 }
 
 @keyframes fadeIn {
@@ -208,18 +364,6 @@ body.light-theme .discovery-modal-description {
     }
 
     to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(10px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
         opacity: 1;
     }
 }
