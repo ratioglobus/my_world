@@ -211,20 +211,33 @@ export default function DiscoveryPage() {
                                     className="discoveries-item"
                                     onClick={() => handleOpenModal(item)}
                                 >
-                                    <span className="discoveries-item-title">{item.title}</span>
-                                    <button
-                                        className="discoveries-delete-btn"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            deleteDiscovery(item.id);
-                                        }}
-                                        title="Удалить"
-                                    >
-                                        ✕
-                                    </button>
+                                    <div className="discoveries-item-header">
+                                        <span className="discoveries-item-title">{item.title}</span>
+
+                                    </div>
+
+                                    {item.tags && item.tags.length > 0 && (
+                                        <ul className="discoveries-item-tags">
+                                            {item.tags.slice(0, 5).map((tag, idx) => (
+                                                <li key={idx} className="discoveries-tag">{tag}</li>
+                                            ))}
+
+                                            <button
+                                                className="discoveries-delete-btn"
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    deleteDiscovery(item.id)
+                                                }}
+                                                title="Удалить"
+                                            >
+                                                ✕
+                                            </button>
+                                        </ul>
+                                    )}
                                 </li>
                             ))}
                         </ul>
+
 
                         {page < totalPages && (
                             <div className="discoveries-load-more-container">

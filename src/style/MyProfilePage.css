@@ -453,8 +453,9 @@ body.light-theme .burger-menu a:hover {
   }
 
   .theme-toggle {
-    right: 25px;
+    position: absolute;
     top: 18px;
+    right: 25px;
   }
 
   .burger-btn {

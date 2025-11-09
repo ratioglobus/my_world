@@ -356,6 +356,11 @@ body.light-theme .discovery-tag-delete:hover {
     .discovery-modal-actions {
         flex-direction: column;
     }
+
+    .discovery-tags-row {
+        width: 93%;
+    }
+
 }
 
 @keyframes fadeIn {
