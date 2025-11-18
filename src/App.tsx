@@ -11,6 +11,7 @@ import ArchiveItemsPage from "./pages/ArchiveItemsPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import AuthForm from "./components/AuthForm";
 import DiscoveryPage from "./pages/DiscoveryPage";
+import ReactPage from "./pages/ReactPage";
 import ThemeToggle from "./components/ThemeToggle";
 
 export default function App() {
@@ -72,6 +73,7 @@ export default function App() {
           <Route path="/archive-items" element={<ArchiveItemsPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/discovery" element={<DiscoveryPage />} />
+          <Route path="/react-page" element={<ReactPage />} />
         </Routes>
       )}
     </div>

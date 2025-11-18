@@ -21,11 +21,6 @@
   margin-top: 0;
 }
 
-.steps-title::before {
-  content: "🧩";
-  font-size: 1.3rem;
-}
-
 .steps-list {
   list-style: none;
   padding: 0;

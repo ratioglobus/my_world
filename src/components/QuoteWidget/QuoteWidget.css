@@ -1,0 +1,53 @@
+.quote-widget {
+  font-family: sans-serif;
+}
+
+.quote-card {
+  padding-top: 10px;
+  background-color: transparent;
+  display: flex;
+}
+
+.quote-content {
+  font-size: 0.9rem;
+  margin-right: 10px;
+}
+
+.quote-author {
+  font-size: 0.9rem;
+  text-align: right;
+  color: #555;
+}
+
+.error {
+  color: red;
+}
+
+body.light-theme .quote-card {
+  color: #fff;
+}
+
+body.light-theme .quote-author {
+  color: #c0bdbd;
+}
+
+@media (max-width: 480px) {
+  .quote-content {
+    font-size: 0.8rem;
+    margin-right: 10px;
+    padding-top: 13px;
+    padding-right: 5px;
+    margin: 0;
+  }
+
+  .quote-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .quote-author {
+    font-size: 0.9rem;
+    text-align: center;
+    color: #555;
+  }
+}

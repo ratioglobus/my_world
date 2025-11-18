@@ -14,6 +14,7 @@ import FilterIdeasButton from "../components/FilterIdeasButton";
 import FilterByHidden from "../components/FilterByHidden";
 import BurgerMenu from "../components/BurgerMenu";
 import { ItemService } from "../services/ItemService";
+import { QuoteWidget } from "../components/QuoteWidget/QuoteWidget";
 
 function MyProfilePage() {
   const [user, setUser] = useState<any>(null);
@@ -311,6 +312,8 @@ function MyProfilePage() {
         {ui.mode === "completed" ? "Добавить исследование" : "Запланировать исследование"}
       </h1>
       <AddItemForm onAdd={handleAdd} mode={ui.mode} />
+      <QuoteWidget></QuoteWidget>
+
       <h1 className="section-title">
         {ui.mode === "completed" ? "Готовые исследования" : "Запланированное"}
       </h1>

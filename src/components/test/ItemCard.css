@@ -1,0 +1,308 @@
+.reactPage {
+    padding: 2rem;
+    margin: 0 auto;
+    background: transparent;
+    min-height: 100vh;
+}
+
+.react-page-title {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    margin-top: 55px;
+}
+
+.filters-button {
+    background: #4041ea;
+    padding: 10px;
+    min-width: 150px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.filters-button:hover {
+    background-color: #2c2ed6;
+}
+
+.item-list-test {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+}
+
+.input-test {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.input-test::placeholder {
+    color: #fff;
+}
+
+.item-card-test {
+    background: #8572de;
+    color: #fff;
+    border-radius: 10px;
+    padding: 1rem;
+    margin: 1rem 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    overflow: visible;
+    width: 300px;
+    transition: transform 0.2s ease;
+    position: relative;
+}
+
+.edit-button-card-test {
+    position: absolute;
+    right: 10px;
+    background: transparent;
+    border: 1px solid black;
+}
+
+.item-title {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.item-description {
+    font-size: 0.95rem;
+    color: #fff;
+    margin-bottom: 0.7rem;
+    text-align: center;
+}
+
+.item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+    margin-bottom: 7px;
+}
+
+.item-tag {
+    background: #9956d7b5;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: #fff;
+}
+
+.item-card-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.item-card-button-like,
+.item-card-button-favorite,
+.item-card-button-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.25);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.item-card-button-like:hover,
+.item-card-button-favorite:hover,
+.item-card-button-delete:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+.item-card-button-like.liked svg {
+    fill: red;
+    stroke: red;
+}
+
+.item-card-button-favorite.favorite svg {
+    fill: gold;
+    stroke: gold;
+}
+
+.item-card-button-delete svg {
+    stroke: white;
+}
+
+.item-card-button-like svg,
+.item-card-button-favorite svg,
+.item-card-button-delete svg {
+    pointer-events: none;
+}
+
+.item-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.item-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 320px;
+    background: #8572de;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.item-form input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.item-form button {
+    background-color: #4041ea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s;
+}
+
+.item-form button:hover {
+    background-color: #2c2ed6;
+    transform: scale(1.03);
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 60px;
+    align-items: center;
+}
+
+.footer-text {
+    margin-right: 20px;
+}
+
+.footer-button {
+    background: transparent;
+    border: 1px solid #8572de;
+    padding: 1px 20px;
+    margin: 0;
+    font-size: 1rem;
+    height: 40px;
+}
+
+.items-table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.items-table th,
+.items-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.items-table th {
+    background: transparent;
+}
+
+.tr-test {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.table-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100px;
+}
+
+.items-table td {
+    white-space: nowrap;
+}
+
+.container-weather {
+    width: 180px;
+    padding: 16px;
+    background: transparent;
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s ease;
+    font-family: "Inter", sans-serif;
+    padding: 20px;
+    position: absolute;
+    top: 35px;
+}
+
+.img-weather {
+    width: 50px;
+}
+
+.weather-title {
+    text-align: center;
+    margin: 0;
+}
+
+.container-weather:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+}
+
+.weather-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.weather-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.weather-temp {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.weather-description {
+    font-size: 14px;
+    color: #fff;
+    text-transform: capitalize;
+    text-align: center;
+    margin-top: 10px;
+}
