@@ -60,15 +60,22 @@ export default function App() {
 
       <Routes>
         <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/about" element={<AboutProjectPage session={session} />} />
+
         {!session && (
-          <Route path="*" element={
-            <AuthForm
-              onLogin={async () => {
-                const { data } = await supabase.auth.getSession();
-                setSession(data.session);
-              }}
+          <>
+            <Route
+              path="*"
+              element={
+                <AuthForm
+                  onLogin={async () => {
+                    const { data } = await supabase.auth.getSession();
+                    setSession(data.session);
+                  }}
+                />
+              }
             />
-          } />
+          </>
         )}
 
         {session && (
@@ -77,7 +84,6 @@ export default function App() {
             <Route path="/profile" element={<ProfileDetailsPage />} />
             <Route path="/profile/:id" element={<OtherProfilePage />} />
             <Route path="/follows" element={<MyFollowsPage />} />
-            <Route path="/about" element={<AboutProjectPage />} />
             <Route path="/archive-items" element={<ArchiveItemsPage />} />
             <Route path="/projects" element={<ProjectsPage />} />
             <Route path="/discovery" element={<DiscoveryPage />} />

@@ -1,26 +1,35 @@
 import "../style/AboutProjectPage.css";
 import { useState } from "react";
 import BurgerMenu from "../components/BurgerMenu";
+import { useNavigate } from "react-router-dom";
+import type { Session } from "@supabase/supabase-js";
 
-export default function AboutProjectPage() {
+type AboutProjectPageProps = {
+    session: Session | null;
+};
+
+export default function AboutProjectPage({ session }: AboutProjectPageProps) {
     const [burgerOpen, setBurgerOpen] = useState(false);
+    const navigate = useNavigate();
 
     return (
         <div className="about">
             <div className="top-bar">
-                <BurgerMenu
-                    isOpen={burgerOpen}
-                    onToggle={() => setBurgerOpen((prev) => !prev)}
-                    onClose={() => setBurgerOpen(false)}
-                    customPages={[
-                        { path: "/", label: "На главную" },
-                        { path: "/profile", label: "Профиль" },
-                        { path: "/follows", label: "Подписки" },
-                        { path: "/discovery", label: "Открытия" },
-                        { path: "/projects", label: "Проекты" },
-                        { path: "/archive-items", label: "Архив" },
-                    ]}
-                />
+                {session && (
+                    <BurgerMenu
+                        isOpen={burgerOpen}
+                        onToggle={() => setBurgerOpen((prev) => !prev)}
+                        onClose={() => setBurgerOpen(false)}
+                        customPages={[
+                            { path: "/", label: "На главную" },
+                            { path: "/profile", label: "Профиль" },
+                            { path: "/follows", label: "Подписки" },
+                            { path: "/discovery", label: "Открытия" },
+                            { path: "/projects", label: "Проекты" },
+                            { path: "/archive-items", label: "Архив" },
+                        ]}
+                    />
+                )}
             </div>
 
             <div className="about-container">
@@ -32,7 +41,6 @@ export default function AboutProjectPage() {
 
                 <div className="about-section">
                     <h2 className="about-section-title">Возможности проекта</h2>
-
                     <div className="about-grid">
                         <div className="about-card">
                             <span className="about-icon">🧑‍💻</span>
@@ -72,6 +80,17 @@ export default function AboutProjectPage() {
                     </div>
                 </div>
 
+                {!session && (
+                    <div style={{ textAlign: "center", marginTop: "20px" }}>
+                        <button
+                            className="auth-redirect-btn"
+                            onClick={() => navigate("/")}
+                        >
+                            Войти / Зарегистрироваться
+                        </button>
+                    </div>
+                )}
+
                 <div className="about-footer">
                     <p className="about-footer-small">Исследуй и делись открытиями с другими</p>
                     <p>Спасибо ❤️</p>
@@ -81,7 +100,7 @@ export default function AboutProjectPage() {
                     <p>Мой email для связи: ya@vzene.ru</p>
                     <button
                         className="privacy-btn"
-                        onClick={() => window.location.href = "/privacy"}
+                        onClick={() => navigate("/privacy")}
                     >
                         Политика конфиденциальности
                     </button>

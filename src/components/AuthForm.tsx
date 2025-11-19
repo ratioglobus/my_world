@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
+import { useNavigate } from "react-router-dom";
 import "../style/AuthForm.css";
 
 export default function AuthForm({ onLogin }: { onLogin: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,17 +66,25 @@ export default function AuthForm({ onLogin }: { onLogin: () => void }) {
 
         <div className="auth-privacy">
           <p>
-            Продолжая, вы соглашаетесь с нашей{" "}<br />
+            Продолжая, вы соглашаетесь с нашей <br />
             <a href="/privacy" className="auth-privacy-link">Политикой конфиденциальности</a>.
           </p>
+        </div>
+
+        <div className="auth-about-project">
+          <button
+            type="button"
+            className="about-project-btn"
+            onClick={() => navigate("/about")}
+          >
+            Узнать больше о проекте
+          </button>
         </div>
       </form>
 
       <footer className="app-footer">
-        <p>© {new Date().getFullYear()} Tyrell Research</p>
+        <p className="name-company">© {new Date().getFullYear()} Tyrell Research</p>
       </footer>
-
     </div>
-
   );
 }

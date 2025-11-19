@@ -11,6 +11,32 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
+body.light-theme .auth-container {
+  background: linear-gradient(135deg, #a7b4f0 0%, #ac85d6 100%);
+}
+
+.about-project-btn {
+  display: block;
+  width: 100%;
+  margin: 15px 0 0 0;
+  padding: 10px 0;
+  background-color: #4a90e2;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.about-project-btn:hover {
+  background-color: #357abd;
+}
+
+.name-company {
+  color: #fff;
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -21,6 +47,10 @@
   min-width: 320px;
   width: 100%;
   max-width: 400px;
+}
+
+body.light-theme .auth-form {
+  background-color: #8777de;
 }
 
 .auth-privacy {
