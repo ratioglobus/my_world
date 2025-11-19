@@ -76,6 +76,17 @@ export default function AboutProjectPage() {
                     <p className="about-footer-small">Исследуй и делись открытиями с другими</p>
                     <p>Спасибо ❤️</p>
                 </div>
+
+                <footer className="app-footer">
+                    <p>Мой email для связи: ya@vzene.ru</p>
+                    <button
+                        className="privacy-btn"
+                        onClick={() => window.location.href = "/privacy"}
+                    >
+                        Политика конфиденциальности
+                    </button>
+                    <p>© {new Date().getFullYear()} Tyrell Research</p>
+                </footer>
             </div>
         </div>
     );
