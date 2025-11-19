@@ -57,27 +57,34 @@ export default function App() {
   return (
     <div className="app-content fade-in">
       <ThemeToggle />
-      {!session ? (
-        <AuthForm
-          onLogin={async () => {
-            const { data } = await supabase.auth.getSession();
-            setSession(data.session);
-          }}
-        />
-      ) : (
-        <Routes>
-          <Route path="/" element={<MyProfilePage />} />
-          <Route path="/profile" element={<ProfileDetailsPage />} />
-          <Route path="/profile/:id" element={<OtherProfilePage />} />
-          <Route path="/follows" element={<MyFollowsPage />} />
-          <Route path="/about" element={<AboutProjectPage />} />
-          <Route path="/archive-items" element={<ArchiveItemsPage />} />
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/discovery" element={<DiscoveryPage />} />
-          <Route path="/react-page" element={<ReactPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-        </Routes>
-      )}
+
+      <Routes>
+        <Route path="/privacy" element={<PrivacyPage />} />
+        {!session && (
+          <Route path="*" element={
+            <AuthForm
+              onLogin={async () => {
+                const { data } = await supabase.auth.getSession();
+                setSession(data.session);
+              }}
+            />
+          } />
+        )}
+
+        {session && (
+          <>
+            <Route path="/" element={<MyProfilePage />} />
+            <Route path="/profile" element={<ProfileDetailsPage />} />
+            <Route path="/profile/:id" element={<OtherProfilePage />} />
+            <Route path="/follows" element={<MyFollowsPage />} />
+            <Route path="/about" element={<AboutProjectPage />} />
+            <Route path="/archive-items" element={<ArchiveItemsPage />} />
+            <Route path="/projects" element={<ProjectsPage />} />
+            <Route path="/discovery" element={<DiscoveryPage />} />
+            <Route path="/react-page" element={<ReactPage />} />
+          </>
+        )}
+      </Routes>
     </div>
   );
 }

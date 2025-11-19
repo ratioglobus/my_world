@@ -61,7 +61,20 @@ export default function AuthForm({ onLogin }: { onLogin: () => void }) {
         >
           {isLogin ? "Перейти к регистрации" : "Перейти к входу"}
         </button>
+
+        <div className="auth-privacy">
+          <p>
+            Продолжая, вы соглашаетесь с нашей{" "}<br />
+            <a href="/privacy" className="auth-privacy-link">Политикой конфиденциальности</a>.
+          </p>
+        </div>
       </form>
+
+      <footer className="app-footer">
+        <p>© {new Date().getFullYear()} Tyrell Research</p>
+      </footer>
+
     </div>
+
   );
 }

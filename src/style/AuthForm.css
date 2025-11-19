@@ -7,6 +7,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
@@ -20,6 +21,23 @@
   min-width: 320px;
   width: 100%;
   max-width: 400px;
+}
+
+.auth-privacy {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.auth-privacy-link {
+  color: #a5b4fc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-privacy-link:hover {
+  text-decoration: underline;
 }
 
 .auth-title {
