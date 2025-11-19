@@ -13,6 +13,7 @@ import AuthForm from "./components/AuthForm";
 import DiscoveryPage from "./pages/DiscoveryPage";
 import ReactPage from "./pages/ReactPage";
 import ThemeToggle from "./components/ThemeToggle";
+import PrivacyPage from "./pages/PrivacyPage";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -74,6 +75,7 @@ export default function App() {
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/discovery" element={<DiscoveryPage />} />
           <Route path="/react-page" element={<ReactPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
       )}
     </div>

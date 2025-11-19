@@ -1,4 +1,5 @@
 import "../style/MyProfilePage.css";
+import "../style/PrivacyPage.css";
 import { useState, useEffect, useMemo } from "react";
 import type { MediaItemProps } from "../types/MediaItem";
 import { supabase } from "../supabaseClient";
@@ -373,6 +374,16 @@ function MyProfilePage() {
           </button>
         </div>
       )}
+
+      <footer className="app-footer">
+        <button
+          className="privacy-btn"
+          onClick={() => window.location.href = "/privacy"}
+        >
+          Политика конфиденциальности
+        </button>
+        <p>© {new Date().getFullYear()} Tyrell Research</p>
+      </footer>
 
       {ui.ratingItem && (
         <RatingModal
